@@ -22,7 +22,7 @@ public class TileManager : MonoBehaviour
             var x = i % mapSize.x;
             var y = i / mapSize.x;
 
-            // tileContainer.CreateTile(new Vector2Int(x, y), tileMap[i]);
+            // tileContainer.CreateTile(position);
         }
     }
 }

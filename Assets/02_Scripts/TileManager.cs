@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
-    // [SerializeField] TileContainer tileContainer;
+    [SerializeField] TileContainer tileContainer;
+    [SerializeField] Vector2Int mapSize = new Vector2Int(10, 10);
+    [SerializeField] float tileSize = 1.0f;
+
     TileMapGenerator tileMapGenerator;
 
     void Start()
     {
         tileMapGenerator = new();
-
-        var mapSize = new Vector2Int(10, 10);
         GenerateTileMap(mapSize);
     }
 
@@ -17,12 +18,42 @@ public class TileManager : MonoBehaviour
     {
         var tileMapGenerationData = tileMapGenerator.Generate(mapSize);
 
-        for (int i = 0; i < tileMapGenerationData.TileMap.Length; i++)
-        {
-            var x = i % mapSize.x;
-            var y = i / mapSize.x;
+        float width = tileSize;
+        float height = tileSize * Mathf.Sqrt(3) / 2f;
 
-            // tileContainer.CreateTile(position);
+        for (int y = 0; y < mapSize.y; y++)
+        {
+            for (int x = 0; x < mapSize.x; x++)
+            {
+                int i = y * mapSize.x + x;
+                float xPos = x * width * 0.75f;
+                float zPos = y * height + (x % 2 == 0 ? 0 : height / 2f);
+
+                var position = new Vector3(xPos, 0, zPos);
+                var tileType = tileMapGenerationData.TileMap[i];
+
+                tileContainer.CreateTile(position, tileType);
+            }
         }
+    }
+
+    void Update()
+    {
+        // R키를 누르면 맵을 재생성
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RegenerateTileMap();
+        }
+    }
+
+    void RegenerateTileMap()
+    {
+        tileContainer.ClearAllTiles();
+        GenerateTileMap(mapSize);
+    }
+
+    public void UpdateTilePositions(int currentTileX, int currentTileY)
+    {
+        tileContainer.SetTileColor(new Vector2Int(currentTileX, currentTileY), Color.red);
     }
 }

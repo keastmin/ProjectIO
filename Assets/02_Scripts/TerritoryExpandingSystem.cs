@@ -12,7 +12,7 @@ public class TerritoryExpandingSystem : MonoBehaviour
     public Vector2 previousPosition;
     public List<Vector2> playerPath;
 
-    Territory territory;
+    public Territory territory;
 
     void Awake()
     {

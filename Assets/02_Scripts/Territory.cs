@@ -81,7 +81,7 @@ public class Territory
                             isExit = isExit
                         });
 
-                        Debug.Log($"교차점 추가: {intersection}, 폴리곤 엣지: {i}, 경로 인덱스: {j}, 나가는 곳?: {isExit}");
+                        // Debug.Log($"교차점 추가: {intersection}, 폴리곤 엣지: {i}, 경로 인덱스: {j}, 나가는 곳?: {isExit}");
                     }
                 }
             }
@@ -104,7 +104,7 @@ public class Territory
         float s = (-s1_y * (p1.x - q1.x) + s1_x * (p1.y - q1.y)) / denom;
         float t = ( s2_x * (p1.y - q1.y) - s2_y * (p1.x - q1.x)) / denom;
 
-        if (s >= 0 && s < 1 && t >= 0 && t < 1)
+        if (s > 0 && s <= 1 && t > 0 && t <= 1)
         {
             // 교차점 계산
             intersection = new Vector2(
@@ -147,26 +147,26 @@ public class Territory
         if (insertIdx0 > insertIdx1)
         {
             // 먼저 insertIdx0에 삽입, 그 다음 insertIdx1+1에 삽입
-            poly.Insert(insertIdx0, i0.point);
-            poly.Insert(insertIdx1 + 1, i1.point);
+            if (poly[insertIdx0 % poly.Count] != i0.point) poly.Insert(insertIdx0, i0.point);
+            if (poly[insertIdx1 % poly.Count] != i1.point) poly.Insert(insertIdx1, i1.point);
         }
         else
         {
             // 먼저 insertIdx1에 삽입, 그 다음 insertIdx0에 삽입
-            poly.Insert(insertIdx1, i1.point);
-            poly.Insert(insertIdx0, i0.point);
+            if (poly[insertIdx1 % poly.Count] != i1.point) poly.Insert(insertIdx1, i1.point);
+            if (poly[insertIdx0 % poly.Count] != i0.point) poly.Insert(insertIdx0, i0.point);
         }
 
-        foreach (var p in poly)
-        {
-            Debug.Log($"Polygon Point: {p}");
-        }
+        // foreach (var p in poly)
+        // {
+        //     Debug.Log($"Polygon Point: {p}");
+        // }
 
         // 두 교차점 인덱스 재계산
         int idx0 = poly.IndexOf(i0.point);
         int idx1 = poly.IndexOf(i1.point);
 
-        Debug.Log($"교차점 인덱스: idx0={idx0}, idx1={idx1}");
+        // Debug.Log($"교차점 인덱스: idx0={idx0}, idx1={idx1}");
 
         // 시계방향 분할 (idx0 -> idx1), 반대방향 분할 (idx1 -> idx0)
         List<Vector2> seg1 = new List<Vector2>();
@@ -233,7 +233,7 @@ public class Territory
             Vector2 pj = poly[j];
 
             // Raycast: point.y가 에지의 y범위 내에 있고, point.x가 에지와의 교차점보다 작은지
-            if ((pi.y > point.y) != (pj.y > point.y))
+            if ((pi.y >= point.y) != (pj.y >= point.y))
             {
                 float atX = (pj.x - pi.x) * (point.y - pi.y) / (pj.y - pi.y + Mathf.Epsilon) + pi.x;
                 if (point.x < atX)

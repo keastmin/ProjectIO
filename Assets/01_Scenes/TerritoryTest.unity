@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 648084793}
-  circlePointCount: 100000
+  circlePointCount: 4
   circleRadius: 3
   isExpanding: 0
   previousPosition: {x: 0, y: 0}

@@ -4,6 +4,7 @@ public class RunnerTestManager : MonoBehaviour
 {
     [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
+    [SerializeField] ResourceSpawnSystem resourceSpawnSystem;
 
     void Start()
     {
@@ -12,5 +13,8 @@ public class RunnerTestManager : MonoBehaviour
 
         // 육각 타일 맵 생성
         hexaTileSnapSystem.GenerateInitialHexaTileMap();
+
+        // 자원 생성
+        resourceSpawnSystem.GenerateResources();
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TerritoryExpandingSystem : MonoBehaviour
 {
+    [SerializeField] ResourceObtainingSystem resourceObtainingSystem;
     public RunnerTestPlayer player;
     public int circlePointCount;
     public float circleRadius;
@@ -33,6 +34,7 @@ public class TerritoryExpandingSystem : MonoBehaviour
                     playerPath.Add(currentPosition);
                     Debug.Log("확장 시작");
                     territory.Expand(playerPath);
+                    resourceObtainingSystem.TryObtainResources(territory);
                 }
                 playerPath.Clear();
                 isExpanding = false;

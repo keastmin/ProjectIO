@@ -457,6 +457,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171f89aae6c74054498fffbc9f6ffda4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  territoryExpandingSystem: {fileID: 1726113699}
+  hexaTileSnapSystem: {fileID: 1726113698}
   trackGenerationSystem: {fileID: 1726113696}
   monsterGenerationSystem: {fileID: 1726113697}
 --- !u!4 &1641532790

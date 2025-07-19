@@ -14,15 +14,6 @@ public class HexaTileSnapSystem : MonoBehaviour
     Ray ray;
     Vector3 hitPoint;
 
-    void Start()
-    {
-        hexaTileMap = new HexaTileMap
-        {
-            HexSize = hexSize, // Set your desired hex size
-            IsFlatTop = isFlatTop // Set to true for flat-top hexes, false for pointy-top
-        };
-    }
-
     void Update()
     {
         var mousePositionInScreen = Input.mousePosition;
@@ -43,5 +34,14 @@ public class HexaTileSnapSystem : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(hitPoint, 0.1f);
+    }
+
+    public void GenerateInitialHexaTileMap()
+    {
+        hexaTileMap = new HexaTileMap
+        {
+            HexSize = hexSize, // Set your desired hex size
+            IsFlatTop = isFlatTop // Set to true for flat-top hexes, false for pointy-top
+        };
     }
 }

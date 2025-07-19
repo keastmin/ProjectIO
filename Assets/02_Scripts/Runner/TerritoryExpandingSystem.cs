@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TerritoryExpandingSystem : MonoBehaviour
 {
-    public TerritoryTestPlayer player;
+    public RunnerTestPlayer player;
     public int circlePointCount;
     public float circleRadius;
 
@@ -19,20 +19,7 @@ public class TerritoryExpandingSystem : MonoBehaviour
         player.OnPositionChanged += HandlePlayerPositionChanged;
     }
 
-    void Start()
-    {
-        var polygonPoints = new List<Vector2>();
-        for (int i = 0; i < circlePointCount; i++)
-        {
-            float angle = (circlePointCount - 1 - i) * Mathf.PI * 2 / circlePointCount;
-            var point = new Vector2(circleRadius * Mathf.Cos(angle), circleRadius * Mathf.Sin(angle));
-            polygonPoints.Add(point);
-        }
-
-        territory = Territory.CreatePolygonMesh(polygonPoints.ToArray());
-    }
-
-    void HandlePlayerPositionChanged(TerritoryTestPlayer player)
+    void HandlePlayerPositionChanged(RunnerTestPlayer player)
     {
         if (territory == null) { return; }
 
@@ -70,5 +57,18 @@ public class TerritoryExpandingSystem : MonoBehaviour
                 previousPosition = currentPosition;
             }
         }
+    }
+
+    public void GenerateInitialTerritory()
+    {
+        var polygonPoints = new List<Vector2>();
+        for (int i = 0; i < circlePointCount; i++)
+        {
+            float angle = (circlePointCount - 1 - i) * Mathf.PI * 2 / circlePointCount;
+            var point = new Vector2(circleRadius * Mathf.Cos(angle), circleRadius * Mathf.Sin(angle));
+            polygonPoints.Add(point);
+        }
+
+        territory = Territory.CreatePolygonMesh(polygonPoints.ToArray());
     }
 }

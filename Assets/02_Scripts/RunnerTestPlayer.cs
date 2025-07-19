@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
 
-public class TerritoryTestPlayer : MonoBehaviour
+public class RunnerTestPlayer : MonoBehaviour
 {
     public float moveSpeed = 5f;
 
-    public event Action<TerritoryTestPlayer> OnPositionChanged;
+    public event Action<RunnerTestPlayer> OnPositionChanged;
 
     void Update()
     {

@@ -5,6 +5,7 @@ public class RunnerTestManager : MonoBehaviour
     [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
     [SerializeField] ResourceSpawnSystem resourceSpawnSystem;
+    [SerializeField] WorldMonsterSpawnSystem worldMonsterSpawnSystem;
 
     void Start()
     {
@@ -16,5 +17,8 @@ public class RunnerTestManager : MonoBehaviour
 
         // 자원 생성
         resourceSpawnSystem.GenerateResources();
+
+        // 테스트용 몬스터 스폰
+        worldMonsterSpawnSystem.SpawnMonsters();
     }
 }

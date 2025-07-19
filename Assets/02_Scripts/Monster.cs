@@ -7,8 +7,15 @@ public class Monster : MonoBehaviour
     [SerializeField] float moveSpeed = 3f;
     [SerializeField] float arriveThreshold = 0.1f;
 
+    // Track Monster
     Track track;
     int currentPointIndex = 0;
+
+    // World Monster
+    Vector3 patrolPivotPosition;
+    float patrolRadius;
+    Vector3 patrolTargetPosition;
+    bool isPatrolling = false;
 
     public void TakeDamage(int damage)
     {
@@ -25,11 +32,25 @@ public class Monster : MonoBehaviour
         currentPointIndex = 0;
     }
 
+    public void SetPatrolPivotPosition(Vector3 position)
+    {
+        patrolPivotPosition = position;
+    }
+
+    public void SetPatrolRadius(float radius)
+    {
+        patrolRadius = radius;
+    }
+
     void Update()
     {
-        if (track != null && track.Points != null && track.Points.Length > 0)
+        if (track != null)
         {
             FollowTrack();
+        }
+        else
+        {
+            Patrol();
         }
     }
 
@@ -52,5 +73,45 @@ public class Monster : MonoBehaviour
         if (move.magnitude > distance) move = moveDir; // 목표점 초과 방지
         transform.position += move;
         transform.LookAt(target);
+    }
+
+    void Patrol()
+    {
+        if (isPatrolling == false)
+        {
+            patrolTargetPosition = patrolPivotPosition + Random.insideUnitSphere * patrolRadius;
+            patrolTargetPosition.y = transform.position.y;
+            isPatrolling = true;
+        }
+        else
+        {
+            Vector3 direction = (patrolTargetPosition - transform.position).normalized;
+            transform.position = transform.position + Time.deltaTime * moveSpeed * direction;
+
+            if (Vector3.Distance(transform.position, patrolTargetPosition) < arriveThreshold)
+            {
+                isPatrolling = false; // 목표 위치에 도달하면 다시 순찰 시작
+            }
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (track == null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(patrolPivotPosition, 0.1f);
+            Gizmos.DrawWireSphere(patrolPivotPosition, patrolRadius);
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(patrolTargetPosition, 0.1f);
+        }
+    }
+    void OnDrawGizmos()
+    {
+        if (track == null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, patrolTargetPosition + Vector3.up * 0.1f);
+        }
     }
 }

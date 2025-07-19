@@ -777,7 +777,7 @@ GameObject:
   m_Component:
   - component: {fileID: 670043823}
   m_Layer: 0
-  m_Name: Inner Monsters
+  m_Name: Track Monsters
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -790,6 +790,37 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670043822}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1443453412}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &778461258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 778461259}
+  m_Layer: 0
+  m_Name: World Monsters
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &778461259
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 778461258}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -947,6 +978,7 @@ GameObject:
   - component: {fileID: 1360410268}
   - component: {fileID: 1360410270}
   - component: {fileID: 1360410269}
+  - component: {fileID: 1360410271}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -1042,6 +1074,22 @@ MonoBehaviour:
   - resourcePrefab: {fileID: 2142689607256237635, guid: b33d40f6efb6b6c4e917a4ecf46535c8, type: 3}
     resourceCount: 10
     spawnRadius: 30
+--- !u!114 &1360410271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360410265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ecb1376cc20ed54c9f797de092b53c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterParentTransform: {fileID: 778461259}
+  monsterPrefab: {fileID: 6203562166342454083, guid: b46fb06dfaf980e4e84ea8d2de1731b4, type: 3}
+  spawnCount: 10
+  spawnRadius: 100
 --- !u!1 &1400206706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1105,6 +1153,7 @@ Transform:
   - {fileID: 434916184}
   - {fileID: 106404578}
   - {fileID: 670043823}
+  - {fileID: 778461259}
   - {fileID: 606355801}
   - {fileID: 1400206707}
   - {fileID: 648084792}
@@ -1142,6 +1191,7 @@ MonoBehaviour:
   territoryExpandingSystem: {fileID: 1360410266}
   hexaTileSnapSystem: {fileID: 1360410268}
   resourceSpawnSystem: {fileID: 1360410270}
+  worldMonsterSpawnSystem: {fileID: 1360410271}
 --- !u!4 &1659522291
 Transform:
   m_ObjectHideFlags: 0

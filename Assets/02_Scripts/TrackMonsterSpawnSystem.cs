@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class MonsterSpawnSystem : MonoBehaviour
+public class TrackMonsterSpawnSystem : MonoBehaviour
 {
     [SerializeField] Transform monsterParentTransform;
     [SerializeField] Monster monsterPrefab;

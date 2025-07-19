@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class HexaTileSnapSystem : MonoBehaviour
 {
-    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] float hexSize = 1.0f; // Set your desired hex size
     [SerializeField] bool isFlatTop = true; // Set to true for flat-top
 
@@ -12,7 +11,8 @@ public class HexaTileSnapSystem : MonoBehaviour
     public Vector2 mousePositionInWorld;
     public Vector2 snappedPosition;
 
-    GameObject ball;
+    Ray ray;
+    Vector3 hitPoint;
 
     void Start()
     {
@@ -21,32 +21,27 @@ public class HexaTileSnapSystem : MonoBehaviour
             HexSize = hexSize, // Set your desired hex size
             IsFlatTop = isFlatTop // Set to true for flat-top hexes, false for pointy-top
         };
-
-        ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
     }
 
     void Update()
     {
         var mousePositionInScreen = Input.mousePosition;
-        mousePositionInScreen.z = -Camera.main.transform.position.z;
-        mousePositionInWorld = Camera.main.ScreenToWorldPoint(mousePositionInScreen);
+        ray = Camera.main.ScreenPointToRay(mousePositionInScreen);
+        var xzPlane = new Plane(Vector3.up, Vector3.zero); // y=0 평면
+        if (xzPlane.Raycast(ray, out var enter))
+        {
+            hitPoint = ray.GetPoint(enter);
+            mousePositionInWorld = new Vector2(hitPoint.x, hitPoint.z);
+        }
         snappedPosition = hexaTileMap.SnapToHexTile(mousePositionInWorld);
-        ball.transform.position = (Vector3)snappedPosition;
+    }
 
-        var territory = territoryExpandingSystem.territory;
-        var isInTerritory = territory.IsPointInPolygon(snappedPosition);
-        if (isInTerritory)
-        {
-            ball.GetComponent<Renderer>().material.color = Color.green;
-        }
-        else
-        {
-            ball.GetComponent<Renderer>().material.color = Color.red;
-        }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(ray.origin, ray.direction * 100f);
 
-        if (Input.GetMouseButtonDown(0) && isInTerritory)
-        {
-            GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = snappedPosition;
-        }
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(hitPoint, 0.1f);
     }
 }

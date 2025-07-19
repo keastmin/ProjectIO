@@ -36,7 +36,7 @@ public class TerritoryExpandingSystem : MonoBehaviour
     {
         if (territory == null) { return; }
 
-        var currentPosition = new Vector2(player.transform.position.x, player.transform.position.y);
+        var currentPosition = new Vector2(player.transform.position.x, player.transform.position.z);
         if (territory.IsPointInPolygon(currentPosition))
         {
             if (isExpanding)

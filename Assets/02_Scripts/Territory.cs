@@ -273,7 +273,7 @@ public class Territory
         // 3D로 변환 (z=0)
         Vector3[] vertices = new Vector3[polygon.Count];
         for (int i = 0; i < polygon.Count; i++)
-            vertices[i] = new Vector3(polygon[i].x, polygon[i].y, 0);
+            vertices[i] = new Vector3(polygon[i].x, 0, polygon[i].y);
 
         // Ear Clipping 삼각분할
         List<int> trianglesList = EarClippingTriangulate(polygon);
@@ -381,23 +381,6 @@ public class Territory
     public bool IsPointInPolygon(Vector2 point)
     {
         return PointInPolygon(point, polygonPoints);
-        // int n = polygonPoints.Count;
-        // bool isInside = false;
-        // for (int i = 0, j = n - 1; i < n; j = i++)
-        // {
-        //     Vector2 pi = polygonPoints[i];
-        //     Vector2 pj = polygonPoints[j];
-
-        //     // Raycast: point.y가 에지의 y범위 내에 있고, point.x가 에지와의 교차점보다 작은지
-        //     if ((pi.y > point.y) != (pj.y > point.y))
-        //     {
-        //         float atX = (pj.x - pi.x) * (point.y - pi.y) / (pj.y - pi.y + Mathf.Epsilon) + pi.x;
-        //         if (point.x < atX)
-        //             isInside = !isInside;
-        //     }
-        // }
-        // // 홀수면 내부, 짝수면 외부
-        // return isInside;
     }
 
     public static Territory CreatePolygonMesh(Vector2[] points, Material material = null)

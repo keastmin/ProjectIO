@@ -17,20 +17,10 @@ public class TerritoryTestPlayer : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector3 movement = moveSpeed * Time.deltaTime * new Vector3(horizontal, vertical, 0);
+        Vector3 movement = moveSpeed * Time.deltaTime * new Vector3(horizontal, 0, vertical);
         transform.Translate(movement, Space.World);
 
         OnPositionChanged?.Invoke(this);
-
-        // var result = Physics.Raycast(new Ray(transform.position + Vector3.back * 3, Vector3.forward * 20f), out RaycastHit hit, 20f);
-        // if (result)
-        // {
-        //     Debug.Log($"Hit: {hit.collider.name} at {hit.point}");
-        // }
-        // else
-        // {
-        //     Debug.Log("No hit detected.");
-        // }
     }
 
     void OnDrawGizmos()

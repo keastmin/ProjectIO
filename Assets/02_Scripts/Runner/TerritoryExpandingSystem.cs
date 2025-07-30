@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TerritoryExpandingSystem : MonoBehaviour
 {
     [SerializeField] ResourceObtainingSystem resourceObtainingSystem;
+    [SerializeField] LineRenderer lineRenderer;
     public RunnerTestPlayer player;
     public int circlePointCount;
     public float circleRadius;
@@ -14,6 +16,8 @@ public class TerritoryExpandingSystem : MonoBehaviour
     public List<Vector2> playerPath;
 
     public Territory territory;
+
+    public event Action<Territory, TerritoryExpandingSystem> OnTerritoryExpandedEvent;
 
     void Awake()
     {
@@ -32,11 +36,16 @@ public class TerritoryExpandingSystem : MonoBehaviour
                 if (playerPath.Count > 1)
                 {
                     playerPath.Add(currentPosition);
-                    Debug.Log("확장 시작");
+                    Debug.Log("확장됨");
                     territory.Expand(playerPath);
-                    resourceObtainingSystem.TryObtainResources(territory);
+                    if (resourceObtainingSystem != null)
+                    {
+                        resourceObtainingSystem.TryObtainResources(territory);
+                    }
+                    OnTerritoryExpandedEvent?.Invoke(territory, this);
                 }
                 playerPath.Clear();
+                lineRenderer.positionCount = 0;
                 isExpanding = false;
                 Debug.Log("다시 들어옴");
             }
@@ -51,12 +60,16 @@ public class TerritoryExpandingSystem : MonoBehaviour
                 playerPath.Clear();
                 playerPath.Add(previousPosition);
                 playerPath.Add(currentPosition);
+                lineRenderer.positionCount = playerPath.Count;
+                lineRenderer.SetPositions(playerPath.ConvertAll(p => new Vector3(p.x, 0, p.y)).ToArray());
             }
 
             if (Vector2.SqrMagnitude(currentPosition - previousPosition) > 0.01f)
             {
                 playerPath.Add(currentPosition);
                 previousPosition = currentPosition;
+                lineRenderer.positionCount = playerPath.Count;
+                lineRenderer.SetPositions(playerPath.ConvertAll(p => new Vector3(p.x, 0, p.y)).ToArray());
             }
         }
     }

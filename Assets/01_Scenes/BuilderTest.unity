@@ -697,8 +697,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterParentTransform: {fileID: 1311363080}
   monsterPrefab: {fileID: 6203562166342454083, guid: b46fb06dfaf980e4e84ea8d2de1731b4, type: 3}
-  spawnInterval: 0.5
-  spawnCount: 10
+  spawnInterval: 0.1
+  spawnCount: 20
 --- !u!114 &1726113698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,6 +727,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d04e83ec785d9c4fa7a4aa5f044a828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resourceObtainingSystem: {fileID: 0}
   player: {fileID: 34492177}
   circlePointCount: 30
   circleRadius: 10

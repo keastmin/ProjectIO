@@ -17,7 +17,9 @@ public class RunnerTestPlayer : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
+        var isDash = Input.GetKey(KeyCode.LeftShift);
         Vector3 movement = moveSpeed * Time.deltaTime * new Vector3(horizontal, 0, vertical);
+        if (isDash) { movement *= 2; }
         transform.Translate(movement, Space.World);
 
         OnPositionChanged?.Invoke(this);

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class WorldMonsterSpawnSystem : MonoBehaviour
 {
+    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] Transform monsterParentTransform;
     [SerializeField] Monster monsterPrefab;
     [SerializeField] int spawnCount;
@@ -11,12 +12,19 @@ public class WorldMonsterSpawnSystem : MonoBehaviour
     {
         for (int i = 0; i < spawnCount; i++)
         {
-            Vector3 randomPosition = monsterParentTransform.position + Random.insideUnitSphere * spawnRadius;
-            randomPosition.y = 0; // y축 고정
-            var monster = Instantiate(monsterPrefab, randomPosition, Quaternion.identity, monsterParentTransform);
+            var randomSpawnPosition = monsterParentTransform.position + Random.insideUnitSphere * spawnRadius;
+            randomSpawnPosition.y = 0; // y축 고정
+            if (territoryExpandingSystem.territory.IsPointInPolygon(randomSpawnPosition))
+            {
+                i--;
+                continue;
+            }
+            var monster = Instantiate(monsterPrefab, randomSpawnPosition, Quaternion.identity, monsterParentTransform);
             monster.name = $"Monster_{i}";
-            monster.SetPatrolPivotPosition(randomPosition);
+            territoryExpandingSystem.OnTerritoryExpandedEvent += monster.OnTerritoryExpanded;
+            monster.SetPatrolPivotPosition(randomSpawnPosition);
             monster.SetPatrolRadius(Random.Range(5f, 10f));
+            monster.Territory = territoryExpandingSystem.territory;
         }
     }
 }

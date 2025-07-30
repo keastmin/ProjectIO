@@ -189,7 +189,7 @@ MonoBehaviour:
   damage: 1
   range: 5
   fireRate: 1
-  projectileSpeed: 10
+  projectileSpeed: 20
   canonFirePositionTransform: {fileID: 3415783401618962704}
   projectilePrefab: {fileID: 1924658582322483610, guid: 26429c7ceeb9b6347b8e5657874db77b, type: 3}
   targetLayerMask:

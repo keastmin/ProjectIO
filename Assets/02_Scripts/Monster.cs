@@ -4,19 +4,20 @@ public class Monster : MonoBehaviour
 {
     public Territory Territory;
     public Transform AttackTargetTransform;
-    [SerializeField] int health = 10;
-    [SerializeField] float moveSpeed = 3f;
-    [SerializeField] float arriveThreshold = 0.1f;
+    public Transform PlayerTransform;
+    [SerializeField] protected int health = 10;
+    [SerializeField] protected float moveSpeed = 3f;
+    [SerializeField] protected float arriveThreshold = 0.1f;
 
     // Track Monster
-    Track track;
-    int currentPointIndex = 0;
+    protected Track track;
+    protected int currentPointIndex = 0;
 
     // World Monster
-    Vector3 patrolPivotPosition;
-    float patrolRadius;
-    Vector3 patrolTargetPosition;
-    bool isPatrolling = false;
+    protected Vector3 patrolPivotPosition;
+    protected float patrolRadius;
+    protected Vector3 patrolTargetPosition;
+    protected bool isPatrolling = false;
 
     public void TakeDamage(int damage)
     {
@@ -43,7 +44,7 @@ public class Monster : MonoBehaviour
         patrolRadius = radius;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (track != null)
         {
@@ -55,7 +56,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    void FollowTrack()
+    protected virtual void FollowTrack()
     {
         if (track.Points == null || track.Points.Length == 0) return;
 
@@ -76,7 +77,7 @@ public class Monster : MonoBehaviour
         transform.LookAt(target);
     }
 
-    void Patrol()
+    protected virtual void Patrol()
     {
         if (isPatrolling == false)
         {

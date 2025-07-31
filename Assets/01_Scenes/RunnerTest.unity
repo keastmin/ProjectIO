@@ -1089,9 +1089,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   territoryExpandingSystem: {fileID: 1360410266}
   monsterParentTransform: {fileID: 778461259}
-  monsterPrefab: {fileID: 6203562166342454083, guid: b46fb06dfaf980e4e84ea8d2de1731b4, type: 3}
+  monsterPrefab: {fileID: -2224400408638445758, guid: 722b4947026900e48ba66c608127d017, type: 3}
   spawnCount: 10
   spawnRadius: 100
+  playerTransform: {fileID: 648084792}
 --- !u!1 &1400206706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,6 +1476,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MineralAmount: 0
   GasAmount: 0
+  Health: 10
 --- !u!120 &6940662796453831204
 LineRenderer:
   serializedVersion: 2

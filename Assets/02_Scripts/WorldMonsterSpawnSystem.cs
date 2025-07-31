@@ -7,6 +7,7 @@ public class WorldMonsterSpawnSystem : MonoBehaviour
     [SerializeField] Monster monsterPrefab;
     [SerializeField] int spawnCount;
     [SerializeField] int spawnRadius;
+    [SerializeField] Transform playerTransform;
 
     public void SpawnMonsters()
     {
@@ -21,6 +22,7 @@ public class WorldMonsterSpawnSystem : MonoBehaviour
             }
             var monster = Instantiate(monsterPrefab, randomSpawnPosition, Quaternion.identity, monsterParentTransform);
             monster.name = $"Monster_{i}";
+            monster.PlayerTransform = playerTransform;
             territoryExpandingSystem.OnTerritoryExpandedEvent += monster.OnTerritoryExpanded;
             monster.SetPatrolPivotPosition(randomSpawnPosition);
             monster.SetPatrolRadius(Random.Range(5f, 10f));

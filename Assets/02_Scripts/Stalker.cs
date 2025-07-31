@@ -35,7 +35,7 @@ public class Stalker : Monster
         if (attackElapsedTime >= 1f)
         {
             PlayerTransform.GetComponent<LocalRunner>().Health -= 1;
-            Debug.Log($"{name} attacks {AttackTargetTransform.name}");
+            Debug.Log($"{name} attacks {PlayerTransform.name}");
             attackElapsedTime = 0f;
         }
     }

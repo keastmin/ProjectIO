@@ -8,6 +8,7 @@ public class PlayerRunner : Player
     private void Awake()
     {
         _cc = GetComponent<NetworkCharacterController>();
+        _cc.maxSpeed = 10f;
     }
 
     public override void FixedUpdateNetwork()
@@ -15,7 +16,7 @@ public class PlayerRunner : Player
         if(GetInput(out NetworkInputData data))
         {
             data.direction.Normalize();
-            _cc.Move(5 * data.direction * Runner.DeltaTime);
+            _cc.Move(10f * data.direction * Runner.DeltaTime);
         }
     }
 }

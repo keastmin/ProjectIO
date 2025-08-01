@@ -15,10 +15,18 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
     private PlayerBuilder _playerBuilder;
     private PlayerRunner _playerRunner;
 
+    private int count = 0;
+
     public override void Spawned()
     {
+        Debug.Log("스폰됌");
         Runner.AddCallbacks(this);
         SpawnPlayer();
+    }
+
+    public override void Render()
+    {
+        SetCamera();
     }
 
     private void SpawnPlayer()
@@ -60,8 +68,6 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
         {
             ChangePlayerAuthority();
         }
-
-        SetCamera();
     }
 
     private void ChangePlayerAuthority()
@@ -91,8 +97,14 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void SetCamera()
     {
+        if(count < 3)
+        {
+            count++;
+            Debug.Log("카메라 설정 중");
+        }
+
         var playerRegistry = PlayerRegistry.Instance;
-        if (playerRegistry && _cinemachineCamera)
+        if (playerRegistry && _cinemachineCamera && Runner)
         {
             var position = playerRegistry.PlayerInfos[Runner.LocalPlayer];
             if (position == PlayerPosition.Runner)

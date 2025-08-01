@@ -235,7 +235,7 @@ MonoBehaviour:
   jumpImpulse: 8
   acceleration: 10
   braking: 10
-  maxSpeed: 2
+  maxSpeed: 10
   rotationSpeed: 15
 --- !u!143 &1641780572280465950
 CharacterController:

@@ -17,6 +17,8 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
 
     private int count = 0;
 
+    private bool _mouseButton0;
+
     public override void Spawned()
     {
         Debug.Log("스폰됌");
@@ -68,6 +70,8 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
         {
             ChangePlayerAuthority();
         }
+
+        _mouseButton0 = _mouseButton0 | Input.GetMouseButtonDown(0);
     }
 
     private void ChangePlayerAuthority()
@@ -135,6 +139,9 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
 
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
+
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);       
+        _mouseButton0 = false;
 
         input.Set(data);
     }

@@ -678,9 +678,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positionParentTransform: {fileID: 1997431240}
-  horizontalRadius: 8
-  verticalRadius: 4
-  noise: 0.5
+  horizontalRadius: 16
+  verticalRadius: 8
+  noise: 0.1
   pointCount: 20
   lineRenderer: {fileID: 1997431241}
 --- !u!114 &1726113697
@@ -728,6 +728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceObtainingSystem: {fileID: 0}
+  lineRenderer: {fileID: 0}
   player: {fileID: 34492177}
   circlePointCount: 30
   circleRadius: 10

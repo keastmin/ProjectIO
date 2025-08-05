@@ -1089,7 +1089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   territoryExpandingSystem: {fileID: 1360410266}
   monsterParentTransform: {fileID: 778461259}
-  monsterPrefab: {fileID: 349410779146119278, guid: a6a8da9451254f34d88cde73f7214296, type: 3}
+  monsterPrefab: {fileID: 9102996305572254423, guid: 26be00afdbdcf0347a26f90324d3b48c, type: 3}
   spawnCount: 10
   spawnRadius: 100
   playerTransform: {fileID: 648084792}
@@ -1442,6 +1442,10 @@ PrefabInstance:
     - target: {fileID: 3090286061699395291, guid: 057e68a53f5f5624193e78e738f488a7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8939228331436415806, guid: 057e68a53f5f5624193e78e738f488a7, type: 3}
+      propertyPath: moveSpeed
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

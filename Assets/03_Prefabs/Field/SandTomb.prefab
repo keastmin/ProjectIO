@@ -204,8 +204,7 @@ MonoBehaviour:
   moveSpeed: 0
   arriveThreshold: 0.1
   suckedIntoSpeed: 2
-  suckedIntoRadius: 5
-  attackRange: 2
+  suckedIntoRadius: 10
   attackSpeed: 1
 --- !u!4 &5756366750137951965 stripped
 Transform:

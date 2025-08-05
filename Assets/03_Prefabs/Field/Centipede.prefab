@@ -85,7 +85,7 @@ MonoBehaviour:
   arriveThreshold: 0.1
   head: {fileID: 2360906007012603727}
   segmentPrefab: {fileID: 5776121947721963262, guid: d0d9635bce618994abd89243759e8a5f, type: 3}
-  segmentCount: 5
+  segmentCount: 12
   segmentDistance: 0.5
   moveCountThreshold: 50
 --- !u!4 &2360906007012603727 stripped

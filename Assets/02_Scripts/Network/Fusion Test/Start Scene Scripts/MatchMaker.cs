@@ -159,7 +159,7 @@ public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
         OnStartGame?.Invoke();
     }
 
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {}
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
 

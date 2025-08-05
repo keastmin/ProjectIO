@@ -17,6 +17,8 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
 
     private int count = 0;
 
+    // 타워 관련 입력
+    [SerializeField] private LayerMask _towerBuildLayerMask;
     private bool _mouseButton0;
 
     public override void Spawned()
@@ -128,6 +130,7 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
     {
         var data = new NetworkInputData();
 
+        // 러너의 경우
         if (Input.GetKey(KeyCode.W))
             data.direction += Vector3.forward;
 
@@ -140,8 +143,15 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
 
-        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);       
+        // 빌더의 경우
+        // 마우스 클릭
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
         _mouseButton0 = false;
+
+        // 마우스 위치
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, _towerBuildLayerMask))
+            data.mousePosition = hit.point;
 
         input.Set(data);
     }

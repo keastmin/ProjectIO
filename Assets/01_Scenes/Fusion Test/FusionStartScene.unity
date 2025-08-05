@@ -678,6 +678,9 @@ MonoBehaviour:
   _cinemachineCamera: {fileID: 293303312}
   _Players:
     _items: []
+  _towerBuildLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &1952309262
 GameObject:
   m_ObjectHideFlags: 0

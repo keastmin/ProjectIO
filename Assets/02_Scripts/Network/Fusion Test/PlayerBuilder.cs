@@ -13,11 +13,7 @@ public class PlayerBuilder : Player
             {
                 if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    if(Physics.Raycast(ray, out RaycastHit hit, 100f, _towerBuildLayerMask))
-                    {
-                        Runner.Spawn(_prefabTower, hit.point, Quaternion.identity, Object.InputAuthority);
-                    }
+                    Runner.Spawn(_prefabTower, data.mousePosition, Quaternion.identity, Object.InputAuthority);
                 }
             }
         }

@@ -132,16 +132,16 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
 
         // 러너의 경우
         if (Input.GetKey(KeyCode.W))
-            data.direction += Vector3.forward;
+            data.PlayerRunnerDirection += Vector3.forward;
 
         if (Input.GetKey(KeyCode.S))
-            data.direction += Vector3.back;
+            data.PlayerRunnerDirection += Vector3.back;
 
         if (Input.GetKey(KeyCode.A))
-            data.direction += Vector3.left;
+            data.PlayerRunnerDirection += Vector3.left;
 
         if (Input.GetKey(KeyCode.D))
-            data.direction += Vector3.right;
+            data.PlayerRunnerDirection += Vector3.right;
 
         // 빌더의 경우
         // 마우스 클릭

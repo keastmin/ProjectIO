@@ -10,7 +10,7 @@ public class ResourceSpawnGroup
 
 public class ResourceSpawnSystem : MonoBehaviour
 {
-    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] Transform fieldTransform;
     [SerializeField] ResourceSpawnGroup[] resourceSpawnGroups;
 

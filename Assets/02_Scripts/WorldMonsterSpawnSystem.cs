@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WorldMonsterSpawnSystem : MonoBehaviour
 {
-    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] Transform monsterParentTransform;
     [SerializeField] Monster monsterPrefab;
     [SerializeField] int spawnCount;

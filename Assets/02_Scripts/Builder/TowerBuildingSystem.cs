@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TowerBuildingSystem : MonoBehaviour
 {
-    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
     [SerializeField] Transform towerContainerTransform;
     [SerializeField] private GameObject towerPrefab;

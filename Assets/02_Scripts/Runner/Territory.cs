@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Territory
 {
-    public List<Vector2> polygonPoints = new();
+    public List<Vector2> Vertices = new();
 
     struct Intersection
     {
@@ -12,18 +12,14 @@ public class Territory
         public int pathIndex;      // 경로 세그먼트 인덱스
         public bool isExit;        // true = 나간 지점, false = 들어온 지점
     }
-    List<Intersection> intersections = new();
-
-    GameObject go;
-    MeshFilter meshFilter;
-    MeshRenderer meshRenderer;
+    readonly List<Intersection> intersections = new();
 
     public void Expand(List<Vector2> path)
     {
-        ExpandTerritory(path);
+        ExpandInternal(path);
     }
 
-    void ExpandTerritory(List<Vector2> path)
+    void ExpandInternal(List<Vector2> path)
     {
         // 1. 교차점 찾기
         FindIntersections(path);
@@ -52,12 +48,12 @@ public class Territory
     void FindIntersections(List<Vector2> playerPath)
     {
         intersections.Clear();
-        int polyCount = polygonPoints.Count;
+        int polyCount = Vertices.Count;
         int pathCount = playerPath.Count;
         for (int i = 0; i < polyCount; i++)
         {
-            Vector2 a1 = polygonPoints[i];
-            Vector2 a2 = polygonPoints[(i + 1) % polyCount];
+            Vector2 a1 = Vertices[i];
+            Vector2 a2 = Vertices[(i + 1) % polyCount];
             for (int j = 0; j < pathCount - 1; j++)
             {
                 Vector2 b1 = playerPath[j];
@@ -102,7 +98,7 @@ public class Territory
             return false; // 평행
 
         float s = (-s1_y * (p1.x - q1.x) + s1_x * (p1.y - q1.y)) / denom;
-        float t = ( s2_x * (p1.y - q1.y) - s2_y * (p1.x - q1.x)) / denom;
+        float t = (s2_x * (p1.y - q1.y) - s2_y * (p1.x - q1.x)) / denom;
 
         if (s > 0 && s <= 1 && t > 0 && t <= 1)
         {
@@ -123,8 +119,8 @@ public class Territory
         {
             int cmp = a.polyEdgeIndex.CompareTo(b.polyEdgeIndex);
             if (cmp != 0) return cmp;
-            var ad = Vector2.SqrMagnitude(polygonPoints[a.polyEdgeIndex] - a.point);
-            var bd = Vector2.SqrMagnitude(polygonPoints[b.polyEdgeIndex] - b.point);
+            var ad = Vector2.SqrMagnitude(Vertices[a.polyEdgeIndex] - a.point);
+            var bd = Vector2.SqrMagnitude(Vertices[b.polyEdgeIndex] - b.point);
             return ad.CompareTo(bd);
         });
     }
@@ -139,7 +135,7 @@ public class Territory
         var i1 = intersections[1];
 
         // polygonPoints 복사본 생성
-        List<Vector2> poly = new List<Vector2>(polygonPoints);
+        List<Vector2> poly = new List<Vector2>(Vertices);
 
         // 교차점 삽입: 인덱스가 큰 것부터 삽입해야 인덱스가 밀리지 않음
         int insertIdx0 = i0.polyEdgeIndex + 1;
@@ -257,12 +253,12 @@ public class Territory
             return;
         }
 
-        meshFilter.mesh = mesh;
-        polygonPoints.Clear();
-        polygonPoints.AddRange(newPoly);
+        // meshFilter.mesh = mesh;
+        Vertices.Clear();
+        Vertices.AddRange(newPoly);
     }
 
-    static Mesh GenerateMesh(List<Vector2> polygon)
+    public static Mesh GenerateMesh(List<Vector2> polygon)
     {
         if (polygon == null || polygon.Count < 3)
         {
@@ -380,7 +376,7 @@ public class Territory
 
     public bool IsPointInPolygon(Vector2 point)
     {
-        return PointInPolygon(point, polygonPoints);
+        return PointInPolygon(point, Vertices);
     }
 
     public static LocalTerritory CreatePolygonMesh(Vector2[] points, Material material = null)

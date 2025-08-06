@@ -19,11 +19,11 @@ public class PlayerRunner : Player
     public override void Spawned()
     {
         // 시네머신 시스템의 싱글톤 사용
-        if (CinemachineSystem.Instance != null)
-        {
-            // 시네머신 시스템의 러너 카메라에 자기 자신을 타겟으로 설정
-            CinemachineSystem.Instance.SetRunnerCameraTarget(transform);
-        }
+        // if (CinemachineSystem.Instance != null)
+        // {
+        //     // 시네머신 시스템의 러너 카메라에 자기 자신을 타겟으로 설정
+        //     CinemachineSystem.Instance.SetRunnerCameraTarget(transform);
+        // }
     }
 
     public override void FixedUpdateNetwork()

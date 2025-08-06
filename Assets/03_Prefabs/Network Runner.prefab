@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1917757541955251679}
   - component: {fileID: 3459160299532943343}
   - component: {fileID: 7327438624373676330}
+  - component: {fileID: -1048452811474257675}
   m_Layer: 0
   m_Name: Network Runner
   m_TagString: Untagged
@@ -172,3 +173,20 @@ MonoBehaviour:
   Customization:
     ServerZonesColor: {r: 0.25, g: 0.25, b: 0.25, a: 0.75}
     PlayerInterestColor: {r: 1, g: 0.08235294, b: 0.08235294, a: 0.2}
+--- !u!114 &-1048452811474257675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504510553980323504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b5a1ff9dee264bfd829a39e6542dcbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _physicsAuthority: 2
+  _physicsTiming: 3
+  ClientPhysicsSimulation: 0
+  DeltaTimeMultiplier: 1
+  SetUnityFixedTimestep: 0

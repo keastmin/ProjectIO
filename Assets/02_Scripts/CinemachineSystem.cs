@@ -2,25 +2,14 @@ using Fusion;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class CinemachineSystem : NetworkBehaviour
+public class CinemachineSystem : MonoBehaviour
 {
-    public static CinemachineSystem Instance { get; private set; }
-
     [SerializeField] private CinemachineCamera _playerRunnerCamera;
 
     private CinemachineCamera _runnerCamera;
 
-    private void Awake()
-    {
-        if(Instance != null)
-        {
-            Destroy(this);
-            return;
-        }
-        Instance = this;
-    }
-
-    public override void Spawned()
+    // public override void Spawned()
+    void Awake()
     {
         InitCamera();
     }

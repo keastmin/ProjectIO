@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   territoryPrefab: {fileID: 4646913948089805381, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-  runner: {fileID: 0}
 --- !u!114 &2054033773519288605
 MonoBehaviour:
   m_ObjectHideFlags: 0

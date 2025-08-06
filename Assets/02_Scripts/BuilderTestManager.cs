@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BuilderTestManager : MonoBehaviour
 {
-    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
     [SerializeField] TrackGenerationSystem trackGenerationSystem;
     [SerializeField] TrackMonsterSpawnSystem monsterGenerationSystem;

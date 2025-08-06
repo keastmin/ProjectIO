@@ -101,7 +101,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void OnTerritoryExpanded(LocalTerritory territory, TerritoryExpandingSystem territoryExpandingSystem)
+    public void OnTerritoryExpanded(LocalTerritory territory, LocalTerritoryExpandingSystem territoryExpandingSystem)
     {
         if (territory.IsPointInPolygon(transform.position))
         {

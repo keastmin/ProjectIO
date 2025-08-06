@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
 
-public class ResourceObtainingSystem : MonoBehaviour
+public class LocalResourceObtainingSystem : MonoBehaviour
 {
-    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] LocalRunner runner;
     [SerializeField] Transform fieldTransform;
     [SerializeField] TextMeshProUGUI mineralText;

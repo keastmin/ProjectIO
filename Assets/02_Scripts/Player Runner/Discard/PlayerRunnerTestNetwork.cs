@@ -37,7 +37,8 @@ public class PlayerRunnerTestNetwork : MonoBehaviour, INetworkRunnerCallbacks
                     runner.Spawn(_inputSystemPrefab);
 
                     Debug.Log("Cinemachine System 스폰 시작");
-                    runner.Spawn(_cinemachineSystemPrefab);
+                    // runner.Spawn(_cinemachineSystemPrefab);
+                    Instantiate(_cinemachineSystemPrefab);
                 }
             });
         }

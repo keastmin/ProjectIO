@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RunnerTestManager : MonoBehaviour
 {
-    [SerializeField] TerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
     [SerializeField] ResourceSpawnSystem resourceSpawnSystem;
     [SerializeField] WorldMonsterSpawnSystem worldMonsterSpawnSystem;

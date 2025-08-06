@@ -10,7 +10,7 @@ public class RunnerTestManager : MonoBehaviour
     void Start()
     {
         // 영역 생성
-        territoryExpandingSystem.GenerateInitialTerritory();
+        territoryExpandingSystem.GenerateInitialTerritory(); // 여기
 
         // 육각 타일 맵 생성
         hexaTileSnapSystem.GenerateInitialHexaTileMap();

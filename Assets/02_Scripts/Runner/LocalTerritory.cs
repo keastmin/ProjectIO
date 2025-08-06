@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Territory
+public class LocalTerritory
 {
     public List<Vector2> polygonPoints = new();
 
@@ -405,9 +405,9 @@ public class Territory
 
         LocalTerritory territory = new();
         territory.polygonPoints.AddRange(points);
-        // territory.go = go;
-        // territory.meshFilter = meshFilter;
-        // territory.meshRenderer = meshRenderer;
+        territory.go = go;
+        territory.meshFilter = meshFilter;
+        territory.meshRenderer = meshRenderer;
 
         return territory;
     }

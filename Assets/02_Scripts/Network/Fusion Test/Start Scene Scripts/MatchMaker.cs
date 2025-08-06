@@ -142,7 +142,7 @@ public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
     // 대기실에서 게임 시작 버튼 클릭 시 호출되는 메서드
     public async void OnClickStartButton()
     {
-        var sceneRef = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath("Assets/01_Scenes/Fusion Test/FusionStartScene.unity"));
+        var sceneRef = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath("Assets/01_Scenes/NetworkGameScene.unity"));
         await Runner.LoadScene(sceneRef, LoadSceneMode.Single);
     }
 

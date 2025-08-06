@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    public Territory Territory;
+    public LocalTerritory Territory;
     public Transform AttackTargetTransform;
     public Transform PlayerTransform;
     [SerializeField] protected int health = 10;
@@ -101,7 +101,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    public void OnTerritoryExpanded(Territory territory, TerritoryExpandingSystem territoryExpandingSystem)
+    public void OnTerritoryExpanded(LocalTerritory territory, TerritoryExpandingSystem territoryExpandingSystem)
     {
         if (territory.IsPointInPolygon(transform.position))
         {

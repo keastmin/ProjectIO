@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class TerritoryExpandingSystem : MonoBehaviour
+public class NetworkTerritoryExpandingSystem : NetworkBehaviour
 {
     [SerializeField] ResourceObtainingSystem resourceObtainingSystem;
     [SerializeField] LineRenderer lineRenderer;
@@ -17,7 +18,7 @@ public class TerritoryExpandingSystem : MonoBehaviour
 
     public LocalTerritory territory;
 
-    public event Action<LocalTerritory, TerritoryExpandingSystem> OnTerritoryExpandedEvent;
+    public event Action<LocalTerritory, NetworkTerritoryExpandingSystem> OnTerritoryExpandedEvent;
 
     void Awake()
     {

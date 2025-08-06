@@ -9,7 +9,7 @@ public class ResourceObtainingSystem : MonoBehaviour
     [SerializeField] TextMeshProUGUI mineralText;
     [SerializeField] TextMeshProUGUI gasText;
 
-    public void TryObtainResources(Territory territory)
+    public void TryObtainResources(LocalTerritory territory)
     {
         foreach (var resource in fieldTransform.GetComponentsInChildren<Resource>())
         {

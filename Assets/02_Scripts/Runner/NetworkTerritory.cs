@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class Territory
+public class NetworkTerritory : NetworkBehaviour
 {
     public List<Vector2> polygonPoints = new();
 
@@ -383,13 +384,13 @@ public class Territory
         return PointInPolygon(point, polygonPoints);
     }
 
-    public static LocalTerritory CreatePolygonMesh(Vector2[] points, Material material = null)
+    public static void CreatePolygonMesh(Vector2[] points, Material material = null)
     {
         var mesh = GenerateMesh(new List<Vector2>(points));
         if (mesh == null)
         {
             Debug.LogError("새로운 폴리곤 생성 실패");
-            return null;
+            // return null;
         }
 
         var go = new GameObject("PolygonMesh");
@@ -403,12 +404,12 @@ public class Territory
         // var meshCollider = go.AddComponent<MeshCollider>();
         // meshCollider.sharedMesh = mesh;
 
-        LocalTerritory territory = new();
-        territory.polygonPoints.AddRange(points);
+        // Territory territory = new();
+        // territory.polygonPoints.AddRange(points);
         // territory.go = go;
         // territory.meshFilter = meshFilter;
         // territory.meshRenderer = meshRenderer;
 
-        return territory;
+        // return territory;
     }
 }

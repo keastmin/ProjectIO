@@ -9,15 +9,15 @@ public class TrackSystem : NetworkSystemBase
     [SerializeField] float noise;
     [SerializeField] int vertexCount;
 
-    Track track;
+    public Track Track;
     TrackView trackView;
 
     void OnDrawGizmosSelected()
     {
-        if (track == null) { return; }
+        if (Track == null) { return; }
 
         Gizmos.color = Color.red;
-        foreach (var vertex in track.Vertices)
+        foreach (var vertex in Track.Vertices)
         {
             Gizmos.DrawSphere(vertex, 0.1f);
         }
@@ -38,8 +38,8 @@ public class TrackSystem : NetworkSystemBase
     {
         CreateTrack();
         trackView.name = $"{Runner.name} - Track";
-        trackView.GenerateTrackVertices(track.Vertices);
-        trackView.GenerateTrackLine(track.Vertices);
+        trackView.GenerateTrackVertices(Track.Vertices);
+        trackView.GenerateTrackLine(Track.Vertices);
     }
 
     void CreateTrack()
@@ -59,7 +59,7 @@ public class TrackSystem : NetworkSystemBase
             trackVertices[i] = vertex;
         }
 
-        track = new Track
+        Track = new Track
         {
             Vertices = trackVertices,
         };
@@ -77,7 +77,7 @@ public class TrackSystem : NetworkSystemBase
     {
         if (!Object.HasStateAuthority) { return; }
 
-        SyncTrack(track.Vertices);
+        SyncTrack(Track.Vertices);
     }
 
     void SyncTrack(Vector3[] vertices)
@@ -117,7 +117,7 @@ public class TrackSystem : NetworkSystemBase
     {
         var vertices = temporaryVertices.ToArray();
 
-        track.Vertices = vertices;
+        Track.Vertices = vertices;
         trackView.GenerateTrackVertices(vertices);
         trackView.GenerateTrackLine(vertices);
 

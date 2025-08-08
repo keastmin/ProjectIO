@@ -27,6 +27,11 @@ public class TerritorySystem : NetworkSystemBase
         territoryView = StageManager.Instance.TerritoryView;
 
         GenerateInitialTerritory();
+
+        if (Object.HasStateAuthority)
+        {
+            StageManager.Instance.PlayerRunner.OnPositionChanged += OnPlayerPositionChanged;
+        }
     }
 
     void GenerateInitialTerritory()

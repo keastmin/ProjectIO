@@ -2,17 +2,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Launcher
 {
     public class NetworkGameTest : LauncherBase
     {
+        [Header("Network")]
         [SerializeField] NetworkRunner networkRunnerPrefab;
-        [SerializeField] PlayerPosition hostPlayerPosition;
-        public NetworkRunner HostRunner;
-        public NetworkRunner ClientRunner;
 
-        string sessionUUID;
+        [Header("Host Role")]
+        [SerializeField] PlayerPosition hostPlayerPosition;
+
+        NetworkRunner hostRunner;
+        NetworkRunner clientRunner;
 
         protected override void OnLauncherInitialized()
         {
@@ -26,22 +29,22 @@ namespace Launcher
 
         async void StartAsBuilder()
         {
-            sessionUUID = System.Guid.NewGuid().ToString();
-            await InitializeHostNetworkRunner();
-            await InitializeClientNetworkRunner();
+            var sessionUUID = System.Guid.NewGuid().ToString();
+            await InitializeHostNetworkRunner(sessionUUID);
+            await InitializeClientNetworkRunner(sessionUUID);
             await LoadScene();
         }
 
-        async Task InitializeHostNetworkRunner()
+        async Task InitializeHostNetworkRunner(string sessionId)
         {
-            HostRunner = Instantiate(networkRunnerPrefab);
-            HostRunner.name = "Host Network Runner";
+            hostRunner = Instantiate(networkRunnerPrefab);
+            hostRunner.name = "Host Network Runner";
 
-            var result = await HostRunner.StartGame(new StartGameArgs
+            var result = await hostRunner.StartGame(new StartGameArgs
             {
                 GameMode = GameMode.Host,
-                SessionName = sessionUUID,
-                SceneManager = HostRunner.GetComponent<NetworkSceneManagerDefault>(),
+                SessionName = sessionId,
+                SceneManager = hostRunner.GetComponent<NetworkSceneManagerDefault>(),
                 SessionProperties = new Dictionary<string, SessionProperty>
                 {
                     { "IsHostBuilder", hostPlayerPosition == PlayerPosition.Builder },
@@ -51,16 +54,16 @@ namespace Launcher
             if (!result.Ok) { Debug.LogError("Failed to start Host Runner."); return; }
         }
 
-        async Task InitializeClientNetworkRunner()
+        async Task InitializeClientNetworkRunner(string sessionId)
         {
-            ClientRunner = Instantiate(networkRunnerPrefab);
-            ClientRunner.name = "Client Network Runner";
+            clientRunner = Instantiate(networkRunnerPrefab);
+            clientRunner.name = "Client Network Runner";
 
-            var result = await ClientRunner.StartGame(new StartGameArgs
+            var result = await clientRunner.StartGame(new StartGameArgs
             {
                 GameMode = GameMode.Client,
-                SessionName = sessionUUID,
-                SceneManager = ClientRunner.GetComponent<NetworkSceneManagerDefault>(),
+                SessionName = sessionId,
+                SceneManager = clientRunner.GetComponent<NetworkSceneManagerDefault>(),
                 EnableClientSessionCreation = false,
             });
 
@@ -69,12 +72,7 @@ namespace Launcher
 
         async Task LoadScene()
         {
-            var loadSceneResult = HostRunner.LoadScene("NetworkGameScene", loadSceneMode: UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            await loadSceneResult;
-            if (loadSceneResult.IsDone)
-            {
-                Debug.Log("Host Scene loaded Successfully");
-            }
+            await hostRunner.LoadScene("NetworkGameScene", loadSceneMode: LoadSceneMode.Additive);
         }
     }
 }

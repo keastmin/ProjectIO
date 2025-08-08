@@ -10,11 +10,10 @@ public class StageManager : NetworkBehaviour
     [SerializeField] PlayerBuilder playerBuilderPrefab;
     [SerializeField] CinemachineSystem cinemachineSystemPrefab;
     [SerializeField] NetworkInputSystem networkInputSystemPrefab;
-    [SerializeField] TerritorySystem territorySystem;
     [SerializeField] NetworkSystemBase[] systems;
 
     [Networked] public PlayerRole PlayerRole { get; set; }
-    [Networked] public PlayerRunner Player { get; set; }
+    [Networked] public PlayerRunner PlayerRunner { get; set; }
     public TerritoryView TerritoryView;
     public TrackView TrackView;
 
@@ -32,7 +31,6 @@ public class StageManager : NetworkBehaviour
             SpawnPlayer();
             SpawnNetworkInputSystem();
 
-            Player.OnPositionChanged += territorySystem.OnPlayerPositionChanged;
             // territorySystem.OnTerritoryExpandedEvent += resourceObtainingSystem.OnTerritoryExpanded;
         }
 
@@ -41,7 +39,7 @@ public class StageManager : NetworkBehaviour
             system.SetUp();
         }
 
-        cinemachineSystem.SetRunnerCameraTarget(Player.transform);
+        cinemachineSystem.SetRunnerCameraTarget(PlayerRunner.transform);
 
         var currentPlayerPosition = PlayerRole.Instance.IsRunner ? PlayerPosition.Runner : PlayerPosition.Builder;
         cinemachineSystem.SetCinemachinePriority(currentPlayerPosition);
@@ -56,11 +54,13 @@ public class StageManager : NetworkBehaviour
     void SpawnPlayer()
     {
         var runnerPlayer = PlayerRole.Instance.Role[PlayerPosition.Runner];
-        Player = Runner.Spawn(playerRunnerPrefab, Vector3.zero, Quaternion.identity, runnerPlayer);
-        Player.name = $"{Runner.name} - Player";
+        PlayerRunner = Runner.Spawn(playerRunnerPrefab, Vector3.zero, Quaternion.identity, runnerPlayer);
+        PlayerRunner.name = $"{Runner.name} - Player Runner";
 
         var builderPlayer = PlayerRole.Instance.Role[PlayerPosition.Builder];
-        Runner.Spawn(playerBuilderPrefab, Vector3.zero, Quaternion.identity, builderPlayer);
+        var playerBuilder = Runner.Spawn(playerBuilderPrefab, Vector3.zero, Quaternion.identity, builderPlayer);
+        playerBuilder.name = $"{Runner.name} - Player Builder";
+
         Debug.Log($"{Runner.name} - Player spawned");
     }
 

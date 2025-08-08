@@ -19,7 +19,7 @@ public class PlayerRegistry : NetworkBehaviour, INetworkRunnerCallbacks
         // 싱글턴 인스턴스 설정
         if (Instance != null)
         {
-            Destroy(this);
+            Runner.Despawn(this.Object);
             return;
         }
         Instance = this;

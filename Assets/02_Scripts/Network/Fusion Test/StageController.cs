@@ -145,13 +145,13 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
 
         // 빌더의 경우
         // 마우스 클릭
-        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
+        data.MouseButton0.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
         _mouseButton0 = false;
 
         // 마우스 위치
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, _towerBuildLayerMask))
-            data.mousePosition = hit.point;
+            data.MousePosition = hit.point;
 
         input.Set(data);
     }

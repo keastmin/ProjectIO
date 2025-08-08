@@ -550,9 +550,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkRunnerPrefab: {fileID: 6947161378665982860, guid: 0d7ca1b5494443141b511feaa35663f9, type: 3}
   mainCamera: {fileID: 167932474}
-  _hostPosition: 2
   HostRunner: {fileID: 0}
   ClientRunner: {fileID: 0}
+  _networkManager: {fileID: 3714456403506439088, guid: eeb78de4f6b5072489fd41f6a0987d86, type: 3}
 --- !u!1 &815205332
 GameObject:
   m_ObjectHideFlags: 0

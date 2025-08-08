@@ -6,13 +6,18 @@ using UnityEngine;
 
 public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
 {
+    [Header("Builder")]
+    [SerializeField] private LayerMask _environmentalLayer;
+
     private bool _dashInput = false; // 러너의 대쉬 입력
+    private bool _mouseButton0 = false; // 마우스 좌클릭
 
     #region MonoBehaviour 메서드
 
     private void Update()
     {
         _dashInput = _dashInput | Input.GetKey(KeyCode.LeftShift); // 왼쪽 쉬프트를 통해 _dashInput 여부 검사
+        _mouseButton0 = _mouseButton0 | Input.GetMouseButtonDown(0); // 마우스 좌클릭 여부 검사
     }
 
     #endregion
@@ -50,6 +55,17 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
         // ---------------------------------------------------------------------------------------
 
         // 빌더 Input -----------------------------------------------------------------------------
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, _environmentalLayer))
+        {
+            // 마우스 위치
+            data.MousePosition = hit.point;
+        }
+
+        // 좌클릭 처리
+        data.MouseButton0.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
+        _mouseButton0 = false;
 
         // ---------------------------------------------------------------------------------------
 

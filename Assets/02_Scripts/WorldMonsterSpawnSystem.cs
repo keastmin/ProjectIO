@@ -4,7 +4,7 @@ public class WorldMonsterSpawnSystem : MonoBehaviour
 {
     [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] Transform monsterParentTransform;
-    [SerializeField] Monster monsterPrefab;
+    [SerializeField] LocalMonster monsterPrefab;
     [SerializeField] int spawnCount;
     [SerializeField] int spawnRadius;
     [SerializeField] Transform playerTransform;

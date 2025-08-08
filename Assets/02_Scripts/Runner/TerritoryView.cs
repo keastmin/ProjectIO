@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Fusion;
 using UnityEngine;
 
-public class NetworkTerritory : NetworkBehaviour
+public class TerritoryView : MonoBehaviour
 {
     MeshFilter meshFilter;
 
@@ -14,6 +13,7 @@ public class NetworkTerritory : NetworkBehaviour
     public void SetTerritory(List<Vector2> vertices)
     {
         var mesh = Territory.GenerateMesh(vertices);
+
         if (mesh == null)
         {
             Debug.LogError("새로운 폴리곤 생성 실패");

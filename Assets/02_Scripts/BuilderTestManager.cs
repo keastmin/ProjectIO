@@ -4,7 +4,7 @@ public class BuilderTestManager : MonoBehaviour
 {
     [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
-    [SerializeField] TrackGenerationSystem trackGenerationSystem;
+    [SerializeField] LocalTrackGenerationSystem trackGenerationSystem;
     [SerializeField] TrackMonsterSpawnSystem monsterGenerationSystem;
 
     void Start()

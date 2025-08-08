@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class LocalMonster : MonoBehaviour
 {
     public LocalTerritory Territory;
     public Transform AttackTargetTransform;
@@ -58,16 +58,16 @@ public class Monster : MonoBehaviour
 
     protected virtual void FollowTrack()
     {
-        if (track.Points == null || track.Points.Length == 0) return;
+        if (track.Vertices == null || track.Vertices.Length == 0) return;
 
-        Vector3 target = track.Points[currentPointIndex];
+        Vector3 target = track.Vertices[currentPointIndex];
         Vector3 moveDir = (target - transform.position);
         moveDir.y = 0; // y축 고정(필요시)
         float distance = moveDir.magnitude;
 
         if (distance < arriveThreshold)
         {
-            currentPointIndex = (currentPointIndex + 1) % track.Points.Length;
+            currentPointIndex = (currentPointIndex + 1) % track.Vertices.Length;
             return;
         }
 

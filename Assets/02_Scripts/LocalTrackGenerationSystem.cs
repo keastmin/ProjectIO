@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TrackGenerationSystem : MonoBehaviour
+public class LocalTrackGenerationSystem : MonoBehaviour
 {
     [SerializeField] Transform positionParentTransform;
     [SerializeField] float horizontalRadius;
@@ -20,7 +20,7 @@ public class TrackGenerationSystem : MonoBehaviour
 
         Track = new Track
         {
-            Points = new Vector3[pointCount],
+            Vertices = new Vector3[pointCount],
         };
 
         for (int i = 0; i < pointCount; i++)
@@ -33,7 +33,7 @@ public class TrackGenerationSystem : MonoBehaviour
             z += Random.Range(-noise, noise);
 
             var point = new Vector3(x, 0, z);
-            Track.Points[i] = point;
+            Track.Vertices[i] = point;
             GameObject pointObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             pointObject.transform.SetParent(positionParentTransform, false);
             pointObject.transform.localPosition = point;
@@ -42,7 +42,7 @@ public class TrackGenerationSystem : MonoBehaviour
         }
 
         lineRenderer.positionCount = pointCount;
-        lineRenderer.SetPositions(Track.Points);
+        lineRenderer.SetPositions(Track.Vertices);
         lineRenderer.loop = true; // 선을 닫아 원형 트랙을 만듭니다.
     }
 }

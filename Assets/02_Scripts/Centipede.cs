@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Centipede : Monster
+public class Centipede : LocalMonster
 {
     public Transform head;
     public GameObject segmentPrefab;

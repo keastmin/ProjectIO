@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SandTomb : Monster
+public class SandTomb : LocalMonster
 {
     [SerializeField] float suckedIntoSpeed = 2f;
     [SerializeField] float suckedIntoRadius = 5f;

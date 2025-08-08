@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Stalker : Monster
+public class Stalker : LocalMonster
 {
     protected bool isChasing;
     [SerializeField] protected float attackRange = 2f;

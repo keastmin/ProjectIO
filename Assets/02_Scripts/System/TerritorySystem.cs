@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Fusion;
 using UnityEngine;
 
-public class NetworkTerritorySystem : NetworkSystemBase
+public class TerritorySystem : NetworkSystemBase
 {
     [SerializeField] LocalResourceObtainingSystem resourceObtainingSystem;
 
@@ -14,16 +13,14 @@ public class NetworkTerritorySystem : NetworkSystemBase
 
     [Header("Expanding")]
     [SerializeField] LineRenderer lineRenderer;
+    [SerializeField] bool isExpanding;
+    [SerializeField] Vector2 previousPosition;
+    [SerializeField] List<Vector2> playerPath;
 
-    [Header("Debug")]
-    public bool isExpanding;
-    public Vector2 previousPosition;
-    public List<Vector2> playerPath;
-
-    NetworkTerritory territoryView;
     Territory territory;
+    TerritoryView territoryView;
 
-    public event Action<Territory, NetworkTerritorySystem> OnTerritoryExpandedEvent;
+    public event Action<Territory, TerritorySystem> OnTerritoryExpandedEvent;
 
     public override void SetUp()
     {
@@ -34,11 +31,15 @@ public class NetworkTerritorySystem : NetworkSystemBase
 
     void GenerateInitialTerritory()
     {
-        var stageManager = StageManager.Instance;
-        var territoryView = stageManager.TerritoryView;
         var vertices = GenerateCircleTerritory();
-        territoryView.SetTerritory(vertices);
 
+        CreateTerritory(vertices);
+        territoryView.name = $"{Runner.name} - Territory";
+        territoryView.SetTerritory(vertices);
+    }
+
+    void CreateTerritory(List<Vector2> vertices)
+    {
         territory = new() { Vertices = vertices };
     }
 
@@ -124,12 +125,15 @@ public class NetworkTerritorySystem : NetworkSystemBase
     public void RPC_ExpandTerritory()
     {
         Debug.Log($"{Runner.name} - Expanding territory with path: { playerPath.Count}");
+
         territory.Expand(playerPath);
         territoryView.SetTerritory(territory.Vertices);
+
         // if (resourceObtainingSystem != null)
         // {
         //     resourceObtainingSystem.TryObtainResources(territoryView);
         // }
+
         if (Object.HasStateAuthority)
         {
             OnTerritoryExpandedEvent?.Invoke(territory, this); // 호스트만

@@ -4,7 +4,7 @@ using UnityEngine;
 public class TrackMonsterSpawnSystem : MonoBehaviour
 {
     [SerializeField] Transform monsterParentTransform;
-    [SerializeField] Monster monsterPrefab;
+    [SerializeField] LocalMonster monsterPrefab;
     [SerializeField] float spawnInterval;
     [SerializeField] int spawnCount;
 
@@ -15,7 +15,7 @@ public class TrackMonsterSpawnSystem : MonoBehaviour
 
     IEnumerator MonsterSpawnRoutine(Track track)
     {
-        var startPosition = track.Points[0];
+        var startPosition = track.Vertices[0];
 
         for (int i = 0; i < spawnCount; i++)
         {

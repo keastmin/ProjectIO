@@ -1,4 +1,3 @@
-using Fusion;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -17,10 +16,10 @@ public class CinemachineSystem : MonoBehaviour
 
     private void Update()
     {
-        if(StageManager.Instance != null)
+        if(PlayerRole.Instance != null)
         {
             // 러너가 자기 자신이라면
-            if (StageManager.Instance.Players[PlayerPosition.Runner] == StageManager.Instance.Runner.LocalPlayer)
+            if (PlayerRole.Instance.IsRunner)
             {
                 BuilderCamFollow();
             }

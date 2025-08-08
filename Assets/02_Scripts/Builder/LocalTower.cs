@@ -73,7 +73,7 @@ public class LocalTower : MonoBehaviour
 
         // 3. 발사체 생성 및 몬스터 방향으로 발사
         var projectile = Instantiate(projectilePrefab, canonFirePositionTransform.position, Quaternion.identity);
-        projectile.SetTarget(targetTransform.GetComponent<Monster>().AttackTargetTransform);
+        projectile.SetTarget(targetTransform.GetComponent<LocalMonster>().AttackTargetTransform);
         projectile.SetSpeed(projectileSpeed);
         projectile.SetDamage(damage);
     }

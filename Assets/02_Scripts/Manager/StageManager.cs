@@ -5,26 +5,31 @@ public class StageManager : NetworkBehaviour
 {
     public static StageManager Instance { get; private set; }
 
+    [SerializeField] PlayerRole playerRolePrefab;
     [SerializeField] PlayerRunner playerRunnerPrefab;
-    [SerializeField] NetworkTerritory territoryPrefab;
+    [SerializeField] PlayerBuilder playerBuilderPrefab;
     [SerializeField] CinemachineSystem cinemachineSystemPrefab;
     [SerializeField] NetworkInputSystem networkInputSystemPrefab;
-    [SerializeField] NetworkTerritorySystem territorySystem;
+    [SerializeField] TerritorySystem territorySystem;
     [SerializeField] NetworkSystemBase[] systems;
 
-    CinemachineSystem cinemachineSystem;
+    [Networked] public PlayerRole PlayerRole { get; set; }
     [Networked] public PlayerRunner Player { get; set; }
-    [Networked] public NetworkTerritory TerritoryView { get; set; }
+    public TerritoryView TerritoryView;
+    public TrackView TrackView;
+
+    CinemachineSystem cinemachineSystem;
 
     public override void Spawned()
     {
         Instance = this;
 
         SpawnCinemachineSystem();
+
         if (Object.HasStateAuthority)
         {
+            SpawnPlayerRole();
             SpawnPlayer();
-            SpawnTerritory();
             SpawnNetworkInputSystem();
 
             Player.OnPositionChanged += territorySystem.OnPlayerPositionChanged;
@@ -39,25 +44,26 @@ public class StageManager : NetworkBehaviour
         cinemachineSystem.SetRunnerCameraTarget(Player.transform);
     }
 
-    void SpawnPlayer()
+    void SpawnPlayerRole()
     {
-        Player = Runner.Spawn(playerRunnerPrefab, Vector3.zero, Quaternion.identity, Runner.LocalPlayer);
-
-        Player.name = $"{Runner.name} - Player";
-        Debug.Log($"{Runner.name} - Player spawned");
+        PlayerRole = Runner.Spawn(playerRolePrefab, Vector3.zero, Quaternion.identity);
+        PlayerRole.name = $"{Runner.name} - PlayerRole";
     }
 
-    void SpawnTerritory()
+    void SpawnPlayer()
     {
-        TerritoryView = Runner.Spawn(territoryPrefab, Vector3.zero, Quaternion.identity);
-        TerritoryView.name = $"{Runner.name} - Territory";
-        Debug.Log($"{Runner.name} - Territory spawned");
+        var runnerPlayer = PlayerRole.Instance.Role[PlayerPosition.Runner];
+        Player = Runner.Spawn(playerRunnerPrefab, Vector3.zero, Quaternion.identity, runnerPlayer);
+        Player.name = $"{Runner.name} - Player";
+
+        var builderPlayer = PlayerRole.Instance.Role[PlayerPosition.Builder];
+        Runner.Spawn(playerBuilderPrefab, Vector3.zero, Quaternion.identity, builderPlayer);
+        Debug.Log($"{Runner.name} - Player spawned");
     }
 
     void SpawnCinemachineSystem()
     {
         var instance = Instantiate(cinemachineSystemPrefab);
-        // var instance = Runner.Spawn(cinemachineSystemPrefab, Vector3.zero, Quaternion.identity);
         instance.name = $"{Runner.name} - CinemachineSystem";
         cinemachineSystem = instance;
         Debug.Log($"{Runner.name} - CinemachineSystem spawned");

@@ -49,7 +49,7 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Monster>(out var monster))
+        if (other.TryGetComponent<LocalMonster>(out var monster))
         {
             monster.TakeDamage(damage);
             Destroy(gameObject); // Destroy the projectile after hitting the target

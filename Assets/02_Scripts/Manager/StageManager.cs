@@ -42,6 +42,9 @@ public class StageManager : NetworkBehaviour
         }
 
         cinemachineSystem.SetRunnerCameraTarget(Player.transform);
+
+        var currentPlayerPosition = PlayerRole.Instance.IsRunner ? PlayerPosition.Runner : PlayerPosition.Builder;
+        cinemachineSystem.SetCinemachinePriority(currentPlayerPosition);
     }
 
     void SpawnPlayerRole()

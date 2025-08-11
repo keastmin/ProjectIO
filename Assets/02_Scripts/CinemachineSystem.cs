@@ -34,9 +34,6 @@ public class CinemachineSystem : MonoBehaviour
     private void BuilderCamFollow()
     {
         Vector3 builderCamPos = _runnerCamera.transform.position;
-        Debug.Log($"Host: {StageManager.Instance.Runner.IsServer}, " +
-            $"Player: {StageManager.Instance.Runner.LocalPlayer}," +
-            $"Camera Position: {builderCamPos}");
         _builderCamera.transform.position = builderCamPos;
     }
 

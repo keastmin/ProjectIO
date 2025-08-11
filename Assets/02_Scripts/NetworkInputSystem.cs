@@ -9,9 +9,6 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
     [Header("Builder")]
     [SerializeField] private LayerMask _environmentalLayer;
 
-    public PhysicsScene _ps;
-    public Camera _localCamera;
-
     private bool _dashInput = false; // 러너의 대쉬 입력
     private bool _mouseButton0 = false; // 마우스 좌클릭
 
@@ -31,8 +28,6 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("InputManager 스폰됨");
         Runner.AddCallbacks(this); // 스폰되면 콜백 등록
-        _localCamera = Camera.main;
-        _ps = Runner.GetPhysicsScene();
     }
 
     #endregion
@@ -61,8 +56,8 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
 
         // 빌더 Input -----------------------------------------------------------------------------
 
-        Ray ray = _localCamera.ScreenPointToRay(Input.mousePosition);
-        if (_ps.Raycast(ray.origin, ray.direction, out RaycastHit hit, 100f, _environmentalLayer))
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 100f, _environmentalLayer))
         {
             // 마우스 위치
             data.MousePosition = hit.point;

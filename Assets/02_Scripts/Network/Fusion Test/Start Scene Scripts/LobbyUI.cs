@@ -28,7 +28,7 @@ public class LobbyUI : MonoBehaviour
         if (playerRegistry)
         {
             // PlayerRegistry가 스폰되면 반복 시작
-            foreach (var player in PlayerRegistry.Instance.PlayerInfos)
+            foreach (var player in PlayerRegistry.Instance.RefToPosition)
             {
                 // 플레이어의 역할군이 변경될 때마다 직접 클라이언트에서 각 역할군 UI Text 변경
                 PlayerPositionUpdate(player);
@@ -116,7 +116,7 @@ public class LobbyUI : MonoBehaviour
         {
             PlayerPosition firstPlayerPosition = PlayerPosition.None;
             int count = 0;
-            foreach (var player in PlayerRegistry.Instance.PlayerInfos)
+            foreach (var player in PlayerRegistry.Instance.RefToPosition)
             {
                 if (count == 0) 
                 {

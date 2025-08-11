@@ -10,7 +10,9 @@ public class PlayerRegistry : NetworkBehaviour, INetworkRunnerCallbacks
     public static PlayerRegistry Instance { get; private set; }
 
     [Networked, Capacity(2)]
-    public NetworkDictionary<PlayerRef, PlayerPosition> PlayerInfos { get; }
+    public NetworkDictionary<PlayerRef, PlayerPosition> RefToPosition { get; } // PlayerRef로 역할군 찾기
+
+    public bool IsRunner => (RefToPosition[Runner.LocalPlayer] == PlayerPosition.Runner);
 
     private void Awake()
     {
@@ -41,30 +43,44 @@ public class PlayerRegistry : NetworkBehaviour, INetworkRunnerCallbacks
     public void AddPlayerInfo(PlayerRef player)
     {
         Debug.Log("플레이어 추가");
-        if (!PlayerInfos.ContainsKey(player))
+        if (!RefToPosition.ContainsKey(player))
         {
-            PlayerInfos.Add(player, PlayerPosition.Builder);
+            RefToPosition.Add(player, PlayerPosition.Builder);
         }
     }
 
     // 플레이어 딕셔너리에서 제거
     public void RemovePlayerInfo(PlayerRef player)
     {
-        if (PlayerInfos.ContainsKey(player))
+        if (RefToPosition.ContainsKey(player))
         {
-            PlayerInfos.Remove(player);
+            RefToPosition.Remove(player);
         }
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_ChangeRole(PlayerRef player)
     {
-        if (Object.HasStateAuthority && PlayerInfos.ContainsKey(player))
+        if (HasStateAuthority && RefToPosition.ContainsKey(player))
         {
-            var currentRole = PlayerInfos.Get(player);
+            var currentRole = RefToPosition.Get(player);
             var newRole = currentRole == PlayerPosition.Builder ? PlayerPosition.Runner : PlayerPosition.Builder;
-            PlayerInfos.Set(player, newRole);
+            RefToPosition.Set(player, newRole);
         }
+    }
+
+    public PlayerRef GetPlayerRefFromPosition(PlayerPosition position)
+    {
+        foreach(var player in RefToPosition)
+        {
+            var playerPosition = player.Value;
+            if(position == playerPosition)
+            {
+                return player.Key;
+            }
+        }
+
+        return PlayerRef.None;
     }
 
     #region INetworkRunnerCallbacks
@@ -72,7 +88,7 @@ public class PlayerRegistry : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"OnPlayerJoined called for: {player} by runner: {runner.name} (isServer: {runner.IsServer}, isLocalPlayer: {player == runner.LocalPlayer})");
-        if (runner.IsServer)
+        if (HasStateAuthority)
         {
             AddPlayerInfo(player);
         }
@@ -80,7 +96,7 @@ public class PlayerRegistry : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer)
+        if (HasStateAuthority)
         {
             RemovePlayerInfo(player);
         }

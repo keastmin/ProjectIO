@@ -38,7 +38,7 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
         var playerRegistry = PlayerRegistry.Instance;
         if (playerRegistry && Runner.IsServer)
         {
-            foreach (var player in playerRegistry.PlayerInfos)
+            foreach (var player in playerRegistry.RefToPosition)
             {
                 var playerPosition = player.Value;
                 if (playerPosition == PlayerPosition.Builder)
@@ -78,7 +78,7 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void ChangePlayerAuthority()
     {
-        foreach(var player in PlayerRegistry.Instance.PlayerInfos)
+        foreach(var player in PlayerRegistry.Instance.RefToPosition)
         {
             PlayerRegistry.Instance.RPC_ChangeRole(player.Key);
         }
@@ -112,7 +112,7 @@ public class StageController : NetworkBehaviour, INetworkRunnerCallbacks
         var playerRegistry = PlayerRegistry.Instance;
         if (playerRegistry && _cinemachineCamera && Runner)
         {
-            var position = playerRegistry.PlayerInfos[Runner.LocalPlayer];
+            var position = playerRegistry.RefToPosition[Runner.LocalPlayer];
             if (position == PlayerPosition.Runner)
             {
                 _cinemachineCamera.Target.TrackingTarget = Players[Runner.LocalPlayer].transform;

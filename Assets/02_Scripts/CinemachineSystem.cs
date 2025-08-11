@@ -16,10 +16,15 @@ public class CinemachineSystem : MonoBehaviour
 
     private void Update()
     {
-        if(PlayerRole.Instance != null)
+
+    }
+
+    private void LateUpdate()
+    {
+        if (PlayerRegistry.Instance != null)
         {
             // 러너가 자기 자신이라면
-            if (PlayerRole.Instance.IsRunner)
+            if (PlayerRegistry.Instance.IsRunner)
             {
                 BuilderCamFollow();
             }

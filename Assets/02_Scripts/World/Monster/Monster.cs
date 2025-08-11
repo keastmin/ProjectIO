@@ -10,6 +10,8 @@ public class Monster : NetworkBehaviour
     [SerializeField] protected float moveSpeed = 3f;
     [SerializeField] protected float arriveThreshold = 0.1f;
 
+    [Networked] protected int _health { get; private set; }
+
     // Track Monster
     protected Track track;
     protected int currentPointIndex = 0;
@@ -20,12 +22,24 @@ public class Monster : NetworkBehaviour
     protected Vector3 patrolTargetPosition;
     protected bool isPatrolling = false;
 
+    public override void Spawned()
+    {
+        base.Spawned();
+        if (Object.HasStateAuthority)
+        {
+            _health = health;
+        }
+    }
+
     public void TakeDamage(int damage)
     {
-        health -= damage;
-        if (health <= 0)
+        if (Object.HasStateAuthority)
         {
-            Destroy(gameObject); // 몬스터가 죽으면 제거
+            _health -= damage;
+            if (_health <= 0)
+            {
+                Runner.Despawn(Object);
+            }
         }
     }
 

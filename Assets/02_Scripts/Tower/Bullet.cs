@@ -82,6 +82,12 @@ public class Bullet : NetworkBehaviour
             if (_rb) _rb.MovePosition(hit.point);
             else transform.position = hit.point;
 
+            if (hit.collider.TryGetComponent(out NetworkObject hitNo) && hitNo != Object)
+            {
+                // 맞은 적이 네트워크 오브젝트면, Hit 이벤트를 호출
+                hitNo.GetComponent<Monster>()?.TakeDamage(1);
+            }
+
             Runner.Despawn(Object); // 타격 시 제거
             return;
         }

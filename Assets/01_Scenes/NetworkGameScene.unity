@@ -220,6 +220,8 @@ Transform:
   - {fileID: 1028244185}
   - {fileID: 896837531}
   - {fileID: 266549076}
+  - {fileID: 777860929}
+  - {fileID: 1712230121}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &633568622
@@ -496,6 +498,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72a0978f5d8e01645a8d39c1c5010d6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &777860928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 777860929}
+  - component: {fileID: 777860931}
+  - component: {fileID: 777860930}
+  m_Layer: 0
+  m_Name: World Monster Spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &777860929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777860928}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 272488529}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &777860930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777860928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 483927968
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 777860931}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &777860931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777860928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87f0ef62108ee764fa80f9af7e616495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  territorySystem: {fileID: 1028244186}
+  monsterParentTransform: {fileID: 1314383435}
+  monsterPrefab: {fileID: -4194661950197827383, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
+  spawnCount: 1
+  spawnRadius: 10
+  playerTransform: {fileID: 0}
 --- !u!1 &896837530
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,6 +721,7 @@ MonoBehaviour:
   isExpanding: 0
   previousPosition: {x: 0, y: 0}
   playerPath: []
+  TerritoryView: {fileID: 0}
 --- !u!114 &1028244187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1100,6 +1173,79 @@ Transform:
   - {fileID: 1314383435}
   m_Father: {fileID: 2049226344}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1712230120
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1712230121}
+  - component: {fileID: 1712230123}
+  - component: {fileID: 1712230122}
+  m_Layer: 0
+  m_Name: Resource Spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1712230121
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712230120}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 272488529}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1712230122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712230120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 660279862
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1712230123}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &1712230123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712230120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ef2262cd713b6f45adbd6a2754d948f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  territorySystem: {fileID: 1028244186}
+  fieldTransform: {fileID: 1573621952}
+  resourceSpawnGroups:
+  - resourcePrefab: {fileID: 2142689607256237635, guid: d02a8295b7d9841418f05dd9ff95b627, type: 3}
+    resourceCount: 10
+    spawnRadius: 10
+  - resourcePrefab: {fileID: 2142689607256237635, guid: 8b86240da3c329f4fba94b55052fc461, type: 3}
+    resourceCount: 10
+    spawnRadius: 10
 --- !u!1001 &1934234195
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1190,7 +1336,7 @@ PrefabInstance:
       objectReference: {fileID: 6623639392449802583, guid: b8a1ffa8094371542a9c31e14125af5b, type: 3}
     - target: {fileID: 6118610569785656979, guid: 8ee0ca47d4ca2f542a19a96fdec5cdec, type: 3}
       propertyPath: systems.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6118610569785656979, guid: 8ee0ca47d4ca2f542a19a96fdec5cdec, type: 3}
       propertyPath: playerBuilderPrefab
@@ -1208,6 +1354,10 @@ PrefabInstance:
       propertyPath: 'systems.Array.data[2]'
       value: 
       objectReference: {fileID: 266549078}
+    - target: {fileID: 6118610569785656979, guid: 8ee0ca47d4ca2f542a19a96fdec5cdec, type: 3}
+      propertyPath: 'systems.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1712230123}
     - target: {fileID: 6118610569785656979, guid: 8ee0ca47d4ca2f542a19a96fdec5cdec, type: 3}
       propertyPath: cinemachineSystemPrefab
       value: 

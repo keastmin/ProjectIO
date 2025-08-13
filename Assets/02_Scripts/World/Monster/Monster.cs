@@ -134,7 +134,7 @@ public class Monster : NetworkBehaviour
         }
     }
 
-    public void OnTerritoryExpanded(Territory territory, LocalTerritorySystem territorySystem)
+    public void OnTerritoryExpanded(Territory territory, TerritorySystem territorySystem)
     {
         if (territory.IsPointInPolygon(transform.position))
         {

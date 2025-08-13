@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3649296518827394531}
-  - component: {fileID: 1287462723279336629}
-  - component: {fileID: 3472767642691166672}
+  - component: {fileID: 5937391670750206713}
   m_Layer: 0
-  m_Name: Mineral
+  m_Name: Local Mineral
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +33,7 @@ Transform:
   - {fileID: 3545490277411532423}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1287462723279336629
+--- !u!114 &5937391670750206713
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,30 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2142689607256237635}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0ccc7a51a5e8424ca2e4a30e5602e49, type: 3}
+  m_Script: {fileID: 11500000, guid: d4c11316776a43d48836ae4633299123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
   Amount: 5
---- !u!114 &3472767642691166672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2142689607256237635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 1978802287
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1287462723279336629}
-  ForceRemoteRenderTimeframe: 0
 --- !u!1 &2585919678333038078
 GameObject:
   m_ObjectHideFlags: 0

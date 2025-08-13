@@ -8,9 +8,9 @@ public class LocalResourceObtainingSystem : MonoBehaviour
     [SerializeField] TextMeshProUGUI mineralText;
     [SerializeField] TextMeshProUGUI gasText;
 
-    public void TryObtainResources(Territory territory,  LocalTerritorySystem territorySystem)
+    public void TryObtainResources(Territory territory, LocalTerritorySystem territorySystem)
     {
-        foreach (var resource in fieldTransform.GetComponentsInChildren<Resource>())
+        foreach (var resource in fieldTransform.GetComponentsInChildren<LocalResource>())
         {
             var xzPosition = new Vector2(resource.transform.position.x, resource.transform.position.z);
             if (territory.IsPointInPolygon(xzPosition))

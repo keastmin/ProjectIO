@@ -17,14 +17,14 @@ public class TerritorySystem : NetworkSystemBase
     [SerializeField] Vector2 previousPosition;
     [SerializeField] List<Vector2> playerPath;
 
-    Territory territory;
-    TerritoryView territoryView;
+    public Territory Territory;
+    public TerritoryView TerritoryView;
 
     public event Action<Territory, TerritorySystem> OnTerritoryExpandedEvent;
 
     public override void SetUp()
     {
-        territoryView = StageManager.Instance.TerritoryView;
+        TerritoryView = StageManager.Instance.TerritoryView;
 
         GenerateInitialTerritory();
 
@@ -39,13 +39,13 @@ public class TerritorySystem : NetworkSystemBase
         var vertices = GenerateCircleTerritory();
 
         CreateTerritory(vertices);
-        territoryView.name = $"{Runner.name} - Territory";
-        territoryView.SetTerritory(vertices);
+        TerritoryView.name = $"{Runner.name} - Territory";
+        TerritoryView.SetTerritory(vertices);
     }
 
     void CreateTerritory(List<Vector2> vertices)
     {
-        territory = new() { Vertices = vertices };
+        Territory = new() { Vertices = vertices };
     }
 
     List<Vector2> GenerateCircleTerritory()
@@ -71,7 +71,7 @@ public class TerritorySystem : NetworkSystemBase
     {
         var currentPosition = new Vector2(playerRunner.transform.position.x, playerRunner.transform.position.z);
 
-        if (territory.IsPointInPolygon(currentPosition))
+        if (Territory.IsPointInPolygon(currentPosition))
         {
             if (isExpanding)
             {
@@ -131,8 +131,8 @@ public class TerritorySystem : NetworkSystemBase
     {
         Debug.Log($"{Runner.name} - Expanding territory with path: { playerPath.Count}");
 
-        territory.Expand(playerPath);
-        territoryView.SetTerritory(territory.Vertices);
+        Territory.Expand(playerPath);
+        TerritoryView.SetTerritory(Territory.Vertices);
 
         // if (resourceObtainingSystem != null)
         // {
@@ -141,7 +141,7 @@ public class TerritorySystem : NetworkSystemBase
 
         if (Object.HasStateAuthority)
         {
-            OnTerritoryExpandedEvent?.Invoke(territory, this); // 호스트만
+            OnTerritoryExpandedEvent?.Invoke(Territory, this); // 호스트만
         }
     }
 }

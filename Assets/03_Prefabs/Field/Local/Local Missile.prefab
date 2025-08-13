@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4606853167128820947}
   - component: {fileID: 1924658582322483610}
   m_Layer: 0
-  m_Name: Missile
+  m_Name: Local Missile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

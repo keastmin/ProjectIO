@@ -5,20 +5,6 @@ using UnityEngine.Events;
 
 public class LocalTerritorySystem : SystemBase
 {
-    // [SerializeField] LocalResourceObtainingSystem resourceObtainingSystem;
-    // [SerializeField] LineRenderer lineRenderer;
-    // public RunnerTestPlayer player; // Spawn으로 생성되어야함, 실행 순서를 생각해서 구현해야함 -> Manager가 게임을 초기화: Spawn할 때 연결, Spawn은 호스트만 할 수 있음
-    // public int circlePointCount;
-    // public float circleRadius;
-
-    // [Header("Debug")]
-    // public bool isExpanding;
-    // public Vector2 previousPosition;
-    // public List<Vector2> playerPath;
-
-    // public LocalTerritory localTerritory;
-
-    // public event Action<LocalTerritory, LocalTerritoryExpandingSystem> OnTerritoryExpandedEvent;
     [Header("Initial Territory")]
     [SerializeField] int circlePointCount;
     [SerializeField] float circleRadius;

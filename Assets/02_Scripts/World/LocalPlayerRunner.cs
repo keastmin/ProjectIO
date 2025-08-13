@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class RunnerTestPlayer : MonoBehaviour
+public class LocalPlayerRunner : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-
-    public event Action<RunnerTestPlayer> OnPositionChanged;
+    [SerializeField] float movementSpeed = 5f;
+    [SerializeField] UnityEvent<LocalPlayerRunner> onPositionChangedEvent;
 
     void Update()
     {
@@ -18,11 +17,11 @@ public class RunnerTestPlayer : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         var isDash = Input.GetKey(KeyCode.LeftShift);
-        Vector3 movement = moveSpeed * Time.deltaTime * new Vector3(horizontal, 0, vertical);
+        Vector3 movement = movementSpeed * Time.deltaTime * new Vector3(horizontal, 0, vertical);
         if (isDash) { movement *= 2; }
         transform.Translate(movement, Space.World);
 
-        OnPositionChanged?.Invoke(this);
+        onPositionChangedEvent?.Invoke(this);
     }
 
     void OnDrawGizmos()

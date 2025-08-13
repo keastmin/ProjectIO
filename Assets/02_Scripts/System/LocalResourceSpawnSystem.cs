@@ -8,9 +8,9 @@ public class ResourceSpawnGroup
     public float spawnRadius;
 }
 
-public class ResourceSpawnSystem : MonoBehaviour
+public class LocalResourceSpawnSystem : MonoBehaviour
 {
-    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritorySystem territorySystem;
     [SerializeField] Transform fieldTransform;
     [SerializeField] ResourceSpawnGroup[] resourceSpawnGroups;
 
@@ -28,7 +28,7 @@ public class ResourceSpawnSystem : MonoBehaviour
         {
             Vector3 randomPosition = fieldTransform.position + Random.insideUnitSphere * spawnRadius;
             randomPosition.y = 0; // y축 고정
-            if (territoryExpandingSystem.territory.IsPointInPolygon(new Vector2(randomPosition.x, randomPosition.z)))
+            if (territorySystem.Territory.IsPointInPolygon(new Vector2(randomPosition.x, randomPosition.z)))
             {
                 i--;
                 continue;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class LocalMonster : MonoBehaviour
 {
-    public LocalTerritory Territory;
+    public Territory Territory;
     public Transform AttackTargetTransform;
     public Transform PlayerTransform;
     [SerializeField] protected int health = 10;
@@ -101,11 +101,11 @@ public class LocalMonster : MonoBehaviour
         }
     }
 
-    public void OnTerritoryExpanded(LocalTerritory territory, LocalTerritoryExpandingSystem territoryExpandingSystem)
+    public void OnTerritoryExpanded(Territory territory, LocalTerritorySystem territorySystem)
     {
         if (territory.IsPointInPolygon(transform.position))
         {
-            territoryExpandingSystem.OnTerritoryExpandedEvent -= OnTerritoryExpanded;
+            territorySystem.OnTerritoryExpandedEvent -= OnTerritoryExpanded;
             Destroy(gameObject); // 영역이 확장되면 몬스터 제거
         }
     }

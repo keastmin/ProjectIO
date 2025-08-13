@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class LocalResourceObtainingSystem : MonoBehaviour
 {
-    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
     [SerializeField] LocalRunner runner;
     [SerializeField] Transform fieldTransform;
     [SerializeField] TextMeshProUGUI mineralText;
     [SerializeField] TextMeshProUGUI gasText;
 
-    public void TryObtainResources(LocalTerritory territory)
+    public void TryObtainResources(Territory territory,  LocalTerritorySystem territorySystem)
     {
         foreach (var resource in fieldTransform.GetComponentsInChildren<Resource>())
         {

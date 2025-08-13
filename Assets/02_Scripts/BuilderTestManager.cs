@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BuilderTestManager : MonoBehaviour
 {
-    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritorySystem territoryExpandingSystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
     [SerializeField] LocalTrackGenerationSystem trackGenerationSystem;
     [SerializeField] TrackMonsterSpawnSystem monsterGenerationSystem;
@@ -10,7 +10,7 @@ public class BuilderTestManager : MonoBehaviour
     void Start()
     {
         // 영역 생성
-        territoryExpandingSystem.GenerateInitialTerritory();
+        territoryExpandingSystem.SetUp();
 
         // 육각 타일 맵 생성
         hexaTileSnapSystem.GenerateInitialHexaTileMap();

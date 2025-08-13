@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TowerBuildingSystem : MonoBehaviour
 {
-    [SerializeField] LocalTerritoryExpandingSystem territoryExpandingSystem;
+    [SerializeField] LocalTerritorySystem territorySystem;
     [SerializeField] HexaTileSnapSystem hexaTileSnapSystem;
     [SerializeField] Transform towerContainerTransform;
     [SerializeField] private GameObject towerPrefab;
@@ -24,7 +24,7 @@ public class TowerBuildingSystem : MonoBehaviour
         var ballPosition = new Vector3(snappedPosition.x, 0, snappedPosition.y);
         ball.transform.position = ballPosition;
 
-        var territory = territoryExpandingSystem.territory;
+        var territory = territorySystem.Territory;
         var isInTerritory = territory.IsPointInPolygon(snappedPosition);
         if (isInTerritory)
         {

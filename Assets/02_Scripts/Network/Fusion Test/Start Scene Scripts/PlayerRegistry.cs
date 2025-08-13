@@ -43,10 +43,23 @@ public class PlayerRegistry : NetworkBehaviour, INetworkRunnerCallbacks
     public void AddPlayerInfo(PlayerRef player)
     {
         Debug.Log("플레이어 추가");
-        if (!RefToPosition.ContainsKey(player))
+
+        // 퀵스타트시 실행
+        if (MatchMaker.Instance.QuickStart)
         {
-            RefToPosition.Add(player, PlayerPosition.Builder);
+            if(player == Runner.LocalPlayer)
+            {
+                RefToPosition.Add(player, MatchMaker.Instance.StartPosition);
+            }
+            else
+            {
+                var hostPosition = RefToPosition[Runner.LocalPlayer];
+                RefToPosition.Add(player, hostPosition == PlayerPosition.Runner ? PlayerPosition.Builder : PlayerPosition.Runner);
+            }
+            return;
         }
+
+        RefToPosition.Add(player, PlayerPosition.Builder);
     }
 
     // 플레이어 딕셔너리에서 제거

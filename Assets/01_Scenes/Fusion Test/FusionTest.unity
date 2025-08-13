@@ -1897,6 +1897,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3494a5ce54ed2646bdf6f0a8a59fb1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  QuickStart: 1
+  IsHost: 1
+  StartPosition: 1
   RunnerPrefab: {fileID: 2466407836444802676, guid: 8bd0310c32138574d9c75f262e58290b, type: 3}
   NetworkManagerPrefab: {fileID: 6678492676428264986, guid: eeb78de4f6b5072489fd41f6a0987d86, type: 3}
   OnRoomCreated:

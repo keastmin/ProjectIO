@@ -115,14 +115,14 @@ public class TerritorySystem : NetworkSystemBase
         }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All, Channel = RpcChannel.Reliable)]
     public void RPC_StartExpanding()
     {
         isExpanding = true;
         playerPath.Clear();
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All, Channel = RpcChannel.Reliable)]
     public void RPC_StopExpanding()
     {
         playerPath.Clear();
@@ -130,7 +130,7 @@ public class TerritorySystem : NetworkSystemBase
         isExpanding = false;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All, Channel = RpcChannel.Reliable)]
     public void RPC_AddExpandingPathPoint(Vector2 point)
     {
         playerPath.Add(point);
@@ -138,7 +138,7 @@ public class TerritorySystem : NetworkSystemBase
         lineRenderer.SetPositions(playerPath.ConvertAll(p => new Vector3(p.x, 0, p.y)).ToArray());
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All, Channel = RpcChannel.Reliable)]
     public void RPC_ExpandTerritory()
     {
         Debug.Log($"{Runner.name} - Expanding territory with path: { playerPath.Count}");

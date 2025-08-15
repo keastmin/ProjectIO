@@ -8,6 +8,8 @@ public class LocalTerritorySystem : SystemBase
     [Header("Initial Territory")]
     [SerializeField] int circlePointCount;
     [SerializeField] float circleRadius;
+    [SerializeField] Transform territoryContainerTransform;
+    [SerializeField] TerritoryView territoryViewPrefab;
 
     [Header("Expanding")]
     [SerializeField] LineRenderer lineRenderer;
@@ -31,13 +33,19 @@ public class LocalTerritorySystem : SystemBase
         var vertices = GenerateCircleTerritory();
 
         CreateTerritory(vertices);
-        TerritoryView.name = $"Local Territory";
-        TerritoryView.SetTerritory(vertices);
+        CreateTerritoryView(vertices);
     }
 
     void CreateTerritory(List<Vector2> vertices)
     {
         Territory = new() { Vertices = vertices };
+    }
+
+    void CreateTerritoryView(List<Vector2> vertices)
+    {
+        TerritoryView = Instantiate(territoryViewPrefab, territoryContainerTransform);
+        TerritoryView.name = $"Local Territory";
+        TerritoryView.SetTerritory(vertices);
     }
 
     List<Vector2> GenerateCircleTerritory()
@@ -125,72 +133,4 @@ public class LocalTerritorySystem : SystemBase
         onTerritoryExpandedEvent?.Invoke(Territory, this);
         OnTerritoryExpandedEvent?.Invoke(Territory, this);
     }
-
-    // void Awake()
-    // {
-    //     player.OnPositionChanged += HandlePlayerPositionChanged;
-    // }
-
-    // void HandlePlayerPositionChanged(RunnerTestPlayer player)
-    // {
-    //     if (localTerritory == null) { return; }
-
-    //     var currentPosition = new Vector2(player.transform.position.x, player.transform.position.z);
-    //     if (localTerritory.IsPointInPolygon(currentPosition))
-    //     {
-    //         if (isExpanding)
-    //         {
-    //             if (playerPath.Count > 1)
-    //             {
-    //                 playerPath.Add(currentPosition);
-    //                 Debug.Log("확장됨");
-    //                 localTerritory.Expand(playerPath);
-    //                 if (resourceObtainingSystem != null)
-    //                 {
-    //                     resourceObtainingSystem.TryObtainResources(localTerritory);
-    //                 }
-    //                 OnTerritoryExpandedEvent?.Invoke(localTerritory, this);
-    //             }
-    //             playerPath.Clear();
-    //             lineRenderer.positionCount = 0;
-    //             isExpanding = false;
-    //             Debug.Log("다시 들어옴");
-    //         }
-    //         previousPosition = currentPosition;
-    //     }
-    //     else
-    //     {
-    //         if (!isExpanding)
-    //         {
-    //             isExpanding = true;
-    //             Debug.Log("나감");
-    //             playerPath.Clear();
-    //             playerPath.Add(previousPosition);
-    //             playerPath.Add(currentPosition);
-    //             lineRenderer.positionCount = playerPath.Count;
-    //             lineRenderer.SetPositions(playerPath.ConvertAll(p => new Vector3(p.x, 0, p.y)).ToArray());
-    //         }
-
-    //         if (Vector2.SqrMagnitude(currentPosition - previousPosition) > 0.01f)
-    //         {
-    //             playerPath.Add(currentPosition);
-    //             previousPosition = currentPosition;
-    //             lineRenderer.positionCount = playerPath.Count;
-    //             lineRenderer.SetPositions(playerPath.ConvertAll(p => new Vector3(p.x, 0, p.y)).ToArray());
-    //         }
-    //     }
-    // }
-
-    // public void GenerateInitialTerritory()
-    // {
-    //     var polygonPoints = new List<Vector2>();
-    //     for (int i = 0; i < circlePointCount; i++)
-    //     {
-    //         float angle = (circlePointCount - 1 - i) * Mathf.PI * 2 / circlePointCount;
-    //         var point = new Vector2(circleRadius * Mathf.Cos(angle), circleRadius * Mathf.Sin(angle));
-    //         polygonPoints.Add(point);
-    //     }
-
-    //     localTerritory = Territory.CreatePolygonMesh(polygonPoints.ToArray());
-    // }
 }

@@ -378,33 +378,4 @@ public class Territory
     {
         return PointInPolygon(point, Vertices);
     }
-
-    // public static LocalTerritory CreatePolygonMesh(Vector2[] points, Material material = null)
-    // {
-    //     var mesh = GenerateMesh(new List<Vector2>(points));
-    //     if (mesh == null)
-    //     {
-    //         Debug.LogError("새로운 폴리곤 생성 실패");
-    //         return null;
-    //     }
-
-    //     var go = new GameObject("PolygonMesh");
-    //     var meshFilter = go.AddComponent<MeshFilter>();
-    //     var meshRenderer = go.AddComponent<MeshRenderer>();
-    //     meshFilter.mesh = mesh;
-    //     if (material != null)
-    //         meshRenderer.material = material;
-    //     else
-    //         meshRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-    //     // var meshCollider = go.AddComponent<MeshCollider>();
-    //     // meshCollider.sharedMesh = mesh;
-
-    //     LocalTerritory territory = new();
-    //     territory.polygonPoints.AddRange(points);
-    //     // territory.go = go;
-    //     // territory.meshFilter = meshFilter;
-    //     // territory.meshRenderer = meshRenderer;
-
-    //     return territory;
-    // }
 }

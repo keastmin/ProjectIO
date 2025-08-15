@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _environmentalLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 128
 --- !u!114 &2580470857171728014
 MonoBehaviour:
   m_ObjectHideFlags: 0

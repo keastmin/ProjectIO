@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4658543036493247766
+--- !u!114 &-4334703622271393582
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Plane Material
+  m_Name: Hexagon Grid Material
   m_Shader: {fileID: -6465566751694194690, guid: f28c62ba86e4c774f88c75f18b8f316d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,11 +38,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 00f0ab738c74a9b43827580e2db92214, type: 3}
-        m_Scale: {x: 10, y: 10}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 87bf6e3c4a270944aa691f059afa1797, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -61,24 +61,28 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GridTexture:
+        m_Texture: {fileID: 2800000, guid: aed1fc18ea1d08146853f868a9400fa1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 00f0ab738c74a9b43827580e2db92214, type: 3}
-        m_Scale: {x: 10, y: 10}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main_Texture:
         m_Texture: {fileID: 2800000, guid: 00f0ab738c74a9b43827580e2db92214, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: 873f9c9416a96d847a1af681be2e4b9c, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: db93e7906b8b9504bb705b89df64cbdb, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: cba50a063207f824f94f365311a29480, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -118,10 +122,12 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GridRotate: 0
-    - _HexRotateDeg: 30
+    - _GridRotate: 1.54
+    - _HexRotateDeg: 29.91
+    - _HexSize: 1.5
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _OutlineThickness: 0
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -139,13 +145,16 @@ Material:
     - _XStep: 2.598256
     - _ZStep: 2.25
     - _ZWrite: 1
+    - _scale: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GridOrigin: {r: 0, g: 0, b: 0, a: 0}
-    - _OriginXZ: {r: -26.56, g: -26.4, b: 0, a: 0}
+    - _FillColor: {r: 0, g: 0, b: 0, a: 0}
+    - _GridOrigin: {r: -25, g: -25, b: 0, a: 0}
+    - _OriginXYZ: {r: 0, g: 0, b: 0, a: 0}
+    - _OriginXZ: {r: -26.2, g: -26, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _line_Color: {r: 0.3019758, g: 0.48906022, b: 0.5471698, a: 0}
+    - _line_Color: {r: 0.30081877, g: 0.8180677, b: 0.9811321, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

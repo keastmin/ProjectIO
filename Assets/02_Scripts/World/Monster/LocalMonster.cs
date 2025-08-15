@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class LocalMonster : MonoBehaviour
@@ -103,7 +104,8 @@ public class LocalMonster : MonoBehaviour
 
     public void OnTerritoryExpanded(Territory territory, LocalTerritorySystem territorySystem)
     {
-        if (territory.IsPointInPolygon(transform.position))
+        var xzPosition = new Vector3(transform.position.x, transform.position.z);
+        if (territory.IsPointInPolygon(xzPosition))
         {
             territorySystem.OnTerritoryExpandedEvent -= OnTerritoryExpanded;
             Destroy(gameObject); // 영역이 확장되면 몬스터 제거
@@ -128,5 +130,8 @@ public class LocalMonster : MonoBehaviour
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, patrolTargetPosition + Vector3.up * 0.1f);
         }
+
+        Handles.color = Color.white;
+        Handles.Label(transform.position + Vector3.up * 0.5f, name);
     }
 }

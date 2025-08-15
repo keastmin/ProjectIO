@@ -136,7 +136,8 @@ public class Monster : NetworkBehaviour
 
     public void OnTerritoryExpanded(Territory territory, TerritorySystem territorySystem)
     {
-        if (territory.IsPointInPolygon(transform.position))
+        var xzPosition = new Vector3(transform.position.x, transform.position.z);
+        if (territory.IsPointInPolygon(xzPosition))
         {
             territorySystem.OnTerritoryExpandedEvent -= OnTerritoryExpanded;
             Runner.Despawn(Object);

@@ -7,7 +7,7 @@ public class Bullet : NetworkBehaviour
     private float _speed;
     private int _hitMask;          // 맞출 레이어(적 레이어 마스크)
 
-    private Rigidbody _rb;
+    //private Rigidbody _rb;
     private float _radius = 0.08f; // SphereCast 반경(없으면 기본값)
     private Vector3 _lastDir;
 
@@ -16,12 +16,12 @@ public class Bullet : NetworkBehaviour
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
-        if (_rb)
-        {
-            //_rb.isKinematic = true;
-            _rb.useGravity = false;
-        }
+        //_rb = GetComponent<Rigidbody>();
+        //if (_rb)
+        //{
+        //    //_rb.isKinematic = true;
+        //    _rb.useGravity = false;
+        //}
 
         // 붙어있는 콜라이더에서 탄두 반경 추정(있으면)
         if (TryGetComponent(out SphereCollider sc))
@@ -79,9 +79,9 @@ public class Bullet : NetworkBehaviour
         // 관통 방지: SphereCast로 이동 경로 검사
         if (ps.SphereCast(from, _radius, dir, out RaycastHit hit, step, _hitMask, QueryTriggerInteraction.Collide))
         {
-            if (_rb) _rb.MovePosition(hit.point);
-            else transform.position = hit.point;
-
+            //if (_rb) _rb.MovePosition(hit.point);
+            // else transform.position = hit.point;
+            transform.position = hit.point;
             if (hit.collider.TryGetComponent(out NetworkObject hitNo) && hitNo != Object)
             {
                 // 맞은 적이 네트워크 오브젝트면, Hit 이벤트를 호출
@@ -94,9 +94,9 @@ public class Bullet : NetworkBehaviour
 
         // 충돌 없으면 이동
         Vector3 to = from + dir * step;
-        if (_rb) _rb.MovePosition(to);
-        else transform.position = to;
-
+        //if (_rb) _rb.MovePosition(to);
+        //else transform.position = to;
+        transform.position = to;
         if (dir.sqrMagnitude > 1e-6f)
             transform.forward = dir;
     }

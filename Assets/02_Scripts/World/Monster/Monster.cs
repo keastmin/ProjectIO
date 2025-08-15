@@ -139,7 +139,8 @@ public class Monster : NetworkBehaviour
         if (territory.IsPointInPolygon(transform.position))
         {
             territorySystem.OnTerritoryExpandedEvent -= OnTerritoryExpanded;
-            Destroy(gameObject); // 영역이 확장되면 몬스터 제거
+            Runner.Despawn(Object);
+            // Destroy(gameObject); // 영역이 확장되면 몬스터 제거
         }
     }
 

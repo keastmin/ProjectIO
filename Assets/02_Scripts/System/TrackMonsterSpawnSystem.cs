@@ -1,4 +1,5 @@
 using System.Collections;
+using Fusion;
 using UnityEngine;
 
 public class TrackMonsterSpawnSystem : NetworkSystemBase
@@ -31,8 +32,12 @@ public class TrackMonsterSpawnSystem : NetworkSystemBase
 
         for (int i = 0; i < spawnCount; i++)
         {
-            var monster = Runner.Spawn(monsterPrefab, startPosition, Quaternion.identity);
-            monster.name = $"Monster_{i}";
+            var monster = Runner.Spawn(monsterPrefab, startPosition, Quaternion.identity, PlayerRef.None, (runner, obj) =>
+            {
+                obj.name = $"Monster_{i}";
+                obj.transform.SetParent(monsterParentTransform);
+            });
+
             monster.SetTrack(track);
             yield return new WaitForSeconds(spawnInterval);
         }

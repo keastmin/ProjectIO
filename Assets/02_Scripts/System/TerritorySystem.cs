@@ -22,6 +22,18 @@ public class TerritorySystem : NetworkSystemBase
 
     public event Action<Territory, TerritorySystem> OnTerritoryExpandedEvent;
 
+    void OnDrawGizmos()
+    {
+        if (Territory != null)
+        {
+            Gizmos.color = Color.green;
+            foreach (var point in Territory.Vertices)
+            { // vector2(x, y) -> vector3(x, y, 0)
+                Gizmos.DrawSphere(new Vector3(point.x, 0, point.y), 0.5f);
+            }
+        }
+    }
+
     public override void SetUp()
     {
         TerritoryView = StageManager.Instance.TerritoryView;

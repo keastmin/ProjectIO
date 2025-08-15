@@ -1,18 +1,15 @@
 using UnityEngine;
 
-public class Stalker : Monster
+public class LocalStalker : LocalMonster
 {
     protected bool isChasing;
-    [SerializeField] protected float sensingRange = 5f;
     [SerializeField] protected float attackRange = 2f;
     [SerializeField] protected float attackSpeed = 5f;
 
     float attackElapsedTime = 0f;
 
-    public override void FixedUpdateNetwork()
+    protected override void Update()
     {
-        if (!Object.HasStateAuthority) { return; }
-
         if (isChasing)
         {
             Chase();
@@ -23,9 +20,9 @@ public class Stalker : Monster
         }
         else
         {
-            base.FixedUpdateNetwork();
-            if (PlayerTransform == null) { return; }
-            if (Vector3.Distance(transform.position, PlayerTransform.position) < sensingRange)
+            base.Update();
+
+            if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) < 10f)
             {
                 StartChasing(PlayerTransform);
             }

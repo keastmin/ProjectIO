@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 public class WorldMonsterSpawnSystem : NetworkSystemBase
@@ -13,10 +14,9 @@ public class WorldMonsterSpawnSystem : NetworkSystemBase
     {
         if (Object.HasStateAuthority)
         {
+            playerTransform = StageManager.Instance.PlayerRunner.transform;
             SpawnMonsters();
         }
-
-        playerTransform = StageManager.Instance.PlayerRunner.transform;
 
         base.SetUp();
     }
@@ -32,8 +32,12 @@ public class WorldMonsterSpawnSystem : NetworkSystemBase
                 i--;
                 continue;
             }
-            var monster = Instantiate(monsterPrefab, randomSpawnPosition, Quaternion.identity, monsterParentTransform);
-            monster.name = $"Monster_{i}";
+            var monster = Runner.Spawn(monsterPrefab, randomSpawnPosition, Quaternion.identity, PlayerRef.None, (runner, obj) =>
+            {
+                obj.name = $"Monster_{i}";
+                obj.transform.SetParent(monsterParentTransform);
+            });
+
             monster.PlayerTransform = playerTransform;
             territorySystem.OnTerritoryExpandedEvent += monster.OnTerritoryExpanded;
             monster.SetPatrolPivotPosition(randomSpawnPosition);

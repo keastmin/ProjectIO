@@ -127,12 +127,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8513210841260731442}
-  - component: {fileID: 4690213330893962600}
+  - component: {fileID: 8082824450983989622}
   - component: {fileID: 7657940020816805542}
   - component: {fileID: 2459832189856283664}
   - component: {fileID: 7676691878658011539}
   m_Layer: 0
-  m_Name: Tower
+  m_Name: Attack Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +155,7 @@ Transform:
   - {fileID: 1843330764807552216}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4690213330893962600
+--- !u!114 &8082824450983989622
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -164,9 +164,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5793117889740293664}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc7fdef8c57f4f147a943aa46edfea82, type: 3}
+  m_Script: {fileID: 11500000, guid: c5bb87f246c13904db2ae0f49e00b47c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cost: 5
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -233,7 +234,7 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 4690213330893962600}
+  - {fileID: 8082824450983989622}
   - {fileID: 2459832189856283664}
   ForceRemoteRenderTimeframe: 0
 --- !u!1 &7217573335109683160

@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class ResourceSpawnSystem : NetworkSystemBase
 {
+    // 자원 관리 시스템
+    [SerializeField] private ResourceSystem _resourceSystem;
+
     [SerializeField] TerritorySystem territorySystem;
     [SerializeField] Transform resourceContainerTransform;
     [SerializeField] ResourceSpawnGroup[] resourceSpawnGroups;

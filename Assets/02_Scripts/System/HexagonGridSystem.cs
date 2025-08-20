@@ -11,6 +11,9 @@ public class HexagonGridSystem : MonoBehaviour
     [SerializeField] [Min(1)] private int _cellCountX = 10; // X 인덱스의 최대 값
     [SerializeField] [Min(1)] private int _cellCountY = 10; // Y 인덱스의 최대 값
 
+    [Header("Territory")]
+    [SerializeField] private TerritorySystem _territorySystem;
+
     private MeshCollider _collider;
 
     private HexagonCell[,] _grid; // 그리드
@@ -30,11 +33,6 @@ public class HexagonGridSystem : MonoBehaviour
     {
         Instance = this;
         OnValidate();
-    }
-
-    private void Start()
-    {
-        
     }
 
     private void InitGrid(int countX, int countY)
@@ -105,6 +103,19 @@ public class HexagonGridSystem : MonoBehaviour
 
         // 6) 월드 중심 좌표 반환
         return _grid[col, row].WorldPosition;
+    }
+
+    public bool IsPointToTowerCraftValid(Vector3 mousePoint)
+    {
+        bool isValid = false;
+        Vector2 point = new Vector2(mousePoint.x, mousePoint.z);
+
+        if (_territorySystem != null)
+            isValid = _territorySystem.Territory.IsPointInPolygon(point);
+
+        Debug.Log($"point: {point}, isValid: {isValid}");
+
+        return isValid;
     }
 
     private void OnDrawGizmos()

@@ -11,7 +11,7 @@ public class ResourceSystem : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI _gasText;
 
     [Networked, OnChangedRender(nameof(OnChangedMineralCount))] public int Mineral { get; set; }
-    [Networked] public int Gas { get; set; }
+    [Networked, OnChangedRender(nameof(OnChangedGasCount))] public int Gas { get; set; }
 
     private void Awake()
     {
@@ -35,5 +35,10 @@ public class ResourceSystem : NetworkBehaviour
     public void OnChangedMineralCount()
     {
         _mineralText.text = $"Mineral: {Mineral}";
+    }
+
+    public void OnChangedGasCount()
+    {
+        _gasText.text = $"Gas: {Gas}";
     }
 }

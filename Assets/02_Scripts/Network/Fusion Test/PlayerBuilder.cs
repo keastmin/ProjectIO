@@ -37,9 +37,9 @@ public class PlayerBuilder : Player
 
     private void SpawnTower(Vector3 towerPosition, int cost)
     {
-        if (ResourceSystem.Instance && ResourceSystem.Instance.Mineral >= cost)
+        if (StageManager.Instance.ResourceSystem && StageManager.Instance.ResourceSystem.Mineral >= cost)
         {
-            ResourceSystem.Instance.Mineral -= cost;
+            StageManager.Instance.ResourceSystem.Mineral -= cost;
             Runner.Spawn(_towerPrefab, towerPosition, Quaternion.identity);
         }
     }
@@ -59,7 +59,7 @@ public class PlayerBuilder : Player
                     ? HexagonGridSystem.Instance.GetNearGridPosition(hit.point)
                     : hit.point;
 
-            if (HexagonGridSystem.Instance.IsPointToTowerCraftValid(p) && ResourceSystem.Instance.Mineral >= cost)
+            if (HexagonGridSystem.Instance.IsPointToTowerCraftValid(p) && StageManager.Instance.ResourceSystem.Mineral >= cost)
             {
                 _towerGhost.EnableTower();
             }

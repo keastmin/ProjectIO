@@ -1877,7 +1877,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4423007ad823414280c7fe557a3d765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceObtainingSystem: {fileID: 0}
   circlePointCount: 10
   circleRadius: 10
   lineRenderer: {fileID: 1028244188}
@@ -2861,6 +2860,10 @@ PrefabInstance:
       propertyPath: TerritoryView
       value: 
       objectReference: {fileID: 6219545451852062858}
+    - target: {fileID: 6118610569785656979, guid: 8ee0ca47d4ca2f542a19a96fdec5cdec, type: 3}
+      propertyPath: ResourceSystem
+      value: 
+      objectReference: {fileID: 1712230124}
     - target: {fileID: 6118610569785656979, guid: 8ee0ca47d4ca2f542a19a96fdec5cdec, type: 3}
       propertyPath: territorySystem
       value: 

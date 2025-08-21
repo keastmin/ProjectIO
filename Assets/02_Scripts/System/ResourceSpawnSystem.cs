@@ -43,6 +43,9 @@ public class ResourceSpawnSystem : NetworkSystemBase
             {
                 obj.transform.SetParent(resourceContainerTransform);
             });
+
+            var resource = resourceObject.GetComponent<Resource>();
+            territorySystem.OnTerritoryExpandedEvent += resource.OnTerritoryExpanded;
         }
     }
 }

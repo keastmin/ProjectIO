@@ -19,6 +19,7 @@ public class StageManager : NetworkBehaviour
     [Header("Network Systems")]
     [SerializeField] private NetworkInputSystem networkInputSystemPrefab;
     [SerializeField] private NetworkSystemBase[] systems;
+    public ResourceSystem ResourceSystem;
 
     [Space(10)]
 

@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TerritorySystem : NetworkSystemBase
 {
-    [SerializeField] LocalResourceObtainingSystem resourceObtainingSystem;
-
     [Header("Initial Territory")]
     [SerializeField] int circlePointCount;
     [SerializeField] float circleRadius;
@@ -145,11 +143,6 @@ public class TerritorySystem : NetworkSystemBase
 
         Territory.Expand(playerPath);
         TerritoryView.SetTerritory(Territory.Vertices);
-
-        // if (resourceObtainingSystem != null)
-        // {
-        //     resourceObtainingSystem.TryObtainResources(territoryView);
-        // }
 
         if (Object.HasStateAuthority)
         {

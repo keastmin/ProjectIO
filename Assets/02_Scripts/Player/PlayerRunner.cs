@@ -2,14 +2,19 @@ using Fusion;
 using System;
 using UnityEngine;
 
-public class PlayerRunner : Player
+public class PlayerRunner : Player, IDamageable
 {
+    [Header("플레이어 상태")]
+    [Networked] public float HP { get; set; }
+    [Networked] public NetworkBool IsDead { get; set; }
+
     [Header("이동")]
     [SerializeField] private float _moveSpeed = 6f; // 이동 속도
 
     private Rigidbody _rigidbody; // 리지드바디
 
     public event Action<PlayerRunner> OnPositionChanged; // 영역 관련 이벤트
+
 
     private void Awake()
     {
@@ -18,7 +23,7 @@ public class PlayerRunner : Player
 
     public override void Spawned()
     {
-
+        InitPlayerRunner();
     }
 
     public override void FixedUpdateNetwork()
@@ -33,5 +38,27 @@ public class PlayerRunner : Player
 
         // 영역에 관한 로직 이벤트 수행
         OnPositionChanged?.Invoke(this);
+    }
+
+    // 플레이어 러너 초기화
+    private void InitPlayerRunner()
+    {
+        if (HasStateAuthority)
+        {
+            HP = 100f;
+            IsDead = false;
+        }
+    }
+
+    // 데미지 입기
+    public void TakeDamage(float damage)
+    {
+        if (!HasStateAuthority) return; // 상태 권한이 없으면 무시 - 호스트만 변수값 변경 가능
+        if (IsDead) return; // 이미 죽었으면 무시
+
+        HP -= damage; // 체력 감소
+
+        if (HP <= 0f) // 체력이 0 이하라면
+            IsDead = true; // 죽음 처리
     }
 }

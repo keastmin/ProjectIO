@@ -102,12 +102,16 @@ public class TerritorySystem : NetworkSystemBase
                 Debug.Log("나감");
                 RPC_StartExpanding();
                 RPC_AddExpandingPathPoint(previousPosition);
-                RPC_AddExpandingPathPoint(currentPosition);
+                // RPC_AddExpandingPathPoint(currentPosition);
             }
 
             if (Vector2.SqrMagnitude(currentPosition - previousPosition) > 0.01f)
             {
                 RPC_AddExpandingPathPoint(currentPosition);
+
+                // 러너가 자신이 지나온 길을 다시 밟으면 게임 오버
+                CheckPlayerRunnerCrossedOwnPath();
+
                 previousPosition = currentPosition;
             }
         }
@@ -148,5 +152,38 @@ public class TerritorySystem : NetworkSystemBase
         {
             OnTerritoryExpandedEvent?.Invoke(Territory, this); // 호스트만
         }
+    }
+
+    // 플레이어 러너가 이전 경로를 밟았는지 확인하고 밟았다면 게임 오버 처리
+    private void CheckPlayerRunnerCrossedOwnPath()
+    {
+        if (CheckCurrPathCrossPrevPath())
+        {
+            // GameOver
+            Debug.Log("Game Over! Player crossed own path.");
+        }
+    }
+
+    // 플레이어 러너의 현재 경로가 이전 경로와 교차했는지 확인
+    private bool CheckCurrPathCrossPrevPath()
+    {
+        int count = playerPath.Count;
+
+        Vector2 currPos = playerPath[count - 1];
+        Vector2 prevPos = playerPath[count - 2];
+
+        for(int i = 0; i < count - 3; i++) // 마지막 두 점은 현재 경로이므로 제외
+        {
+            Vector2 pos1 = playerPath[i];
+            Vector2 pos2 = playerPath[i + 1];
+
+            if(Geometry.SegmentIntersection(currPos, prevPos, pos1, pos2, out Vector2 intersection))
+            {
+                Debug.Log($"Intersection at: {intersection}");
+                return true;
+            }
+        }
+
+        return false;
     }
 }

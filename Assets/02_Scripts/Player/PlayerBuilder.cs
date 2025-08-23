@@ -7,8 +7,6 @@ public class PlayerBuilder : Player
     [SerializeField] private Tower _towerPrefab;
     [SerializeField] private TowerGhost _towerGhostPrefab;
 
-    private bool _isTowerGhostEnabled = false;
-
     private TowerGhost _towerGhost;
 
     public override void Spawned()
@@ -70,10 +68,5 @@ public class PlayerBuilder : Player
 
             _towerGhost.transform.position = p;
         }
-    }
-
-    public void OnClickTowerSlotButton(Tower tower, TowerGhost towerGhost)
-    {
-
     }
 }

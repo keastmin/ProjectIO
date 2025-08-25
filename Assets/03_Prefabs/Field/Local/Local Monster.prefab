@@ -208,10 +208,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70136debeb047d8468284a88b99d00d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackTargetTransform: {fileID: 4398705182232736182}
+  attackTargetTransform: {fileID: 4398705182232736182}
   health: 10
-  moveSpeed: 3
-  arriveThreshold: 0.1
+  movementSpeed: 3
+  arrivalThreshold: 0.1
 --- !u!1 &8321828037487483530
 GameObject:
   m_ObjectHideFlags: 0

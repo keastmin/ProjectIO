@@ -4,7 +4,7 @@ using UnityEngine;
 public class LocalTrackMonsterSpawnSystem : MonoBehaviour
 {
     [SerializeField] Transform monsterParentTransform;
-    [SerializeField] LocalMonster monsterPrefab;
+    [SerializeField] LocalTrackMonster monsterPrefab;
     [SerializeField] float spawnInterval;
     [SerializeField] int spawnCount;
 

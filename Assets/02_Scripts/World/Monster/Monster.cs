@@ -1,7 +1,7 @@
 using Fusion;
 using UnityEngine;
 
-public class Monster : NetworkBehaviour
+public class Monster : NetworkBehaviour, IMonster
 {
     public Territory Territory;
     public Transform AttackTargetTransform;
@@ -11,6 +11,8 @@ public class Monster : NetworkBehaviour
     [SerializeField] protected float arriveThreshold = 0.1f;
 
     [Networked] protected int _health { get; private set; }
+
+    protected Rigidbody rigidBody;
 
     // Track Monster
     protected Track track;
@@ -28,6 +30,7 @@ public class Monster : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             _health = health;
+            rigidBody = GetComponent<Rigidbody>();
         }
     }
 
@@ -38,9 +41,14 @@ public class Monster : NetworkBehaviour
             _health -= damage;
             if (_health <= 0)
             {
-                Runner.Despawn(Object);
+                DestroyMonster();
             }
         }
+    }
+
+    public virtual void DestroyMonster()
+    {
+        Runner.Despawn(Object);
     }
 
     public void SetTrack(Track track)
@@ -61,33 +69,21 @@ public class Monster : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasStateAuthority)
-        {
-            if (track != null)
-            {
-                FollowTrack();
-            }
-            else
-            {
-                Patrol();
-            }
-        }
+        if (!Object.HasStateAuthority) { return; }
+        UpdateMonster();
     }
 
-    // protected virtual void Update()
-    // {
-    //     if (Object.HasStateAuthority)
-    //     {
-    //         if (track != null)
-    //         {
-    //             FollowTrack();
-    //         }
-    //         else
-    //         {
-    //             Patrol();
-    //         }
-    //     }
-    // }
+    public virtual void UpdateMonster()
+    {
+        if (track != null)
+        {
+            FollowTrack();
+        }
+        else
+        {
+            Patrol();
+        }
+    }
 
     protected virtual void FollowTrack()
     {

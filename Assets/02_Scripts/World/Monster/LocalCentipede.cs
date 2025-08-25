@@ -1,23 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Centipede : Monster
+public class LocalCentipede : LocalWorldMonster
 {
-    public Transform head;
-    public GameObject segmentPrefab;
+    [SerializeField] protected Transform head;
+    [SerializeField] protected GameObject segmentPrefab;
     [SerializeField] protected int segmentCount = 5;
     [SerializeField] protected float segmentAmplitude = 1.0f;
     [SerializeField] protected float segmentFrequency = 1.0f;
     [SerializeField] protected float moveCountThreshold = 10f;
 
-    List<Transform> segments = new List<Transform>();
-    List<Vector3> originalSegmentPositions = new List<Vector3>();
-    List<Vector3> segmentPositions = new List<Vector3>();
+    List<Transform> segments = new();
+    List<Vector3> originalSegmentPositions = new();
+    List<Vector3> segmentPositions = new();
     int moveCount = 0;
+    Vector3 originalPosition;
+    float duration;
+    float elapsedTime;
 
-    public override void Spawned()
+    public override void Initialize()
     {
-        base.Spawned();
+        base.Initialize();
         InitializeSegments();
     }
 
@@ -35,38 +38,35 @@ public class Centipede : Monster
         }
     }
 
-    public override void FixedUpdateNetwork()
+    public override void UpdateMonster()
     {
-        base.FixedUpdateNetwork();
+        base.UpdateMonster();
         FollowSegments();
     }
-
-    Vector3 originalPosition;
-    float duration;
-    float elapsedTime;
 
     protected override void Patrol()
     {
         if (isPatrolling == false)
         {
             var randomTargetPosition = patrolPivotPosition + Random.insideUnitSphere * patrolRadius;
-            if (!Territory.IsPointInPolygon(randomTargetPosition))
+            if (!territory.IsPointInPolygon(randomTargetPosition))
             {
                 originalPosition = transform.position;
                 patrolTargetPosition = randomTargetPosition;
                 patrolTargetPosition.y = transform.position.y;
                 elapsedTime = 0;
-                duration = Vector3.Distance(transform.position, randomTargetPosition) / moveSpeed;
+                duration = Vector3.Distance(transform.position, randomTargetPosition) / movementSpeed;
                 isPatrolling = true;
             }
         }
         else
         {
+            Debug.Log($"{elapsedTime}, {duration}");
             elapsedTime += Time.deltaTime;
             Vector3 direction = (patrolTargetPosition - transform.position).normalized;
             var verticalDirection = Quaternion.AngleAxis(90f, Vector3.up) * direction;
-            rigidBody.linearVelocity = Vector3.Lerp(originalPosition, patrolTargetPosition, Mathf.Min(elapsedTime / duration, 1)) +
-                segmentAmplitude * Mathf.Sin(elapsedTime * segmentFrequency) * verticalDirection - transform.position;
+            transform.position = Vector3.Lerp(originalPosition, patrolTargetPosition, Mathf.Min(elapsedTime / duration, 1)) +
+                segmentAmplitude * Mathf.Sin(elapsedTime * segmentFrequency) * verticalDirection;
 
             if (elapsedTime >= duration)
             {

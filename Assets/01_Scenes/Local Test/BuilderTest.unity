@@ -401,8 +401,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1354217537}
+  m_Children: []
   m_Father: {fileID: 420135550}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &420135549
@@ -474,79 +473,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 420135550}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1354217535
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 307260613}
-    m_Modifications:
-    - target: {fileID: 2186741070557608453, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_Name
-      value: Territory
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
---- !u!114 &1354217536 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4646913948089805381, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-  m_PrefabInstance: {fileID: 1354217535}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 490a1ca698ea46b4289dce6ba0570c01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1354217537 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4163892030626728552, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
-  m_PrefabInstance: {fileID: 1354217535}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1597040047
 GameObject:
   m_ObjectHideFlags: 0
@@ -832,6 +758,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   circlePointCount: 30
   circleRadius: 10
+  territoryContainerTransform: {fileID: 307260613}
+  territoryViewPrefab: {fileID: 4646913948089805381, guid: 14b1e178ce627cf478c33ff40343590e, type: 3}
   lineRenderer: {fileID: 1726113702}
   isExpanding: 0
   previousPosition: {x: 0, y: 0}
@@ -839,7 +767,7 @@ MonoBehaviour:
   onTerritoryExpandedEvent:
     m_PersistentCalls:
       m_Calls: []
-  TerritoryView: {fileID: 1354217536}
+  TerritoryView: {fileID: 0}
 --- !u!114 &1726113700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -869,7 +797,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterParentTransform: {fileID: 1311363080}
-  monsterPrefab: {fileID: 6203562166342454083, guid: b46fb06dfaf980e4e84ea8d2de1731b4, type: 3}
+  monsterPrefab: {fileID: 8534360555402048216, guid: 449167e92e45806468af94dc54996678, type: 3}
   spawnInterval: 1
   spawnCount: 10
 --- !u!120 &1726113702

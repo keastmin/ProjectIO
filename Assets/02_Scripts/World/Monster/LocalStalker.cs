@@ -1,30 +1,30 @@
 using UnityEngine;
 
-public class LocalStalker : LocalMonster
+public class LocalStalker : LocalWorldMonster
 {
-    protected bool isChasing;
     [SerializeField] protected float attackRange = 2f;
-    [SerializeField] protected float attackSpeed = 5f;
+    [SerializeField] protected float attackSpeed = 1f;
 
+    protected bool isChasing;
     float attackElapsedTime = 0f;
 
-    protected override void Update()
+    public override void UpdateMonster()
     {
         if (isChasing)
         {
             Chase();
-            if (Vector3.Distance(transform.position, AttackTargetTransform.position) < attackRange)
+            if (Vector3.Distance(transform.position, attackTargetTransform.position) < attackRange)
             {
                 Attack();
             }
         }
         else
         {
-            base.Update();
+            base.UpdateMonster();
 
-            if (PlayerTransform != null && Vector3.Distance(transform.position, PlayerTransform.position) < 10f)
+            if (playerTransform != null && Vector3.Distance(transform.position, playerTransform.position) < 10f)
             {
-                StartChasing(PlayerTransform);
+                StartChasing(playerTransform);
             }
         }
     }
@@ -34,25 +34,25 @@ public class LocalStalker : LocalMonster
         attackElapsedTime += Time.deltaTime * attackSpeed;
         if (attackElapsedTime >= 1f)
         {
-            PlayerTransform.GetComponent<LocalRunner>().Health -= 1;
-            Debug.Log($"{name} attacks {PlayerTransform.name}");
+            playerTransform.GetComponent<LocalRunner>().Health -= 1;
+            Debug.Log($"{name} attacks {playerTransform.name}");
             attackElapsedTime = 0f;
         }
     }
 
     public void StartChasing(Transform target)
     {
-        AttackTargetTransform = target;
+        attackTargetTransform = target;
         isChasing = true;
     }
 
     protected virtual void Chase()
     {
-        if (AttackTargetTransform != null)
+        if (attackTargetTransform != null)
         {
-            Vector3 direction = (AttackTargetTransform.position - transform.position).normalized;
-            transform.position += moveSpeed * Time.deltaTime * direction;
-            transform.LookAt(AttackTargetTransform);
+            Vector3 direction = (attackTargetTransform.position - transform.position).normalized;
+            transform.position += movementSpeed * Time.deltaTime * direction;
+            transform.LookAt(attackTargetTransform);
         }
     }
 }

@@ -1141,8 +1141,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   territorySystem: {fileID: 1360410266}
   monsterParentTransform: {fileID: 778461259}
-  monsterPrefab: {fileID: -2224400408638445758, guid: 722b4947026900e48ba66c608127d017, type: 3}
-  spawnCount: 10
+  monsterPrefab: {fileID: 4169187445798827108, guid: 43f1149ba0230af4ca5390c151b63e08, type: 3}
+  spawnCount: 1
   spawnRadius: 40
   playerTransform: {fileID: 648084792}
 --- !u!1 &1400206706

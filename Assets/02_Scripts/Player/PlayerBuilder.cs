@@ -1,29 +1,57 @@
+using Fusion;
 using UnityEngine;
 
 public class PlayerBuilder : Player
 {
     [SerializeField] private LayerMask _environmentalLayer;
 
-    [SerializeField] private Tower _towerPrefab;
-    [SerializeField] private TowerGhost _towerGhostPrefab;
-
-    private TowerGhost _towerGhost;
+    [SerializeField] private TowerData _towerData;
+    [SerializeField] private Tower _tower;
+    [SerializeField] private TowerGhost _towerGhost;
 
     public override void Spawned()
     {
-        _towerGhost = Instantiate(_towerGhostPrefab);
+
     }
 
     public override void FixedUpdateNetwork()
     {
-        if(GetInput(out NetworkInputData data) && HexagonGridSystem.Instance)
+        if (GetInput(out NetworkInputData data) && HexagonGridSystem.Instance)
         {
             bool mouseButton0 = data.MouseButton0.IsSet(NetworkInputData.MOUSEBUTTON0);
+            bool mouseButton1 = data.MouseButton1.IsSet(NetworkInputData.MOUSEBUTTON1);
             Vector3 towerPosition = HexagonGridSystem.Instance.GetNearGridPosition(data.MousePosition);
 
-            if (HasStateAuthority && mouseButton0 && HexagonGridSystem.Instance.IsPointToTowerCraftValid(towerPosition))
+            if (_tower)
             {
-                SpawnTower(towerPosition, 5);
+                if (mouseButton0 && HexagonGridSystem.Instance.IsPointToTowerCraftValid(towerPosition))
+                {
+                    if (_tower.Cost <= StageManager.Instance.ResourceSystem.Mineral)
+                    {
+                        if (HasStateAuthority)
+                        {
+                            SpawnTower(towerPosition, _tower.Cost);
+                            _tower = null;
+                        }
+                        if (HasInputAuthority)
+                        {
+                            _towerData = null;
+                            Destroy(_towerGhost.gameObject);
+                        }
+                    }
+                }
+                else if (mouseButton1)
+                {
+                    if (HasStateAuthority)
+                    {
+                        _tower = null;
+                    }
+                    if (HasInputAuthority)
+                    {
+                        _towerData = null;
+                        Destroy(_towerGhost.gameObject);
+                    }
+                }
             }
         }
     }
@@ -35,11 +63,8 @@ public class PlayerBuilder : Player
 
     private void SpawnTower(Vector3 towerPosition, int cost)
     {
-        if (StageManager.Instance.ResourceSystem && StageManager.Instance.ResourceSystem.Mineral >= cost)
-        {
-            StageManager.Instance.ResourceSystem.Mineral -= cost;
-            Runner.Spawn(_towerPrefab, towerPosition, Quaternion.identity);
-        }
+        StageManager.Instance.ResourceSystem.Mineral -= cost;
+        Runner.Spawn(_tower, towerPosition, Quaternion.identity);
     }
 
     // 타워 예시를 스냅샷 해보는 메서드
@@ -67,6 +92,31 @@ public class PlayerBuilder : Player
             }
 
             _towerGhost.transform.position = p;
+        }
+    }
+
+    public void SetTowerData(TowerData towerData)
+    {
+        _towerData = towerData;
+        SetTower(_towerData.Tower);
+        SetTowerGhost(_towerData.TowerGhost);
+    }
+
+    private void SetTower(Tower tower)
+    {
+        // 스폰은 호스트가
+        if (HasStateAuthority)
+        {
+            _tower = tower;
+        }
+    }
+
+    private void SetTowerGhost(TowerGhost towerGhost)
+    {
+        // 미리보기는 로컬에서만
+        if (HasInputAuthority)
+        {
+            _towerGhost = Instantiate(towerGhost);
         }
     }
 }

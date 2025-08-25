@@ -11,6 +11,7 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
 
     private bool _dashInput = false; // 러너의 대쉬 입력
     private bool _mouseButton0 = false; // 마우스 좌클릭
+    private bool _mouseButton1 = false; // 마우스 우클릭
 
     #region MonoBehaviour 메서드
 
@@ -18,6 +19,7 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
     {
         _dashInput = _dashInput | Input.GetKey(KeyCode.LeftShift); // 왼쪽 쉬프트를 통해 _dashInput 여부 검사
         _mouseButton0 = _mouseButton0 | Input.GetMouseButtonDown(0); // 마우스 좌클릭 여부 검사
+        _mouseButton1 = _mouseButton1 | Input.GetMouseButtonDown(1); // 마우스 우클릭 여부 검사
     }
 
     #endregion
@@ -66,6 +68,10 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
         // 좌클릭 처리
         data.MouseButton0.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
         _mouseButton0 = false;
+
+        // 우클릭 처리
+        data.MouseButton1.Set(NetworkInputData.MOUSEBUTTON1, _mouseButton1);
+        _mouseButton1 = false;
 
         // ---------------------------------------------------------------------------------------
 

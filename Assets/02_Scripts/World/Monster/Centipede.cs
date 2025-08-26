@@ -35,12 +35,6 @@ public class Centipede : WorldMonster
         }
     }
 
-    public override void FixedUpdateNetwork()
-    {
-        base.FixedUpdateNetwork();
-        FollowSegments();
-    }
-
     Vector3 originalPosition;
     float duration;
     float elapsedTime;
@@ -74,6 +68,8 @@ public class Centipede : WorldMonster
             }
         }
     }
+
+    void LateUpdate() => FollowSegments();
 
     protected virtual void FollowSegments()
     {

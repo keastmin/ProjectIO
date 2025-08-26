@@ -12,8 +12,8 @@ public class PlayerBuilder : Player, IStateMachineOwner
 
     [SerializeField] private LayerMask _environmentalLayer;
 
-    [SerializeField] private TowerData _towerData;
-    [SerializeField] private Tower _tower;
+    [Networked] public NetworkPrefabRef TowerRef { get; set; }
+    [Networked] public int TowerCost { get; set; }
     [SerializeField] private TowerGhost _towerGhost;
 
     void IStateMachineOwner.CollectStateMachines(List<IStateMachine> stateMachines)
@@ -25,6 +25,7 @@ public class PlayerBuilder : Player, IStateMachineOwner
     // 이 객체가 스폰될 때 수행되는 함수
     public override void Spawned()
     {
+
     }
 
     public override void FixedUpdateNetwork()
@@ -37,20 +38,20 @@ public class PlayerBuilder : Player, IStateMachineOwner
             bool mouseButton1 = data.MouseButton1.IsSet(NetworkInputData.MOUSEBUTTON1);
             Vector3 towerPosition = HexagonGridSystem.Instance.GetNearGridPosition(data.MousePosition);
 
-            if (_tower)
+            if (TowerRef != default)
             {
                 if (mouseButton0 && HexagonGridSystem.Instance.IsPointToTowerCraftValid(towerPosition))
                 {
-                    if (_tower.Cost <= StageManager.Instance.ResourceSystem.Mineral)
+                    if (TowerCost <= StageManager.Instance.ResourceSystem.Mineral)
                     {
                         if (HasStateAuthority)
                         {
-                            SpawnTower(towerPosition, _tower.Cost);
-                            _tower = null;
+                            SpawnTower(towerPosition, TowerCost);
+                            TowerRef = default;
+                            TowerCost = 0;
                         }
                         if (HasInputAuthority)
                         {
-                            _towerData = null;
                             Destroy(_towerGhost.gameObject);
                         }
                     }
@@ -59,11 +60,10 @@ public class PlayerBuilder : Player, IStateMachineOwner
                 {
                     if (HasStateAuthority)
                     {
-                        _tower = null;
+                        TowerRef = default;
                     }
                     if (HasInputAuthority)
                     {
-                        _towerData = null;
                         Destroy(_towerGhost.gameObject);
                     }
                 }
@@ -73,13 +73,13 @@ public class PlayerBuilder : Player, IStateMachineOwner
 
     private void Update()
     {
-        SnapshotEXTower(5);
+        SnapshotEXTower(TowerCost);
     }
 
     private void SpawnTower(Vector3 towerPosition, int cost)
     {
         StageManager.Instance.ResourceSystem.Mineral -= cost;
-        Runner.Spawn(_tower, towerPosition, Quaternion.identity);
+        Runner.Spawn(TowerRef, towerPosition, Quaternion.identity);
     }
 
     // 타워 예시를 스냅샷 해보는 메서드
@@ -112,26 +112,60 @@ public class PlayerBuilder : Player, IStateMachineOwner
 
     public void SetTowerData(TowerData towerData)
     {
-        _towerData = towerData;
-        SetTower(_towerData.Tower);
-        SetTowerGhost(_towerData.TowerGhost);
+        var towerCost = towerData.Tower.Cost;
+        var towerRef = towerData.TowerPrefabRef;
+
+        RPC_SetNetworkTower(towerRef, towerCost);
+        SetLocalTower(towerData.TowerGhost);
     }
 
-    private void SetTower(Tower tower)
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_SetNetworkTower(NetworkPrefabRef towerRef, int cost)
     {
         // 스폰은 호스트가
         if (HasStateAuthority)
         {
-            _tower = tower;
+            TowerRef = towerRef;
+            TowerCost = cost;
         }
     }
 
-    private void SetTowerGhost(TowerGhost towerGhost)
+    private void SetLocalTower(TowerGhost towerGhost)
     {
         // 미리보기는 로컬에서만
         if (HasInputAuthority)
-        {
+        {           
             _towerGhost = Instantiate(towerGhost);
         }
+    }
+
+    private bool GetNetworkPrefabRef(out NetworkPrefabRef prefabRef, Tower tower)
+    {
+        prefabRef = default;
+
+        var no = tower.Object;
+        if (no == null) 
+        {
+            Debug.Log("tower에 오브젝트가 없음");
+            return false; 
+        }
+
+        var typeId = no.NetworkTypeId;
+        if (!typeId.IsPrefab)
+        {
+            Debug.Log("tower에 네트워크 타입 ID가 없음");
+            return false;
+        }
+        var prefabId = typeId.AsPrefabId;
+
+        var guid = StageManager.Instance.Runner.Prefabs.GetGuid(prefabId);
+        if (!guid.IsValid)
+        {
+            Debug.Log("tower에 prefabsId가 없음");
+            return false;
+        }
+
+        prefabRef = (NetworkPrefabRef)guid;
+        return prefabRef.IsValid;
     }
 }

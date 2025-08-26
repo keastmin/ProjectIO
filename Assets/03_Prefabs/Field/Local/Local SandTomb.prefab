@@ -123,7 +123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1081141730720889549, guid: b46fb06dfaf980e4e84ea8d2de1731b4, type: 3}
       propertyPath: m_Name
-      value: SandTomb
+      value: Local SandTomb
       objectReference: {fileID: 0}
     - target: {fileID: 4012451566646062793, guid: b46fb06dfaf980e4e84ea8d2de1731b4, type: 3}
       propertyPath: m_Enabled
@@ -198,11 +198,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da714b5611cec594ea41a8a830765ac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackTargetTransform: {fileID: 0}
-  PlayerTransform: {fileID: 0}
+  attackTargetTransform: {fileID: 0}
   health: 10
-  moveSpeed: 0
-  arriveThreshold: 0.1
+  movementSpeed: 3
+  arrivalThreshold: 0.1
+  playerTransform: {fileID: 0}
+  patrolMinimumRadius: 5
+  patrolMaximumRadius: 10
   suckedIntoSpeed: 2
   suckedIntoRadius: 10
   attackSpeed: 1

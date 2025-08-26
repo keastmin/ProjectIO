@@ -34,7 +34,7 @@ public class SandTomb : WorldMonster
         attackElapsedTime += Time.deltaTime * attackSpeed;
         if (attackElapsedTime >= 1f)
         {
-            playerTransform.GetComponent<LocalRunner>().Health -= 1;
+            playerTransform.GetComponent<IDamageable>()?.TakeDamage(1f);
             Debug.Log($"{name} attacks {playerTransform.name}");
             attackElapsedTime = 0f;
         }

@@ -1,13 +1,8 @@
 using Fusion.Addons.FSM;
 using UnityEngine;
 
-public class OriginState : StateBehaviour
+public class OriginState : BuilderStateBehaviour
 {
-    protected override bool CanExitState(StateBehaviour nextState)
-    {
-        return Machine.StateTime > 3f;
-    }
-
     protected override void OnEnterStateRender()
     {
         Debug.Log("Origin State");

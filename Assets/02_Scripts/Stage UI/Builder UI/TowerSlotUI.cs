@@ -11,7 +11,7 @@ public class TowerSlotUI : MonoBehaviour
             var builder = StageManager.Instance.PlayerBuilder;
             if (builder)
             {
-                builder.SetTowerData(towerData);
+                builder.ClickTowerSelectButton(towerData);
             }
         }
     }

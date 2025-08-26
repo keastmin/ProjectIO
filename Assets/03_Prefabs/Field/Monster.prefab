@@ -210,11 +210,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91bd15060580547850abcf56977dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackTargetTransform: {fileID: 0}
-  PlayerTransform: {fileID: 0}
+  attackTargetTransform: {fileID: 4398705182232736182}
   health: 10
   moveSpeed: 3
   arriveThreshold: 0.1
+  playerTransform: {fileID: 0}
 --- !u!114 &-899081356136341341
 MonoBehaviour:
   m_ObjectHideFlags: 0

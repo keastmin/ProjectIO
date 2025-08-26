@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class LocalTrackMonster : LocalMonster
+public class TrackMonster : Monster
 {
     protected Track track;
     protected int currentPointIndex;

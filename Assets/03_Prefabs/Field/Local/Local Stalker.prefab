@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3582902651737905463, guid: 8baa25640ec86bd4c9996414146ca2c3, type: 3}
       propertyPath: m_Name
-      value: Local Stalker 1
+      value: Local Stalker
       objectReference: {fileID: 0}
     - target: {fileID: 4925110782342690367, guid: 8baa25640ec86bd4c9996414146ca2c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -83,5 +83,8 @@ MonoBehaviour:
   movementSpeed: 3
   arrivalThreshold: 0.1
   playerTransform: {fileID: 0}
+  patrolMinimumRadius: 5
+  patrolMaximumRadius: 10
+  sensingRange: 3
   attackRange: 2
   attackSpeed: 1

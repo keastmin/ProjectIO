@@ -6,24 +6,20 @@ public class TrackMonsterSpawnSystem : NetworkSystemBase
 {
     [SerializeField] TrackSystem trackSystem;
     [SerializeField] Transform monsterParentTransform;
-    [SerializeField] Monster monsterPrefab;
+    [SerializeField] TrackMonster monsterPrefab;
     [SerializeField] float spawnInterval;
     [SerializeField] int spawnCount;
 
     public override void SetUp()
     {
-        if (Object.HasStateAuthority)
-        {
-            SpawnMonsters(trackSystem.Track);
-        }
+        if (!Object.HasStateAuthority) { return; }
+        SpawnMonsters(trackSystem.Track);
     }
 
     public void SpawnMonsters(Track track)
     {
-        if (Object.HasStateAuthority)
-        {
-            StartCoroutine(MonsterSpawnRoutine(track));
-        }
+        if (!Object.HasStateAuthority) { return; }
+        StartCoroutine(MonsterSpawnRoutine(track));
     }
 
     IEnumerator MonsterSpawnRoutine(Track track)
@@ -39,6 +35,8 @@ public class TrackMonsterSpawnSystem : NetworkSystemBase
             });
 
             monster.SetTrack(track);
+            monster.Initialize();
+
             yield return new WaitForSeconds(spawnInterval);
         }
     }

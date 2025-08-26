@@ -22,6 +22,8 @@ public class LocalTrackMonsterSpawnSystem : MonoBehaviour
             var monster = Instantiate(monsterPrefab, startPosition, Quaternion.identity, monsterParentTransform);
             monster.name = $"Monster_{i}";
             monster.SetTrack(track);
+            monster.Initialize();
+
             yield return new WaitForSeconds(spawnInterval);
         }
     }

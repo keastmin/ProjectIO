@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SandTomb : Monster
+public class SandTomb : WorldMonster
 {
     [SerializeField] float suckedIntoSpeed = 2f;
     [SerializeField] float suckedIntoRadius = 5f;
@@ -17,13 +17,13 @@ public class SandTomb : Monster
 
     bool SuckIntoSandTomb()
     {
-        if (PlayerTransform == null) return false;
+        if (playerTransform == null) return false;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
         if (distanceToPlayer <= suckedIntoRadius)
         {
-            Vector3 direction = (transform.position - PlayerTransform.position).normalized;
-            PlayerTransform.position += suckedIntoSpeed * Time.deltaTime * direction;
+            Vector3 direction = (transform.position - playerTransform.position).normalized;
+            playerTransform.position += suckedIntoSpeed * Time.deltaTime * direction;
             return true;
         }
         return false;
@@ -34,8 +34,8 @@ public class SandTomb : Monster
         attackElapsedTime += Time.deltaTime * attackSpeed;
         if (attackElapsedTime >= 1f)
         {
-            PlayerTransform.GetComponent<LocalRunner>().Health -= 1;
-            Debug.Log($"{name} attacks {PlayerTransform.name}");
+            playerTransform.GetComponent<LocalRunner>().Health -= 1;
+            Debug.Log($"{name} attacks {playerTransform.name}");
             attackElapsedTime = 0f;
         }
     }

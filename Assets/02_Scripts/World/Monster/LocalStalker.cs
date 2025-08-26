@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class LocalStalker : LocalWorldMonster
 {
+    [SerializeField] protected float sensingRange = 5f;
     [SerializeField] protected float attackRange = 2f;
     [SerializeField] protected float attackSpeed = 1f;
 
@@ -22,7 +23,8 @@ public class LocalStalker : LocalWorldMonster
         {
             base.UpdateMonster();
 
-            if (playerTransform != null && Vector3.Distance(transform.position, playerTransform.position) < 10f)
+            if (playerTransform == null) { return; }
+            if (Vector3.Distance(transform.position, playerTransform.position) < sensingRange)
             {
                 StartChasing(playerTransform);
             }

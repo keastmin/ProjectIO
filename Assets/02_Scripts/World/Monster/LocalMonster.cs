@@ -10,16 +10,8 @@ public class LocalMonster : MonoBehaviour, IMonster, IDamageable
     protected Territory territory;
     [SerializeField] protected Transform playerTransform;
 
-    public void SetTerritory(Territory territory)
-    {
-        this.territory = territory;
-    }
-
-    public void SetPlayerTransform(Transform playerTransform)
-    {
-        this.playerTransform = playerTransform;
-    }
-
+    public void SetTerritory(Territory territory) => this.territory = territory;
+    public void SetPlayerTransform(Transform playerTransform) => this.playerTransform = playerTransform;
     public Transform GetAttackTargetTransform() => attackTargetTransform;
 
     public virtual void Initialize() { }

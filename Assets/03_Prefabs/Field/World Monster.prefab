@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2070939421293872855
+--- !u!1001 &2822469624878238317
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -899081356136341341, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
       propertyPath: SortKey
-      value: 2224631477
+      value: 1777171379
       objectReference: {fileID: 0}
     - target: {fileID: -899081356136341341, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
       propertyPath: NetworkedBehaviours.Array.size
@@ -19,22 +19,18 @@ PrefabInstance:
     - target: {fileID: -899081356136341341, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
       propertyPath: 'NetworkedBehaviours.Array.data[0]'
       value: 
-      objectReference: {fileID: -6493832403160885226}
+      objectReference: {fileID: 3443739926629535264}
     - target: {fileID: -899081356136341341, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
       propertyPath: 'NetworkedBehaviours.Array.data[1]'
       value: 
-      objectReference: {fileID: 7834194089666279516}
+      objectReference: {fileID: 6282168818028803302}
+    - target: {fileID: -899081356136341341, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
+      propertyPath: 'NetworkedBehaviours.Array.data[2]'
+      value: 
+      objectReference: {fileID: 3443739926629535264}
     - target: {fileID: 1081141730720889549, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
       propertyPath: m_Name
-      value: Centipede
-      objectReference: {fileID: 0}
-    - target: {fileID: 6129699833028842371, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
-      propertyPath: 'Guid.RawGuidValue.Array.data[0]'
-      value: -4316331898746391041
-      objectReference: {fileID: 0}
-    - target: {fileID: 6129699833028842371, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
-      propertyPath: 'Guid.RawGuidValue.Array.data[1]'
-      value: -5362944273250199589
+      value: World Monster
       objectReference: {fileID: 0}
     - target: {fileID: 8854209350007772613, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
       propertyPath: m_LocalPosition.x
@@ -83,49 +79,41 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1081141730720889549, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
       insertIndex: 3
-      addedObject: {fileID: -6493832403160885226}
+      addedObject: {fileID: 3443739926629535264}
   m_SourcePrefab: {fileID: 100100000, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
---- !u!1 &1422443430145637402 stripped
+--- !u!4 &1882568577623817179 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4398705182232736182, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
+  m_PrefabInstance: {fileID: 2822469624878238317}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2894567192362922144 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1081141730720889549, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
-  m_PrefabInstance: {fileID: 2070939421293872855}
+  m_PrefabInstance: {fileID: 2822469624878238317}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-6493832403160885226
+--- !u!114 &3443739926629535264
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1422443430145637402}
+  m_GameObject: {fileID: 2894567192362922144}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbb5fc509bd3b66468e1edfb39720c16, type: 3}
+  m_Script: {fileID: 11500000, guid: 94317233cfe8d594cba65890a4543465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackTargetTransform: {fileID: 0}
+  attackTargetTransform: {fileID: 1882568577623817179}
   health: 10
-  movementSpeed: 3
-  arrivalThreshold: 0.1
+  moveSpeed: 3
+  arriveThreshold: 0.1
   playerTransform: {fileID: 0}
-  patrolMinimumRadius: 20
-  patrolMaximumRadius: 30
-  head: {fileID: 2722882217986662236}
-  segmentPrefab: {fileID: 5776121947721963262, guid: d0d9635bce618994abd89243759e8a5f, type: 3}
-  segmentCount: 12
-  segmentAmplitude: 1
-  segmentFrequency: 1
-  moveCountThreshold: 10
---- !u!4 &2722882217986662236 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4140191917587667339, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
-  m_PrefabInstance: {fileID: 2070939421293872855}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7834194089666279516 stripped
+--- !u!114 &6282168818028803302 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -1151282776921145717, guid: 1f07dcc6068889e46ba5ca7a07d5f118, type: 3}
-  m_PrefabInstance: {fileID: 2070939421293872855}
+  m_PrefabInstance: {fileID: 2822469624878238317}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1422443430145637402}
+  m_GameObject: {fileID: 2894567192362922144}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}

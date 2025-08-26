@@ -1,33 +1,32 @@
 using UnityEngine;
 
-public class Stalker : Monster
+public class Stalker : WorldMonster
 {
-    protected bool isChasing;
     [SerializeField] protected float sensingRange = 5f;
     [SerializeField] protected float attackRange = 2f;
-    [SerializeField] protected float attackSpeed = 5f;
+    [SerializeField] protected float attackSpeed = 1f;
 
+    protected bool isChasing;
     float attackElapsedTime = 0f;
 
-    public override void FixedUpdateNetwork()
+    public override void UpdateMonster()
     {
-        if (!Object.HasStateAuthority) { return; }
-
         if (isChasing)
         {
             Chase();
-            if (Vector3.Distance(transform.position, AttackTargetTransform.position) < attackRange)
+            if (Vector3.Distance(transform.position, attackTargetTransform.position) < attackRange)
             {
                 Attack();
             }
         }
         else
         {
-            base.FixedUpdateNetwork();
-            if (PlayerTransform == null) { return; }
-            if (Vector3.Distance(transform.position, PlayerTransform.position) < sensingRange)
+            base.UpdateMonster();
+
+            if (playerTransform == null) { return; }
+            if (Vector3.Distance(transform.position, playerTransform.position) < sensingRange)
             {
-                StartChasing(PlayerTransform);
+                StartChasing(playerTransform);
             }
         }
     }
@@ -37,25 +36,25 @@ public class Stalker : Monster
         attackElapsedTime += Time.deltaTime * attackSpeed;
         if (attackElapsedTime >= 1f)
         {
-            PlayerTransform.GetComponent<LocalRunner>().Health -= 1;
-            Debug.Log($"{name} attacks {PlayerTransform.name}");
+            playerTransform.GetComponent<IDamageable>()?.TakeDamage(1f);
+            Debug.Log($"{name} attacks {playerTransform.name}");
             attackElapsedTime = 0f;
         }
     }
 
     public void StartChasing(Transform target)
     {
-        AttackTargetTransform = target;
+        attackTargetTransform = target;
         isChasing = true;
     }
 
     protected virtual void Chase()
     {
-        if (AttackTargetTransform != null)
+        if (attackTargetTransform != null)
         {
-            Vector3 direction = (AttackTargetTransform.position - transform.position).normalized;
-            transform.position += moveSpeed * Time.deltaTime * direction;
-            transform.LookAt(AttackTargetTransform);
+            Vector3 direction = (attackTargetTransform.position - transform.position).normalized;
+            transform.position += movementSpeed * Time.deltaTime * direction;
+            transform.LookAt(attackTargetTransform);
         }
     }
 }

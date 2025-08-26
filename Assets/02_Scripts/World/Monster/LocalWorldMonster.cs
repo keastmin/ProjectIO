@@ -28,20 +28,14 @@ public class LocalWorldMonster : LocalMonster
         Handles.Label(transform.position + Vector3.up * 0.5f, name);
     }
 
-    public void SetPatrolPivotPosition(Vector3 position)
-    {
-        patrolPivotPosition = position;
-    }
+    public void SetPatrolPivotPosition(Vector3 position) => patrolPivotPosition = position;
 
     public override void Initialize()
     {
         patrolRadius = Random.Range(patrolMinimumRadius, patrolMaximumRadius);
     }
 
-    public override void UpdateMonster()
-    {
-        Patrol();
-    }
+    public override void UpdateMonster() => Patrol();
 
     protected virtual void Patrol()
     {

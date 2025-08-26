@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Centipede : Monster
+public class Centipede : WorldMonster
 {
     public Transform head;
     public GameObject segmentPrefab;
@@ -50,13 +50,13 @@ public class Centipede : Monster
         if (isPatrolling == false)
         {
             var randomTargetPosition = patrolPivotPosition + Random.insideUnitSphere * patrolRadius;
-            if (!Territory.IsPointInPolygon(randomTargetPosition))
+            if (!territory.IsPointInPolygon(randomTargetPosition))
             {
                 originalPosition = transform.position;
                 patrolTargetPosition = randomTargetPosition;
                 patrolTargetPosition.y = transform.position.y;
                 elapsedTime = 0;
-                duration = Vector3.Distance(transform.position, randomTargetPosition) / moveSpeed;
+                duration = Vector3.Distance(transform.position, randomTargetPosition) / movementSpeed;
                 isPatrolling = true;
             }
         }

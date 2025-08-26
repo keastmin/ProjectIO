@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5bb87f246c13904db2ae0f49e00b47c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _networkObject: {fileID: 7676691878658011539}
   _cost: 5
   _enemyLayer:
     serializedVersion: 2

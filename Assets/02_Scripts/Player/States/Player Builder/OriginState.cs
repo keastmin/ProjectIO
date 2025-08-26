@@ -10,6 +10,6 @@ public class OriginState : StateBehaviour
 
     protected override void OnEnterStateRender()
     {
-        
+        Debug.Log("Origin State");
     }
 }

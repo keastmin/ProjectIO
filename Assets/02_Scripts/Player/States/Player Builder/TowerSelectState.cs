@@ -13,6 +13,6 @@ public class TowerSelectState : StateBehaviour
 
     protected override void OnEnterStateRender()
     {
-        
+        Debug.Log("Tower Select State");
     }
 }

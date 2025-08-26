@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Tower: {fileID: 8082824450983989622, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
   TowerGhost: {fileID: 236603895008108142, guid: ad79879568175c049b82d7453499a2ea, type: 3}
+  TowerPrefabRef:
+    RawGuidValue: 6892247cd852b494dac5840fdd95f6ea

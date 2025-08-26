@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
 {
     [Header("Quick Start")]
+    public string QuickStartSessionName = "QuickStart";
     public bool QuickStart = false;
     public bool IsHost = true;
     public PlayerPosition StartPosition;
@@ -87,7 +88,7 @@ public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Host, // 호스트 모드로 시작
             PlayerCount = _maxPlayerCount, // 최대 2명으로 설정
-            SessionName = "QuickStartSession", // 룸 코드 랜덤 생성
+            SessionName = QuickStartSessionName, // 룸 코드 랜덤 생성
             SceneManager = Runner.GetComponent<NetworkSceneManagerDefault>() // 기본 씬 매니저 사용
         });
 
@@ -117,7 +118,7 @@ public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
         var result = await Runner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.Client, // 클라이언트 모드로 시작
-            SessionName = "QuickStartSession", // 참여할 룸 코드를 받아옴
+            SessionName = QuickStartSessionName, // 참여할 룸 코드를 받아옴
             SceneManager = Runner.GetComponent<NetworkSceneManagerDefault>(), // 기본 씬 매니저 사용
             EnableClientSessionCreation = false // 클라이언트 세션 생성 비활성화
         });

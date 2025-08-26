@@ -113,8 +113,6 @@ public class HexagonGridSystem : MonoBehaviour
         if (_territorySystem != null)
             isValid = _territorySystem.Territory.IsPointInPolygon(point);
 
-        // Debug.Log($"point: {point}, isValid: {isValid}");
-
         return isValid;
     }
 

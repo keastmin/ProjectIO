@@ -1,21 +1,36 @@
 using Fusion;
+using Fusion.Addons.FSM;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBuilder : Player
+public class PlayerBuilder : Player, IStateMachineOwner
 {
+    [Header("States")]
+    [SerializeField] private OriginState _originState; // 기본 상태
+    [SerializeField] private TowerSelectState _towerSelectState; // 타워 설치 상태
+    private StateMachine<StateBehaviour> _builderStateMachine; // 빌더의 State Machine
+
     [SerializeField] private LayerMask _environmentalLayer;
 
     [SerializeField] private TowerData _towerData;
     [SerializeField] private Tower _tower;
     [SerializeField] private TowerGhost _towerGhost;
 
+    void IStateMachineOwner.CollectStateMachines(List<IStateMachine> stateMachines)
+    {
+        _builderStateMachine = new StateMachine<StateBehaviour>("Builder State Machine", _originState, _towerSelectState);
+        stateMachines.Add(_builderStateMachine);
+    }
+
+    // 이 객체가 스폰될 때 수행되는 함수
     public override void Spawned()
     {
-
     }
 
     public override void FixedUpdateNetwork()
     {
+        _builderStateMachine.TryActivateState(_towerSelectState);
+        
         if (GetInput(out NetworkInputData data) && HexagonGridSystem.Instance)
         {
             bool mouseButton0 = data.MouseButton0.IsSet(NetworkInputData.MOUSEBUTTON0);

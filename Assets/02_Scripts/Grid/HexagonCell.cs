@@ -29,4 +29,10 @@ public class HexagonCell
     }
 
     public Vector3 WorldPosition => new Vector3(PosX, 0f, PosZ);
+
+    // 셀의 상태를 변화시키는 함수
+    public void ChangeState(GridState newState)
+    {
+        State = newState;
+    }
 }

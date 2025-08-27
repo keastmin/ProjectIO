@@ -58,12 +58,17 @@ public class HexagonGridSystem : MonoBehaviour
     }
 
     // 현재 마우스 위치로부터 가까운 셀의 중심 위치를 반환
-    public Vector3 GetNearGridPosition(Vector3 mousePosition)
+    public Vector3 GetNearGridPosition(Vector2Int index)
+    {
+        return _grid[index.x, index.y].WorldPosition;
+    }
+
+    public Vector2Int GetNearGridIndex(Vector3 mousePoint)
     {
         // 1) 월드XZ -> 그리드 원점 기준 상대좌표
         Vector3 origin = _collider.bounds.min;
         Vector2 originXZ = new Vector2(origin.x, origin.z);
-        Vector2 wp = new Vector2(mousePosition.x, mousePosition.z) - originXZ;
+        Vector2 wp = new Vector2(mousePoint.x, mousePoint.z) - originXZ;
 
         // 2) 월드XZ -> 축좌표(q, r) (Pointy-Top)
         float s = _length;
@@ -101,19 +106,40 @@ public class HexagonGridSystem : MonoBehaviour
         col = Mathf.Clamp(col, 0, _cellCountX - 1);
         row = Mathf.Clamp(row, 0, _cellCountY - 1);
 
-        // 6) 월드 중심 좌표 반환
-        return _grid[col, row].WorldPosition;
+        return new Vector2Int(col, row);
     }
 
-    public bool IsPointToTowerCraftValid(Vector3 mousePoint)
+    // 해당 셀의 위치에 타워 설치가 가능한지 판별하는 함수
+    public bool IsPointToTowerCraftValid(Vector2Int index)
     {
-        bool isValid = false;
-        Vector2 point = new Vector2(mousePoint.x, mousePoint.z);
-
+        // 해당 위치가 영역 밖이라면 false
         if (_territorySystem != null)
-            isValid = _territorySystem.Territory.IsPointInPolygon(point);
+        {
+            if (!_territorySystem.Territory.IsPointInPolygon(_grid[index.x, index.y].WorldPosition))
+            {
+                return false;
+            }
+        }
 
-        return isValid;
+        // 해당 셀이 이미 타워가 설치 되어 있으면 false
+        if (_grid[index.x, index.y].State == GridState.Tower)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    // 셀의 상태를 타워 상태로 변경하는 함수
+    public void ChangeGridCellToTowerState(Vector2Int index)
+    {
+        _grid[index.x, index.y].ChangeState(GridState.Tower);
+    }
+
+    // 셀의 상태를 None 상태로 변경하는 함수
+    public void ChangeGridCellToNoneState(Vector2Int index)
+    {
+        _grid[index.x, index.y].ChangeState(GridState.None);
     }
 
     private void OnDrawGizmos()

@@ -16,6 +16,8 @@ public class PlayerRegistry : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
+
+
         Debug.Log("스폰됨");
 
         // 싱글턴 인스턴스 설정

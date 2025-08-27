@@ -3,22 +3,6 @@ using Fusion.Addons.FSM;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class BuilderContext
-{
-    public PlayerBuilder OwnerBuilder;
-
-    public NetworkPrefabRef TowerRef => OwnerBuilder.SelcetTowerRef;
-    public Tower Tower => OwnerBuilder.SelectTower;
-    public TowerGhost TowerGhost => OwnerBuilder.SelectTowerGhost;
-
-    public LayerMask EnvironmentalLayer => OwnerBuilder.EnvironmentalLayer;
-}
-
-public abstract class BuilderStateBehaviour : StateBehaviour
-{
-    public BuilderContext ctx { get; set; }
-}
-
 public class PlayerBuilder : Player, IStateMachineOwner
 {
     [Header("States")]
@@ -72,44 +56,6 @@ public class PlayerBuilder : Player, IStateMachineOwner
     public override void FixedUpdateNetwork()
     {
         _builderStateMachine.TryToggleState<TowerSelectState>(IsTowerSelect);
-
-        //if (GetInput(out NetworkInputData data) && HexagonGridSystem.Instance)
-        //{
-        //    bool mouseButton0 = data.MouseButton0.IsSet(NetworkInputData.MOUSEBUTTON0);
-        //    bool mouseButton1 = data.MouseButton1.IsSet(NetworkInputData.MOUSEBUTTON1);
-        //    Vector3 towerPosition = HexagonGridSystem.Instance.GetNearGridPosition(data.MousePosition);
-
-        //    if (TowerRef != default)
-        //    {
-        //        if (mouseButton0 && HexagonGridSystem.Instance.IsPointToTowerCraftValid(towerPosition))
-        //        {
-        //            if (TowerCost <= StageManager.Instance.ResourceSystem.Mineral)
-        //            {
-        //                if (HasStateAuthority)
-        //                {
-        //                    SpawnTower(towerPosition, TowerCost);
-        //                    TowerRef = default;
-        //                    TowerCost = 0;
-        //                }
-        //                if (HasInputAuthority)
-        //                {
-        //                    Destroy(_towerGhost.gameObject);
-        //                }
-        //            }
-        //        }
-        //        else if (mouseButton1)
-        //        {
-        //            if (HasStateAuthority)
-        //            {
-        //                TowerRef = default;
-        //            }
-        //            if (HasInputAuthority)
-        //            {
-        //                Destroy(_towerGhost.gameObject);
-        //            }
-        //        }
-        //    }
-        //}
     }
 
     public void ClickTowerSelectButton(TowerData towerData)

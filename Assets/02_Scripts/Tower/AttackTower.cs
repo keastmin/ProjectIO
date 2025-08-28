@@ -4,49 +4,86 @@ using UnityEngine;
 
 public class AttackTower : Tower
 {
-    [SerializeField] private LayerMask _enemyLayer;
-    [SerializeField] private float _attackRange = 5f;
-    [SerializeField] private float _attackSpeed = 1f;
-    [SerializeField] private float _bulletSpeed = 20f;
-    [SerializeField] private float _rotateSpeed = 10f;
-    [SerializeField] private Bullet _bullet;
-    [SerializeField] private Transform _firePosition;
+    [Header("공격")]
+    [SerializeField] protected float _attackSpeed = 1f; // 공격 주기
+    [SerializeField] private Transform _attackPosition; // 공격 시작 지점
 
-    [Networked] private NetworkObject _target { get; set; }
-    [Networked] private TickTimer _tick { get; set; }
+    [Header("타겟 지정")]
+    [SerializeField] protected LayerMask _enemyLayer; // 감지할 의 레이어 마스크
+    [SerializeField] protected float _targettingRange = 5f; // 감지 가능한 거리
 
-    protected Queue<NetworkObject> queue;
-    protected int level;
-    private Collider[] _hits;
+    [Header("타겟에 대한 동작")]
+    [SerializeField] protected float _rotateSpeed = 10f; // 타겟을 바라보는 회전 속도
 
-    #region Legacy
-    public override void Spawned()
+    protected int level; // 타워의 레벨
+
+    protected Queue<Collider> _targetQueue; // 타겟을 저장하는 큐
+    [SerializeField] protected Collider _currTarget; // 현재 타겟
+
+    private TickTimer _attackTick; // 공격 주기를 계산하는 타이머
+
+    // 타워에서 타겟까지의 magnitude를 반환하는 메서드
+    private float GetTowerToTargetMagnitude(Vector3 monsterPos, Vector3 targetPos)
     {
-        if (_firePosition == null) _firePosition = transform;
-        _hits = new Collider[64];
-        _tick = TickTimer.CreateFromSeconds(Runner, 1f / Mathf.Max(0.0001f, _attackSpeed));
+        return (monsterPos - targetPos).sqrMagnitude;
     }
 
-    public override void FixedUpdateNetwork()
+    // 타겟이 유효한지 검증하는 메서드
+    private bool IsValidTarget()
     {
-        if (!Object.HasStateAuthority)
-            return;
+        float mag = GetTowerToTargetMagnitude(_currTarget.transform.position, transform.position);
+        return (mag <= _targettingRange * _targettingRange);
+    }
 
-        var ps = gameObject.scene.GetPhysicsScene();
-
-        // Transform 기반 이동(NMA/Translate 등) 반영
-        Physics.SyncTransforms();
-
-        // 현재 타겟 검증: 무효면 새로 획득
-        if (!IsTargetValid(_target))
+    // 타겟 설정 메서드
+    protected virtual void SetTarget()
+    {
+        // 현재 타겟이 있고, 타겟이 유효하지 않다면 타겟을 null로 비움
+        if (_currTarget != null && !IsValidTarget())
         {
-            _target = AcquireTarget(ps);
+            _currTarget = null;
         }
 
-        // Y축만 회전
-        if (_target)
+        // 타겟이 없다면 타겟 설정
+        if (_currTarget == null)
         {
-            Vector3 dir = _target.transform.position - transform.position;
+            Collider[] monsterCollider = Physics.OverlapSphere(
+                transform.position,
+                _targettingRange,
+                _enemyLayer
+            );
+
+            float best = float.MaxValue;
+            Collider bestMonsterCollider = null;
+
+            // 감지된 몬스터의 콜라이더 중 가장 가까운 콜라이더 판별
+            foreach (var mc in monsterCollider)
+            {
+                Vector3 monsterPos = mc.transform.position;
+                float mag = GetTowerToTargetMagnitude(monsterPos, transform.position);
+
+                if (best > mag)
+                {
+                    best = mag;
+                    bestMonsterCollider = mc;
+                }
+            }
+
+            // 가장 가까운 몬스터가 있다면 타겟 설정
+            if (bestMonsterCollider != null)
+            {
+                _currTarget = bestMonsterCollider;
+            }
+        }
+    }
+
+    // 타겟을 향해 회전하는 메서드
+    protected virtual void LookAtTarget() 
+    {
+        // Y축만 회전
+        if (_currTarget != null)
+        {
+            Vector3 dir = _currTarget.transform.position - transform.position;
             dir.y = 0f;
             if (dir.sqrMagnitude > 0.0001f)
             {
@@ -55,122 +92,6 @@ public class AttackTower : Tower
                     transform.rotation, look, _rotateSpeed * Runner.DeltaTime);
             }
         }
-
-        // 발사
-        if (_tick.ExpiredOrNotRunning(Runner))
-        {
-            _tick = TickTimer.CreateFromSeconds(Runner, 1f / Mathf.Max(0.0001f, _attackSpeed));
-
-            if (_target && _bullet)
-            {
-                Runner.Spawn(_bullet,
-                            _firePosition.position,
-                            Quaternion.identity,
-                            null,
-                            (runner, o) =>
-                            {
-                                o.GetComponent<Bullet>().Init(_target.transform, _bulletSpeed, _enemyLayer);
-                            });
-            }
-        }
     }
-
-    private bool IsTargetValid(NetworkObject no)
-    {
-        if (no == null) return false;
-        if (!no) return false;
-        if (!no.gameObject.activeInHierarchy) return false;
-
-        // 레이어/거리 체크
-        if (((1 << no.gameObject.layer) & _enemyLayer) == 0) return false;
-
-        float sq = (no.transform.position - transform.position).sqrMagnitude;
-        return sq <= _attackRange * _attackRange;
-    }
-
-    private NetworkObject AcquireTarget(PhysicsScene ps)
-    {
-        int count = ps.OverlapSphere(
-            transform.position,
-            _attackRange,
-            _hits,
-            _enemyLayer,                      // LayerMask -> int로 암시 변환
-            QueryTriggerInteraction.Collide   // 트리거 포함
-        );
-
-        float best = float.MaxValue;
-        NetworkObject bestNO = null;
-
-        for (int i = 0; i < count; i++)
-        {
-            var col = _hits[i];
-            _hits[i] = null; // 버퍼 정리
-
-            if (!col) continue;
-
-            // 콜라이더가 자식에 있을 수 있으므로 부모에서 찾기
-            var no = col.GetComponentInParent<NetworkObject>();
-            if (no == null || !no.gameObject || !no.gameObject.activeInHierarchy) continue;
-
-            float d = (no.transform.position - transform.position).sqrMagnitude;
-            if (d < best)
-            {
-                best = d;
-                bestNO = no;
-            }
-        }
-
-        return bestNO;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, _attackRange);
-    }
-
-    #endregion
-
-    protected virtual void SetTarget()
-    {
-        int count = Physics.OverlapSphereNonAlloc(
-            transform.position,
-            _attackRange,
-            _hits,
-            _enemyLayer,                      // LayerMask -> int로 암시 변환
-            QueryTriggerInteraction.Collide   // 트리거 포함
-        );
-
-
-        float best = float.MaxValue;
-        NetworkObject bestNO = null;
-
-        for (int i = 0; i < count; i++)
-        {
-            var col = _hits[i];
-            _hits[i] = null; // 버퍼 정리
-
-            if (!col) continue;
-
-            // 콜라이더가 자식에 있을 수 있으므로 부모에서 찾기
-            var no = col.GetComponentInParent<NetworkObject>();
-            if (no == null || !no.gameObject || !no.gameObject.activeInHierarchy) continue;
-
-            float d = (no.transform.position - transform.position).sqrMagnitude;
-            if (d < best)
-            {
-                best = d;
-                bestNO = no;
-            }
-        }
-
-        // return bestNO;
-    }
-    protected virtual void LookAtTarget() { }
     protected virtual void Fire() { }
-
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("trigger enter: " + other.name);
-    }
 }

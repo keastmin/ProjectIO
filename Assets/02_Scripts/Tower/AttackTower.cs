@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -14,8 +15,11 @@ public class AttackTower : Tower
     [Networked] private NetworkObject _target { get; set; }
     [Networked] private TickTimer _tick { get; set; }
 
+    protected Queue<NetworkObject> queue;
+    protected int level;
     private Collider[] _hits;
 
+    #region Legacy
     public override void Spawned()
     {
         if (_firePosition == null) _firePosition = transform;
@@ -123,5 +127,50 @@ public class AttackTower : Tower
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, _attackRange);
+    }
+
+    #endregion
+
+    protected virtual void SetTarget()
+    {
+        int count = Physics.OverlapSphereNonAlloc(
+            transform.position,
+            _attackRange,
+            _hits,
+            _enemyLayer,                      // LayerMask -> int로 암시 변환
+            QueryTriggerInteraction.Collide   // 트리거 포함
+        );
+
+
+        float best = float.MaxValue;
+        NetworkObject bestNO = null;
+
+        for (int i = 0; i < count; i++)
+        {
+            var col = _hits[i];
+            _hits[i] = null; // 버퍼 정리
+
+            if (!col) continue;
+
+            // 콜라이더가 자식에 있을 수 있으므로 부모에서 찾기
+            var no = col.GetComponentInParent<NetworkObject>();
+            if (no == null || !no.gameObject || !no.gameObject.activeInHierarchy) continue;
+
+            float d = (no.transform.position - transform.position).sqrMagnitude;
+            if (d < best)
+            {
+                best = d;
+                bestNO = no;
+            }
+        }
+
+        // return bestNO;
+    }
+    protected virtual void LookAtTarget() { }
+    protected virtual void Fire() { }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("trigger enter: " + other.name);
     }
 }

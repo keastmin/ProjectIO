@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 7657940020816805542}
   - component: {fileID: 2459832189856283664}
   - component: {fileID: 7676691878658011539}
+  - component: {fileID: 434116324808561885}
   m_Layer: 0
   m_Name: Attack Tower
   m_TagString: Untagged
@@ -167,7 +168,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5bb87f246c13904db2ae0f49e00b47c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _networkObject: {fileID: 7676691878658011539}
   _cost: 5
   _enemyLayer:
     serializedVersion: 2
@@ -238,6 +238,27 @@ MonoBehaviour:
   - {fileID: 8082824450983989622}
   - {fileID: 2459832189856283664}
   ForceRemoteRenderTimeframe: 0
+--- !u!135 &434116324808561885
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5793117889740293664}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7217573335109683160
 GameObject:
   m_ObjectHideFlags: 0

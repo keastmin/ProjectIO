@@ -115,7 +115,9 @@ public class HexagonGridSystem : MonoBehaviour
         // 해당 위치가 영역 밖이라면 false
         if (_territorySystem != null)
         {
-            if (!_territorySystem.Territory.IsPointInPolygon(_grid[index.x, index.y].WorldPosition))
+            Vector3 cellWorldPosition = _grid[index.x, index.y].WorldPosition;
+            Vector2 worldPosition2D = new Vector2(cellWorldPosition.x, cellWorldPosition.z);
+            if (!_territorySystem.Territory.IsPointInPolygon(worldPosition2D))
             {
                 return false;
             }

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43488c12847d0364199c9ab9f6f2544e, type: 3}
-  m_Name: Attack Tower Data
+  m_Name: Centry Gun Tower Data
   m_EditorClassIdentifier: 
-  Tower: {fileID: 8082824450983989622, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
-  TowerGhost: {fileID: 236603895008108142, guid: ad79879568175c049b82d7453499a2ea, type: 3}
+  Tower: {fileID: 5934703772361257757, guid: 907be4cd4193c1b429b00b2c8156f4dd, type: 3}
+  TowerGhost: {fileID: 7665473588800853303, guid: 162515771d3bb6042a6510821b3d1553, type: 3}
   TowerPrefabRef:
-    RawGuidValue: 6892247cd852b494dac5840fdd95f6ea
+    RawGuidValue: 907be4cd4193c1b429b00b2c8156f4dd

@@ -5,8 +5,6 @@ using UnityEngine;
 public class TowerSelectState : BuilderStateBehaviour
 {
     private TowerGhost _towerGhost;
-    private Vector2Int _index; // 타워를 설치할 셀의 인덱스
-    private bool _canBuildTower; // 타워 설치 가능 여부
 
     protected override void OnEnterStateRender()
     {
@@ -28,7 +26,7 @@ public class TowerSelectState : BuilderStateBehaviour
 
             if (Input.GetMouseButtonDown(0) && canTowerCraft)
             {
-                SpawnTower(ctx.TowerRef, buildPosition, cellIndex, ctx.Tower.Cost);
+                SpawnTower(ctx.TowerRef, buildPosition, cellIndex, ctx.Tower.Cost.Mineral);
             }
             else if (Input.GetMouseButtonDown(1))
             {
@@ -108,7 +106,7 @@ public class TowerSelectState : BuilderStateBehaviour
 
             _towerGhost.transform.position = buildPosition;
            
-            if(IsValidTowerCraft(cellIndex, ctx.Tower.Cost))
+            if(IsValidTowerCraft(cellIndex, ctx.Tower.Cost.Mineral))
             {
                 // 타워 설치가 가능하다면 푸른색으로 변경하고 타워 설치 가능 플래그를 true로 변경
                 _towerGhost.EnableTower();

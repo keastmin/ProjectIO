@@ -422,7 +422,7 @@ MonoBehaviour:
         m_MethodName: OnClickTowerSelectButton
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 4a6b171c2e7e5344eb08b2852999349c, type: 2}
+          m_ObjectArgument: {fileID: 11400000, guid: e69e6d4a543ff234f8a71c5e105035f7, type: 2}
           m_ObjectArgumentAssemblyTypeName: TowerData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1171,7 +1171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   territorySystem: {fileID: 1028244186}
   monsterParentTransform: {fileID: 1314383435}
-  monsterPrefab: {fileID: -5841351934475562450, guid: b08d26875fb37ec4fafe07eea190e799, type: 3}
+  monsterPrefab: {fileID: -7740008079418054329, guid: 016c82c53b2d0094ea2d7832ca2e11b1, type: 3}
   spawnCount: 10
   spawnRadius: 30
   playerTransform: {fileID: 0}
@@ -2017,10 +2017,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1f5ef8fb8438a49820e59bc0385ebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TowerSlots:
-  - {fileID: 196580185}
-  - {fileID: 1294630233}
-  - {fileID: 761845683}
 --- !u!1 &1196457873
 GameObject:
   m_ObjectHideFlags: 0

@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 6904440350234220960}
   - component: {fileID: 7665473588800853303}
   m_Layer: 0
-  m_Name: Centry Gun Tower Ghost
+  m_Name: Sentry Gun Tower Ghost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

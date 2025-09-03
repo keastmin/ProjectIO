@@ -6,7 +6,7 @@ public class AttackTower : Tower
 {
     [Header("공격")]
     [SerializeField] protected float _attackSpeed = 1f; // 공격 주기
-    [SerializeField] private Transform _attackPosition; // 공격 시작 지점
+    [SerializeField] protected Transform _attackPosition; // 공격 시작 지점
 
     [Header("타겟 지정")]
     [SerializeField] protected LayerMask _enemyLayer; // 감지할 의 레이어 마스크
@@ -20,7 +20,7 @@ public class AttackTower : Tower
     protected Queue<Collider> _targetQueue; // 타겟을 저장하는 큐
     [SerializeField] protected Collider _currTarget; // 현재 타겟
 
-    private TickTimer _attackTick; // 공격 주기를 계산하는 타이머
+    [Networked] protected TickTimer _attackTick { get; set; } // 공격 주기를 계산하는 타이머
 
     // 타워에서 타겟까지의 magnitude를 반환하는 메서드
     private float GetTowerToTargetMagnitude(Vector3 monsterPos, Vector3 targetPos)
@@ -93,5 +93,6 @@ public class AttackTower : Tower
             }
         }
     }
+
     protected virtual void Fire() { }
 }

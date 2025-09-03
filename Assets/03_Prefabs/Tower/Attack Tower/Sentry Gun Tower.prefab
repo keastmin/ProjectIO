@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 554064233507888941, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
       propertyPath: m_Name
-      value: Centry Gun Tower
+      value: Sentry Gun Tower
       objectReference: {fileID: 0}
     - target: {fileID: 4097201981202255514, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
       propertyPath: m_LocalPosition.x
@@ -98,8 +98,12 @@ MonoBehaviour:
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  _lockOnRange: 5
+  _targettingRange: 5
   _rotateSpeed: 10
+  _currTarget: {fileID: 0}
+  _bullet: {fileID: 3383989042019545065, guid: 022974b8ab27faa45b10e7989d5d7305, type: 3}
+  _bulletSpeed: 20
+  _bulletDamage: 2
 --- !u!135 &6738767568107957932
 SphereCollider:
   m_ObjectHideFlags: 0

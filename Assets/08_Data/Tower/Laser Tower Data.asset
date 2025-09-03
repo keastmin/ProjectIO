@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43488c12847d0364199c9ab9f6f2544e, type: 3}
+  m_Name: Laser Tower Data
+  m_EditorClassIdentifier: 
+  Tower: {fileID: 642142408883691842, guid: 53cd9bd1095bb2248906be863927d806, type: 3}
+  TowerGhost: {fileID: 3643084436076818065, guid: d4047c01a64313f429c07ff99a6dd73f, type: 3}
+  TowerPrefabRef:
+    RawGuidValue: 53cd9bd1095bb2248906be863927d806

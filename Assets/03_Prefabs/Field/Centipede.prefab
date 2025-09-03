@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2894567192362922144, guid: 3f204e3d39da8664e820553faf1f691e, type: 3}
       propertyPath: m_Name
-      value: Centipede 1
+      value: Centipede
       objectReference: {fileID: 0}
     - target: {fileID: 6102025025699949262, guid: 3f204e3d39da8664e820553faf1f691e, type: 3}
       propertyPath: SortKey
@@ -123,8 +123,8 @@ MonoBehaviour:
   head: {fileID: 7386142748793108289}
   segmentPrefab: {fileID: 5776121947721963262, guid: d0d9635bce618994abd89243759e8a5f, type: 3}
   segmentCount: 12
-  segmentAmplitude: 1
-  segmentFrequency: 1
+  segmentAmplitude: 3
+  segmentFrequency: 2
   moveCountThreshold: 10
 --- !u!4 &7386142748793108289 stripped
 Transform:

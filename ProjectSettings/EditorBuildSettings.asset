@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/01_Scenes/Fusion Test/FusionTest.unity
+    path: Assets/01_Scenes/FusionTest.unity
     guid: 3b0c61a0794f273408ee48be4d2f162a
   - enabled: 1
     path: Assets/01_Scenes/Fusion Test/FusionStartScene.unity

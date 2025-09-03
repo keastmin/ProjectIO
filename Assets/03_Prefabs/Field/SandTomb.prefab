@@ -246,5 +246,5 @@ MonoBehaviour:
   patrolMinimumRadius: 0
   patrolMaximumRadius: 0
   suckedIntoSpeed: 2
-  suckedIntoRadius: 10
+  suckedIntoRadius: 20
   attackSpeed: 1

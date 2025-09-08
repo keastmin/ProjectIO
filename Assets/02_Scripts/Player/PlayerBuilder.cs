@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerBuilder : Player, IStateMachineOwner
 {
+    public GameObject testObject;
+
     [Header("States")]
     [SerializeField] private OriginState _originState; // 기본 상태
     [SerializeField] private TowerSelectState _towerSelectState; // 타워 설치 상태

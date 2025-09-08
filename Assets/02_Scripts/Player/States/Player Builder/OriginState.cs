@@ -25,10 +25,13 @@ public class OriginState : BuilderStateBehaviour
             var ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out var hit, 5000f))
             {
-                var interactable = hit.collider.GetComponentInParent<InteractableObject>();
+                Instantiate(ctx.OwnerBuilder.testObject, hit.point, Quaternion.identity);
+                Debug.Log(hit.collider.name);
+
+                var interactable = hit.collider.GetComponentInParent<IInteractableObejct>();
                 if(interactable != null)
                 {
-                    Debug.Log("클릭");
+                    interactable.OnClickThisObject();
                 }
             }
         }

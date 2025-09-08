@@ -1,11 +1,5 @@
 using UnityEngine;
 
-public enum GridState
-{
-    None,
-    Tower
-}
-
 public class HexagonCell
 {
     // 인덱스

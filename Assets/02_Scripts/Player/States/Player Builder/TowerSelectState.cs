@@ -68,20 +68,20 @@ public class TowerSelectState : BuilderStateBehaviour
     // 스냅샷될 그리드의 인덱스를 반환하는 함수
     private Vector2Int GetSnapshotIndex(Vector3 mousePosition)
     {
-        return HexagonGridSystem.Instance.GetNearGridIndex(mousePosition);
+        return StageManager.Instance.GridSystem.GetNearGridIndex(mousePosition);
     }
 
     // 스냅샷될 셀의 위치를 반환하는 함수
     private Vector3 GetSnapshotPosition(Vector2Int index)
     {
-        return HexagonGridSystem.Instance.GetNearGridPosition(index);
+        return StageManager.Instance.GridSystem.GetNearGridPosition(index);
     }
 
     // 타워 설치가 가능한지 판별하는 함수
     private bool IsValidTowerCraft(Vector2Int index, int cost)
     {
         // 해당 셀에 타워 설치가 불가능 하다면 false
-        if (!HexagonGridSystem.Instance.IsPointToTowerCraftValid(index)) return false;
+        if (!StageManager.Instance.GridSystem.IsPointToTowerCraftValid(index)) return false;
 
         // 현재 가지고 있는 자원이 설치할 타워의 필요 자원보다 적다면 false
         if (StageManager.Instance.ResourceSystem.Mineral < cost) return false;
@@ -130,7 +130,7 @@ public class TowerSelectState : BuilderStateBehaviour
         // 만약 호스트가 아니라면 로컬에서도 셀의 상태를 바꿈
         if(!HasStateAuthority && HasInputAuthority)
         {
-            HexagonGridSystem.Instance.ChangeGridCellToTowerState(cellIndex);
+            StageManager.Instance.GridSystem.ChangeGridCellToTowerState(cellIndex);
         }
     }
 
@@ -139,7 +139,7 @@ public class TowerSelectState : BuilderStateBehaviour
     private void RPC_SpawnTower(NetworkPrefabRef towerRef, Vector3 buildPosition, Vector2Int index, int cost)
     {
         StageManager.Instance.ResourceSystem.Mineral -= cost;
-        HexagonGridSystem.Instance.ChangeGridCellToTowerState(index);
+        StageManager.Instance.GridSystem.ChangeGridCellToTowerState(index);
         Runner.Spawn(towerRef, buildPosition, Quaternion.identity);
         ctx.OwnerBuilder.IsTowerSelect = false;
     }

@@ -26,6 +26,7 @@ public class StageManager : NetworkBehaviour
     [Header("Local Systems")]
     [SerializeField] private CinemachineSystem cinemachineSystemPrefab; // 시네머신 시스템 프리팸
     [SerializeField] private StageUIController _stageUIController; // 이 게임 스테이지의 UI 컨트롤러
+    public HexagonGridSystem GridSystem; // 그리드 시스템
 
     [Space(10)]
 
@@ -37,10 +38,14 @@ public class StageManager : NetworkBehaviour
     {
         Instance = this;
 
+        // 로컬 시스템 - 그리드 시스템 초기화(Laboratory 스폰 전에 초기화 필요)
+        InitGridSystem();
+
         if (HasStateAuthority)
         {
             SpawnPlayer();
             SpawnNetworkInputSystem();
+            SpawnLaboratory();
         }
 
         foreach (var system in systems)
@@ -58,7 +63,7 @@ public class StageManager : NetworkBehaviour
     void SpawnPlayer()
     {
         var runnerPlayer = PlayerRegistry.Instance.GetPlayerRefFromPosition(PlayerPosition.Runner);
-        PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero, Quaternion.identity, runnerPlayer);
+        PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity, runnerPlayer);
         PlayerRunner.name = $"{Runner.name} - Player Runner";
 
         var builderPlayer = PlayerRegistry.Instance.GetPlayerRefFromPosition(PlayerPosition.Builder);
@@ -93,5 +98,36 @@ public class StageManager : NetworkBehaviour
     {
         var playerPosition = PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer]; // 현재 자신의 역할군을 가져옴
         _stageUIController.SetPlayerUI(playerPosition); // 자신의 역할군에 따라 UI를 설정
+    }
+
+    // 그리드 시스템 초기화
+    private void InitGridSystem()
+    {
+        GridSystem.InitGrid();
+    }
+
+    // 연구소 스폰
+    private void SpawnLaboratory()
+    {
+        Vector2Int index = new Vector2Int(GridSystem.CellCountX / 2, GridSystem.CellCountY / 2);
+        Vector3 labPos = GridSystem.GetNearGridPosition(index);
+
+        Runner.Spawn(ResourceManager.Instance.LaboratoryPrefab, labPos);
+
+        RPC_SetLaboratoryCell(index);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SetLaboratoryCell(Vector2Int index)
+    {
+        Vector2Int[] indices = { new Vector2Int(index.x - 1, index.y - 1), new Vector2Int(index.x, index.y - 1),
+                                 index, new Vector2Int(index.x - 1, index.y), new Vector2Int(index.x + 1, index.y), 
+                                 new Vector2Int(index.x - 1, index.y + 1), new Vector2Int(index.x, index.y + 1) };
+
+        // 그리드에 표시
+        foreach (var i in indices)
+        {
+            GridSystem.ChangeGridCellToLaboratoryState(i);
+        }
     }
 }

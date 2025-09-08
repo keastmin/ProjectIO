@@ -1,9 +1,8 @@
+using System;
 using UnityEngine;
 
 public class HexagonGridSystem : MonoBehaviour
 {
-    public static HexagonGridSystem Instance;
-
     [Header("Cell Size")]
     [SerializeField] [Min(0.1f)] private float _length = 1.5f; // 정육각형의 한 변의 길이
 
@@ -14,7 +13,7 @@ public class HexagonGridSystem : MonoBehaviour
     [Header("Territory")]
     [SerializeField] private TerritorySystem _territorySystem;
 
-    private MeshCollider _collider;
+    private MeshCollider _collider; // 평면 콜라이더
 
     private HexagonCell[,] _grid; // 그리드
 
@@ -24,30 +23,29 @@ public class HexagonGridSystem : MonoBehaviour
     float zStep => (1.5f * _length);       // 1.5 * s
     const float SQRT3 = 1.7320508075688772f;
 
+    // 프로퍼티
+    public int CellCountX => _cellCountX;
+    public int CellCountY => _cellCountY;
+
     private void OnValidate()
     {
-        InitGrid(_cellCountX, _cellCountY);
+        InitGrid();
     }
 
-    private void Awake()
+    // 그리드 시스템 초기화
+    public void InitGrid()
     {
-        Instance = this;
-        OnValidate();
-    }
-
-    private void InitGrid(int countX, int countY)
-    {
-        _grid = new HexagonCell[countX, countY];
+        _grid = new HexagonCell[_cellCountX, _cellCountY];
 
         TryGetComponent(out _collider);
-      
+
         Vector3 origin = _collider.bounds.min;
 
-        for (int y = 0; y < countY; y++)
+        for (int y = 0; y < _cellCountY; y++)
         {
             float rowOffsetX = (y & 1) == 1 ? width : 0; 
 
-            for (int x = 0; x < countX; x++)
+            for (int x = 0; x < _cellCountX; x++)
             {
                 float posX = origin.x + (x * xStep) + rowOffsetX;
                 float posZ = origin.z + (y * zStep);
@@ -123,8 +121,8 @@ public class HexagonGridSystem : MonoBehaviour
             }
         }
 
-        // 해당 셀이 이미 타워가 설치 되어 있으면 false
-        if (_grid[index.x, index.y].State == GridState.Tower)
+        // 해당 셀이 비어있지 않으면 false
+        if (_grid[index.x, index.y].State != GridState.None)
         {
             return false;
         }
@@ -144,12 +142,18 @@ public class HexagonGridSystem : MonoBehaviour
         _grid[index.x, index.y].ChangeState(GridState.None);
     }
 
+    // 셀의 상태를 Laboratory 상태로 변경하는 함수
+    public void ChangeGridCellToLaboratoryState(Vector2Int index)
+    {
+        _grid[index.x, index.y].ChangeState(GridState.Laboratory);
+    }
+
     private void OnDrawGizmos()
     {
-        if(_grid != null)
+        if (_grid != null)
         {
             Gizmos.color = Color.red;
-            foreach(var cell in _grid)
+            foreach (var cell in _grid)
             {
                 Gizmos.DrawSphere(cell.WorldPosition, 0.3f);
             }

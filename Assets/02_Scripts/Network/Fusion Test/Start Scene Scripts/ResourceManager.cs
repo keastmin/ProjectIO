@@ -6,6 +6,7 @@ public class ResourceManager : MonoBehaviour
 
     public PlayerBuilder PlayerBuilderPrefab;
     public PlayerRunner PlayerRunnerPrefab;
+    public Laboratory LaboratoryPrefab;
 
     private void Awake()
     {

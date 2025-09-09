@@ -25,7 +25,7 @@ public class StageManager : NetworkBehaviour
 
     [Header("Local Systems")]
     [SerializeField] private CinemachineSystem cinemachineSystemPrefab; // 시네머신 시스템 프리팸
-    [SerializeField] private StageUIController _stageUIController; // 이 게임 스테이지의 UI 컨트롤러
+    public StageUIController UIController; // 이 게임 스테이지의 UI 컨트롤러
     public HexagonGridSystem GridSystem; // 그리드 시스템
 
     [Space(10)]
@@ -97,7 +97,7 @@ public class StageManager : NetworkBehaviour
     private void InitUIController()
     {
         var playerPosition = PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer]; // 현재 자신의 역할군을 가져옴
-        _stageUIController.SetPlayerUI(playerPosition); // 자신의 역할군에 따라 UI를 설정
+        UIController.SetPlayerUI(playerPosition); // 자신의 역할군에 따라 UI를 설정
     }
 
     // 그리드 시스템 초기화

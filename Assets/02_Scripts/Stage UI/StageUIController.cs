@@ -3,8 +3,8 @@ using UnityEngine.Events;
 
 public class StageUIController : MonoBehaviour
 {
-    [SerializeField] private GameObject _builderUI; // 플레이어 빌더가 보게 될 UI 오브젝트
-    [SerializeField] private GameObject _runnerUI; // 플레이어 러너가 보게 될 UI 오브젝트
+    public PlayerBuilderUI BuilderUI; // 플레이어 빌더가 보게 될 UI 오브젝트
+    public GameObject RuunnerUI; // 플레이어 러너가 보게 될 UI 오브젝트
 
     private void Awake()
     {
@@ -20,10 +20,10 @@ public class StageUIController : MonoBehaviour
         switch (playerPosition)
         {
             case PlayerPosition.Builder:
-                _builderUI.SetActive(true);
+                BuilderUI.gameObject.SetActive(true);
                 break;
             case PlayerPosition.Runner:
-                _runnerUI.SetActive(true);
+                RuunnerUI.SetActive(true);
                 break;
         }
     }
@@ -33,7 +33,7 @@ public class StageUIController : MonoBehaviour
     /// </summary>
     public void SetDisableAllUI()
     {
-        _builderUI.SetActive(false);
-        _runnerUI.SetActive(false);
+        BuilderUI.gameObject.SetActive(false);
+        RuunnerUI.SetActive(false);
     }
 }

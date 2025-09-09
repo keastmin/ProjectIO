@@ -361,6 +361,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -730773238839307985, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 554064233507888941, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
       propertyPath: m_Name
       value: Blade Tower

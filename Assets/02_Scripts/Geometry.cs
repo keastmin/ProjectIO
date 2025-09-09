@@ -6,7 +6,7 @@ public static class Geometry
 
     private static float Cross(Vector2 a, Vector2 b) => a.x * b.y - a.y * b.x;
 
-    public static bool SegmentIntersection(Vector2 A, Vector2 B, Vector2 C, Vector2 D, out Vector2 intersection)
+    public static bool SegmentIntersection(Vector2 A, Vector2 B, Vector2 C, Vector2 D, bool includeEndpoints, out Vector2 intersection)
     {
         intersection = default;
 
@@ -40,7 +40,7 @@ public static class Geometry
                 float tmin = Mathf.Min(t0, t1);
                 float tmax = Mathf.Max(t0, t1);
 
-                if (tmax < 0f || tmin > 1f) return false; // 안 겹침
+                if (tmax <= 0f || tmin >= 1f) return false; // 안 겹침
 
                 // 겹침: 단일 교점을 원하면 경계점 중 하나를 반환
                 float t = Mathf.Clamp01((Mathf.Abs(tmin - 1f) < Mathf.Abs(tmax) ? 1f : 0f));
@@ -55,9 +55,9 @@ public static class Geometry
         float t_ = Cross(AC, s) / rxs;
         float u_ = Cross(AC, r) / rxs;
 
-        if(t_ >= -EPS && t_ <= 1f + EPS && u_ >= -EPS && u_ <= 1f + EPS)
+        if(includeEndpoints && t_ >= -EPS && t_ <= 1f + EPS && u_ >= -EPS && u_ <= 1f + EPS)
         {
-            // 구간 안: 교점
+            // 구간 안: 교점, 끝점 인식
             intersection = A + t_ * r;
             return true;
         }

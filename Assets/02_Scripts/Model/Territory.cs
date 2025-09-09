@@ -232,7 +232,7 @@ public class Territory
             if ((pi.y >= point.y) != (pj.y >= point.y))
             {
                 float atX = (pj.x - pi.x) * (point.y - pi.y) / (pj.y - pi.y + Mathf.Epsilon) + pi.x;
-                if (point.x < atX)
+                if (point.x <= atX)
                     isInside = !isInside;
             }
         }

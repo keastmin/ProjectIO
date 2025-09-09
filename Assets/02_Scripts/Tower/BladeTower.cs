@@ -69,7 +69,7 @@ public class BladeTower : AttackTower
 
     bool CheckTargetInAttackRange()
     {
-        if (_currTarget == null) return false;
+        if (_currTarget == null) { return false; }
 
         float distance = Vector3.SqrMagnitude(transform.position - _currTarget.transform.position);
         return distance <= AttackRange * AttackRange;

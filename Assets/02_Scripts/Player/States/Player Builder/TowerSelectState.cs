@@ -1,10 +1,17 @@
 using Fusion;
 using Fusion.Addons.FSM;
+using System;
 using UnityEngine;
 
 public class TowerSelectState : BuilderStateBehaviour
 {
     private TowerGhost _towerGhost;
+
+    [Networked] private NetworkBool _towerBuild { get; set; }
+    [Networked] private NetworkPrefabRef _prefabRef { get; set; }
+    [Networked] private Vector3 _buildPos { get; set; }
+    [Networked] private Vector2Int _buildIndex { get; set; }
+    [Networked] private int _buildCost { get; set; }
 
     protected override void OnEnterStateRender()
     {
@@ -16,8 +23,24 @@ public class TowerSelectState : BuilderStateBehaviour
         }
     }
 
+    protected override void OnFixedUpdate()
+    {
+        if (_towerBuild)
+        {
+            // 호스트라면 타워 스폰
+            if (HasStateAuthority)
+            {
+                SpawnTower(); // 타워 스폰
+            }
+
+            // 설치한 위치에 해당하는 그리드 셀을 타워 상태로 변경
+            StageManager.Instance.GridSystem.ChangeGridCellToTowerState(_buildIndex);
+        }
+    }
+
     protected override void OnRender()
     {
+        // 로컬에서 타워가 설치될 위치를 타워 예시로 확인
         if (HasInputAuthority)
         {
             Vector3 buildPosition;
@@ -26,7 +49,7 @@ public class TowerSelectState : BuilderStateBehaviour
 
             if (Input.GetMouseButtonDown(0) && canTowerCraft)
             {
-                SpawnTower(ctx.TowerRef, buildPosition, cellIndex, ctx.Tower.Cost.Mineral);
+                RequestTowerSpawn(ctx.TowerRef, buildPosition, cellIndex, ctx.Tower.Cost.Mineral);
             }
             else if (Input.GetMouseButtonDown(1))
             {
@@ -40,6 +63,10 @@ public class TowerSelectState : BuilderStateBehaviour
         if (HasInputAuthority)
         {
             DestroyTowerGhost();
+        }
+        if (HasStateAuthority)
+        {
+            InitNetworkValue();
         }
     }
 
@@ -122,30 +149,44 @@ public class TowerSelectState : BuilderStateBehaviour
         return canTowerCraft;
     }
 
-    // 타워를 스폰하는 함수
-    private void SpawnTower(NetworkPrefabRef towerRef, Vector3 buildPosition, Vector2Int cellIndex, int towerCost)
+    // 호스트에게 타워 스폰 플래그를 활성화 요청
+    private void RequestTowerSpawn(NetworkPrefabRef towerRef, Vector3 buildPosition, Vector2Int cellIndex, int towerCost)
     {
-        RPC_SpawnTower(towerRef, buildPosition, cellIndex, towerCost);
-
-        // 만약 호스트가 아니라면 로컬에서도 셀의 상태를 바꿈
-        if(!HasStateAuthority && HasInputAuthority)
-        {
-            StageManager.Instance.GridSystem.ChangeGridCellToTowerState(cellIndex);
-        }
+        RPC_SetTowerInfo(towerRef, buildPosition, cellIndex, towerCost);
     }
 
     // 호스트에게 코스트만큼 소유한 자원 감소, 타워를 설치한 셀의 상태 변화, 타워 스폰, 빌더의 상태 변화를 요청
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void RPC_SpawnTower(NetworkPrefabRef towerRef, Vector3 buildPosition, Vector2Int index, int cost)
+    private void RPC_SetTowerInfo(NetworkPrefabRef towerRef, Vector3 buildPosition, Vector2Int index, int cost)
     {
-        StageManager.Instance.ResourceSystem.Mineral -= cost;
-        StageManager.Instance.GridSystem.ChangeGridCellToTowerState(index);
-        Runner.Spawn(towerRef, buildPosition, Quaternion.identity);
+        _towerBuild = true;
+        _prefabRef = towerRef;
+        _buildPos = buildPosition;
+        _buildIndex = index;
+        _buildCost = cost;
+    }
+
+    // 호스트에게 코스트만큼 소유한 자원을 감소시키고, 타워를 스폰하며 빌더의 상태 변화시키기를 요청
+    private void SpawnTower()
+    {
+        StageManager.Instance.ResourceSystem.Mineral -= _buildCost;
+        Runner.Spawn(_prefabRef, _buildPos, Quaternion.identity);
         ctx.OwnerBuilder.IsTowerSelect = false;
     }
 
+    // 로컬로 보고있던 예시 타워를 파괴
     private void DestroyTowerGhost()
     {
         if (_towerGhost) Destroy(_towerGhost.gameObject);
+    }
+
+    // 호스트가 타워 설치를 위해 가지고 있던 타워 정보를 초기화
+    private void InitNetworkValue()
+    {
+        _towerBuild = false;
+        _buildCost = 0;
+        _buildIndex = default;
+        _buildPos = default;
+        _prefabRef = default;
     }
 }

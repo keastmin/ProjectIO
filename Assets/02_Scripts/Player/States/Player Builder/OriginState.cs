@@ -3,36 +3,47 @@ using UnityEngine;
 
 public class OriginState : BuilderStateBehaviour
 {
+    bool isClick = false;
+
     protected override void OnEnterStateRender()
     {
         Debug.Log("Origin State");
+        isClick = false;
+    }
+
+    protected override void OnFixedUpdate()
+    {
+        if (HasInputAuthority && isClick)
+        {
+            ClickInteractableObject();
+            isClick = false;
+        }
     }
 
     protected override void OnRender()
     {
         if (HasInputAuthority)
         {
-            ClickInteractableObject();
+            ClickFlagOn();
         }
+    }
+
+    private void ClickFlagOn()
+    {
+        isClick = isClick | Input.GetMouseButtonDown(0);
     }
 
     // Interactable Object 컴포넌트가 있는 오브젝트를 클릭했을 때
     private void ClickInteractableObject()
     {
-        if (Input.GetMouseButtonDown(0))
+        var cam = Camera.main;
+        var ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit, 5000f))
         {
-            var cam = Camera.main;
-            var ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit, 5000f))
+            var interactable = hit.collider.GetComponentInParent<IInteractableObejct>();
+            if (interactable != null)
             {
-                Instantiate(ctx.OwnerBuilder.testObject, hit.point, Quaternion.identity);
-                Debug.Log(hit.collider.name);
-
-                var interactable = hit.collider.GetComponentInParent<IInteractableObejct>();
-                if(interactable != null)
-                {
-                    interactable.OnClickThisObject();
-                }
+                interactable.OnClickThisObject();
             }
         }
     }

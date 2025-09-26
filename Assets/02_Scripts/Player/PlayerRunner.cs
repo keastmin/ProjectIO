@@ -34,6 +34,24 @@ public class PlayerRunner : Player, IDamageable
             float speed = data.DashInput.IsSet(NetworkInputData.DASH_INPUT) ? _moveSpeed * 2f : _moveSpeed;
             data.PlayerRunnerDirection.Normalize();
             _rigidbody.linearVelocity = speed * data.PlayerRunnerDirection;
+
+            // 러너 아이템 사용
+            var itemUsing = data.ItemInput.IsSet(NetworkInputData.ITEM_INPUT);
+            if (itemUsing)
+            {
+                Debug.Log("아이템 사용");
+                Debug.Log(data.SelectedItem);
+            }
+
+            // 러너 스킬 사용
+            var skillUsing = data.SkillInput.IsSet(NetworkInputData.SKILL_INPUT);
+            if (skillUsing)
+                Debug.Log("스킬 사용");
+
+            // 러너 상호작용
+            var interactUsing = data.InteractInput.IsSet(NetworkInputData.INTERACT_INPUT);
+            if (interactUsing)
+                Debug.Log("상호작용 사용");
         }
 
         // 영역에 관한 로직 이벤트 수행

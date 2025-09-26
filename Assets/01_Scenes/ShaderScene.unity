@@ -244,6 +244,7 @@ MonoBehaviour:
   _length: 1.5
   _cellCountX: 20
   _cellCountY: 23
+  _territorySystem: {fileID: 0}
 --- !u!1 &1370509762
 GameObject:
   m_ObjectHideFlags: 0

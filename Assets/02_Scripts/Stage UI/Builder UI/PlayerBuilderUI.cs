@@ -7,35 +7,10 @@ public class PlayerBuilderUI : MonoBehaviour
     [SerializeField] private GameObject _towerListUI;
     [SerializeField] private GameObject _laboratoryUI;
 
-    private void Awake()
+    private void OnEnable()
     {
         _builderMainUI.SetActive(true);
         _towerListUI.SetActive(false);
-        _laboratoryUI.SetActive(false);
-    }
-
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            _builderMainUI.SetActive(true);
-            _towerListUI.SetActive(false);
-            _laboratoryUI.SetActive(false);
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            OpenTowerListUI();
-        }
-    }
-
-    public void OpenTowerListUI()
-    {
-        bool isActive = _towerListUI.activeSelf;
-
-        _builderMainUI.SetActive(isActive);
-        _towerListUI.SetActive(!isActive);
-
         _laboratoryUI.SetActive(false);
     }
 

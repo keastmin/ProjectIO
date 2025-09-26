@@ -10,6 +10,10 @@ public class BuilderMainUI : MonoBehaviour
         {
             OnClickTowerSelectButton();
         }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            OnClickLaboratoryButton();
+        }
     }
 
     // 타워 선택 UI를 띄우는 함수
@@ -17,5 +21,11 @@ public class BuilderMainUI : MonoBehaviour
     {
         _towerListUI.gameObject.SetActive(true);
         gameObject.SetActive(false);
+    }
+
+    // 연구소 UI를 띄우는 함수
+    public void OnClickLaboratoryButton()
+    {
+        StageManager.Instance.UIController.BuilderUI.OpenLaboratoryUpgradeUI();
     }
 }

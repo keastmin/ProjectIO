@@ -2,6 +2,7 @@ using Fusion;
 using Fusion.Addons.FSM;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerBuilder : Player
 {
@@ -34,10 +35,18 @@ public class PlayerBuilder : Player
                     // 우클릭을 하면 타워 설치 대기 취소
                     CancelStandByTowerBuild();
                 }
-                else if(Input.GetMouseButtonDown(0) && _canTowerBuild)
+                else if(Input.GetMouseButtonDown(0) && _canTowerBuild && !EventSystem.current.IsPointerOverGameObject())
                 {
                     // 좌클릭을 하면 타워 설치
                     RPC_TowerBuild(_towerRef, _towerBuildPosition, _towerCost.Mineral);
+                    StageManager.Instance.GridSystem.ChangeGridCellToTowerState(_towerBuildIndex);
+                }
+            }
+            else
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    OnClickInteractableObject();
                 }
             }
         }
@@ -150,7 +159,26 @@ public class PlayerBuilder : Player
 
     #endregion
 
+    #region 월드 오브젝트 상호작용
+
+    private void OnClickInteractableObject()
+    {
+        var cam = Camera.main;
+        var ray = cam.ScreenPointToRay(Input.mousePosition);
+        if(Physics.Raycast(ray, out var hit, 5000))
+        {
+            var inter = hit.collider.GetComponentInParent<IInteractableObejct>();
+            if (inter != null)
+            {
+                inter.OnClickThisObject();
+            }
+        }
+    }
+
+    #endregion
+
     public override void FixedUpdateNetwork()
     {
+
     }
 }

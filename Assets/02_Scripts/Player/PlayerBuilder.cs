@@ -44,7 +44,7 @@ public class PlayerBuilder : Player
             }
             else
             {
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                 {
                     OnClickInteractableObject();
                 }

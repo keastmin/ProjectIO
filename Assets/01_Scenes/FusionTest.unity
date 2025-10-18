@@ -1852,6 +1852,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerBuilderPrefab: {fileID: 3984747633682037487, guid: 515b90f1716e1d14a9fa8526fb3363d7, type: 3}
   PlayerRunnerPrefab: {fileID: 6623639392449802583, guid: b8a1ffa8094371542a9c31e14125af5b, type: 3}
+  LaboratoryPrefab: {fileID: 1113385613191258577, guid: cb7c4388cdc1a4b4084f48f24a1af3a8, type: 3}
 --- !u!4 &1034320524
 Transform:
   m_ObjectHideFlags: 0
@@ -1897,6 +1898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3494a5ce54ed2646bdf6f0a8a59fb1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  QuickStartSessionName: QuickStartA
   QuickStart: 1
   IsHost: 1
   StartPosition: 1

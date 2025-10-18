@@ -10,6 +10,7 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField] private LayerMask _environmentalLayer;
 
     private bool _dashInput = false; // 러너의 대쉬 입력
+    private bool _slideInput = false; // 러너의 슬라이드 입력
     private int _selectedItem = 0; // 러너 아이템
     private bool _mouseButton0 = false; // 마우스 좌클릭
     private bool _mouseButton1 = false; // 마우스 우클릭
@@ -19,23 +20,24 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
     private void Update()
     {
         _dashInput = _dashInput | Input.GetKey(KeyCode.LeftShift); // 왼쪽 쉬프트를 통해 _dashInput 여부 검사
+        _slideInput = _slideInput | Input.GetKey(KeyCode.LeftControl); // 왼쪽 컨트롤을 통해 _slideInput 여부 검사
         _mouseButton0 = _mouseButton0 | Input.GetMouseButtonDown(0); // 마우스 좌클릭 여부 검사
         _mouseButton1 = _mouseButton1 | Input.GetMouseButtonDown(1); // 마우스 우클릭 여부 검사
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _selectedItem = 0;
+            _selectedItem = 1;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _selectedItem = 1;
+            _selectedItem = 2;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            _selectedItem = 2;
+            _selectedItem = 3;
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            _selectedItem = 3;
+            _selectedItem = 4;
         }
     }
 
@@ -71,6 +73,9 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
         data.DashInput.Set(NetworkInputData.DASH_INPUT, _dashInput);
         _dashInput = false;
 
+        data.SlideInput.Set(NetworkInputData.SLIDE_INPUT, _slideInput);
+        _slideInput = false;
+
         // 아이템 사용
         data.ItemInput.Set(NetworkInputData.ITEM_INPUT, Input.GetKey(KeyCode.Q));
         data.SelectedItem = _selectedItem;
@@ -80,6 +85,10 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
 
         // 상호작용
         data.InteractInput.Set(NetworkInputData.INTERACT_INPUT, Input.GetKey(KeyCode.F));
+        data.LaboratoryInput.Set(NetworkInputData.LABORATORY_INPUT, Input.GetKey(KeyCode.Space));
+
+        // 무기 사용
+        data.WeaponInput.Set(NetworkInputData.WEAPON_INPUT, Input.GetMouseButtonDown(0));
 
         // ---------------------------------------------------------------------------------------
 

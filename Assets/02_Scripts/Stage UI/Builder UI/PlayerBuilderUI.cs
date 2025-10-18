@@ -5,44 +5,55 @@ using UnityEngine;
 public class PlayerBuilderUI : MonoBehaviour
 {
     [SerializeField] private GameObject _builderMainUI;
-    [SerializeField] private GameObject _towerBuildUI;
+    [SerializeField] private GameObject _towerListUI;
+    [SerializeField] private GameObject _attackTowerListUI;
+    [SerializeField] private GameObject _centerTowerListUI;
+    [SerializeField] private GameObject _supportTowerListUI;
     [SerializeField] private GameObject _laboratoryUI;
 
-    public bool IsLaboratoryUIActive => _laboratoryUI.activeSelf;
+    private List<GameObject> _uiList;
+    private GameObject _lastUI;
 
-    private void Update()
+    private void Awake()
     {
-        if(IsLaboratoryUIActive && Input.GetMouseButtonDown(1))
-        {
-            OnClickLaboratoryButton(false);
-        }
+        _uiList = new List<GameObject>() { _builderMainUI, _towerListUI, _attackTowerListUI,
+        _centerTowerListUI, _supportTowerListUI, _laboratoryUI};
+        InitUIState();
     }
 
-    // 타워 선택 버튼 클릭 이벤트
-    public void OnClickTowerButton(TowerData data)
+    // UI 상태 초기화
+    private void InitUIState()
     {
-        var manager = StageManager.Instance;
-        if(manager != null)
+        _builderMainUI.SetActive(true);
+        _towerListUI.SetActive(false);
+        _attackTowerListUI.SetActive(false);
+        _centerTowerListUI.SetActive(false);
+        _supportTowerListUI.SetActive(false);
+        _laboratoryUI.SetActive(false);
+    }
+
+    // 연구소 UI를 여는 로직
+    public void OpenLaboratoryUpgradeUI()
+    {
+        bool isActive = _laboratoryUI.activeSelf;
+
+        _laboratoryUI.SetActive(!isActive);
+        if (isActive)
         {
-            var builder = manager.PlayerBuilder;
-            if(builder != null)
+            _lastUI.SetActive(true);
+            _lastUI = null;
+        }
+        else
+        {
+            for (int i = 0; i < _uiList.Count; i++)
             {
-                builder.StandByTowerBuild(data);
+                if (_uiList[i].activeSelf)
+                {
+                    _lastUI = _uiList[i];
+                    _uiList[i].SetActive(false);
+                    break;
+                }
             }
         }
-    }
-
-    // 실험실 버튼 클릭 이벤트
-    public void OnClickLaboratoryButton(bool isActive)
-    {
-        _builderMainUI.SetActive(!isActive);
-        _laboratoryUI.SetActive(isActive);
-    }
-
-    // 타워 건설 UI 활성화/비활성화
-    public void ActivationTowerBuildUI(bool isActive)
-    {
-        _builderMainUI.SetActive(!isActive);
-        _towerBuildUI.SetActive(isActive);
     }
 }

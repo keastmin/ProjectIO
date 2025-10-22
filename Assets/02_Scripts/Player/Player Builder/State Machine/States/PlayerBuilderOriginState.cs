@@ -59,5 +59,9 @@ public class PlayerBuilderOriginState : IPlayerState
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerBuildState);
         }
+        else if (_player.IsSelectTower)
+        {
+            _player.StateMachine.TransitionToState(_player.StateMachine.TowerSelectState);
+        }
     }
 }

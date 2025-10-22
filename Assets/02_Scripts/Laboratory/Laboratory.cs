@@ -1,7 +1,7 @@
 using Fusion;
 using UnityEngine;
 
-public class Laboratory : NetworkBehaviour, IInteractableObejct
+public class Laboratory : NetworkBehaviour, IInteractableObject
 {
 
     #region IInteractableObject
@@ -14,6 +14,11 @@ public class Laboratory : NetworkBehaviour, IInteractableObejct
         {
             StageManager.Instance.UIController.BuilderUI.OnClickLaboratoryButton(true);
         }
+    }
+
+    public void OnDragThisObject()
+    {
+
     }
 
     #endregion

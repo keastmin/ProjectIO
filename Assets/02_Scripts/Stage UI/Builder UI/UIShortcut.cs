@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class UIShortcut : MonoBehaviour
 {
@@ -43,7 +45,7 @@ public class UIShortcut : MonoBehaviour
         foreach (var info in currentTop.Shortcuts)
         {
             // 단축키가 눌렸는지 확인
-            if (Input.GetKeyDown(info.ShortcutKey))
+            if (!info.IsLongPress && Input.GetKeyDown(info.ShortcutKey))
             {
                 // 단축키에 해당하는 버튼 클릭 이벤트 호출
                 info.ShortcutButton.onClick.Invoke();
@@ -58,5 +60,18 @@ public class UIShortcut : MonoBehaviour
         currentTop.DeactiveThisPart();
         _uiShortcutPartStack.Push(nextPart);
         nextPart.ActiveThisPart();
+    }
+
+    // 스택과 UI 상태 메인으로 초기화
+    public void Clear()
+    {
+        if(_uiShortcutPartStack.Count > 1)
+        {
+            while(_uiShortcutPartStack.Count > 1)
+            {
+                _uiShortcutPartStack.Pop().gameObject.SetActive(false);
+            }
+            _uiShortcutPartStack.Peek().gameObject.SetActive(true);
+        }
     }
 }

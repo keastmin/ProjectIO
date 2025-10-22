@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class UIShortcutPart : MonoBehaviour
 {
-    [Min(0)] public int Priority;
     public UIShortcutInfo[] Shortcuts;
 
     [Header("Tween")]

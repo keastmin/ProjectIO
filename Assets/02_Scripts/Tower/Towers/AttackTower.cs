@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
-public class AttackTower : Tower
+public class AttackTower : Tower, IInteractableObject
 {
     [Header("공격")]
     [SerializeField] protected float _attackSpeed = 1f; // 공격 주기
@@ -95,4 +95,22 @@ public class AttackTower : Tower
     }
 
     protected virtual void Fire() { }
+
+    #region IInteractableObject 구현
+
+    // 공격 타워를 클릭했을 때 호출되는 메서드
+    public void OnClickThisObject()
+    {
+        var manager = StageManager.Instance;
+        if(manager != null)
+        {
+            manager.PlayerBuilder.ClickAttackTower(this);
+        }
+    }
+
+    public void OnDragThisObject()
+    {
+
+    }
+    #endregion
 }

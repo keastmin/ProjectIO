@@ -1,19 +1,17 @@
 using UnityEngine;
 
-public class PlayerBuilderTowerSelectState : IPlayerState
+public class PlayerBuilderTowerDragState : IPlayerState
 {
     private PlayerBuilder _player;
 
-    public PlayerBuilderTowerSelectState(PlayerBuilder player)
+    public PlayerBuilderTowerDragState(PlayerBuilder player)
     {
         _player = player;
     }
 
     public void Enter()
     {
-        var manager = StageManager.Instance;
-        if (manager != null)
-            manager.UIController.BuilderUI.ActivationTowerSelectUI(true);
+        
     }
 
     public void Exit()

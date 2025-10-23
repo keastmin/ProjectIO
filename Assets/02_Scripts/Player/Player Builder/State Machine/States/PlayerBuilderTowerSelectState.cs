@@ -16,21 +16,6 @@ public class PlayerBuilderTowerSelectState : IPlayerState
             manager.UIController.BuilderUI.ActivationTowerSelectUI(true);
     }
 
-    public void Exit()
-    {
-        
-    }
-
-    public void LateUpdate()
-    {
-        
-    }
-
-    public void NetworkFixedUpdate()
-    {
-        
-    }
-
     public void Render()
     {
         
@@ -38,6 +23,35 @@ public class PlayerBuilderTowerSelectState : IPlayerState
 
     public void Update()
     {
-        
+
+
+        TransitionTo();
+    }
+
+    public void LateUpdate()
+    {
+
+    }
+
+    public void NetworkFixedUpdate()
+    {
+
+    }
+
+    public void Exit()
+    {
+        _player.BuilderSelectTowerSetting(false, null);
+
+        var manager = StageManager.Instance;
+        if (manager != null)
+            manager.UIController.BuilderUI.ActivationTowerSelectUI(false);
+    }
+
+    private void TransitionTo()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            _player.StateMachine.TransitionToState(_player.StateMachine.OriginState);
+        }
     }
 }

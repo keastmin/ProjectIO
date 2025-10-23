@@ -1,45 +1,76 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class CustomButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     [SerializeField] private float _longPressDuration = 1.3f;
+    [SerializeField] private Slider _slider;
     public UnityEvent SuccessEvent;
 
     private bool _isPressed = false;
     private float _pressTime = 0f;
+    public float PressTime
+    {
+        get
+        {
+            return _pressTime;
+        }
+        set
+        {
+            _pressTime = value;
+            if(_slider != null)
+            {
+                _slider.value = _pressTime / _longPressDuration;
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        SetPressState(false);
+    }
+
+    private void OnDisable()
+    {
+        SetPressState(false);
+    }
 
     private void Update()
     {
         if (_isPressed)
         {
-            Debug.Log(_pressTime);
+            PressTime += Time.deltaTime;
 
-            if(_pressTime >= _longPressDuration)
+            Debug.Log(PressTime);
+
+            if(PressTime >= _longPressDuration)
             {
                 SuccessEvent.Invoke();
-                _isPressed = false;
-                _pressTime = 0f;
+                SetPressState(false);
             }
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        _isPressed = true;
-        _pressTime = 0f;
+        SetPressState(true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        _isPressed = false;
-        _pressTime = 0f;
+        SetPressState(false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        _isPressed = false;
-        _pressTime = 0f;
+        SetPressState(false);
+    }
+
+    private void SetPressState(bool pressed)
+    {
+        _isPressed = pressed;
+        PressTime = 0f;
     }
 }

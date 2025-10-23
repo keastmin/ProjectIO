@@ -104,7 +104,8 @@ public class AttackTower : Tower, IInteractableObject
         var manager = StageManager.Instance;
         if(manager != null)
         {
-            manager.PlayerBuilder.ClickAttackTower(this);
+            // 빌더의 타워 선택 상태를 true로 변경하고 선택된 타워를 현재 타워로 설정
+            manager.PlayerBuilder.BuilderSelectTowerSetting(true, this);
         }
     }
 

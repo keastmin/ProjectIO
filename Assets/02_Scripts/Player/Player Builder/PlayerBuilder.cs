@@ -31,6 +31,7 @@ public class PlayerBuilder : Player
 
     // UI와의 상호작용 변수
     public bool IsStandByTowerBuild { get; set; }
+    public bool IsOpeningLaboratory { get; set; }
 
     // 상태머신
     public PlayerBuilderStateMachine StateMachine;
@@ -81,6 +82,16 @@ public class PlayerBuilder : Player
 
     #endregion
 
+    #region 연구실 로직
+
+    public void OpenLaboratory(bool isOpening)
+    {
+        IsOpeningLaboratory = isOpening;
+    }
+
+    #endregion
+
+
     #region 월드 오브젝트 상호작용
 
     public void OnClickInteractableObject()
@@ -97,10 +108,10 @@ public class PlayerBuilder : Player
         }
     }
 
-    // 공격 타워 클릭 시 타워 선택 상태로 전환
-    public void ClickAttackTower(AttackTower tower)
+    // 빌더의 타워 선택 상태 설정
+    public void BuilderSelectTowerSetting(bool isSelectTower, AttackTower tower)
     {
-        IsSelectTower = true;
+        IsSelectTower = isSelectTower;
         _selectedAttackTower = tower;
     }
 

@@ -19,33 +19,24 @@ public class PlayerBuilderUI : MonoBehaviour
         _towerSelectUI.SetActive(false);
     }
 
-    private void Update()
-    {
-        if(IsLaboratoryUIActive && Input.GetMouseButtonDown(1))
-        {
-            OnClickLaboratoryButton(false);
-        }
-    }
+    #region 클릭 이벤트 메서드
 
     // 타워 선택 버튼 클릭 이벤트
     public void OnClickTowerButton(TowerData data)
     {
-        var manager = StageManager.Instance;
-        if(manager != null)
+        if (IsPlayerBuilderExist(out PlayerBuilder builder))
         {
-            var builder = manager.PlayerBuilder;
-            if(builder != null)
-            {
-                builder.StandByTowerBuild(data);
-            }
+            builder.StandByTowerBuild(data);
         }
     }
 
     // 실험실 버튼 클릭 이벤트
     public void OnClickLaboratoryButton(bool isActive)
     {
-        _builderMainUI.SetActive(!isActive);
-        _laboratoryUI.SetActive(isActive);
+        if (IsPlayerBuilderExist(out PlayerBuilder builder))
+        {
+            builder.OpenLaboratory(isActive);
+        }
     }
 
     // 타워 판매 버튼 클릭 이벤트
@@ -63,6 +54,17 @@ public class PlayerBuilderUI : MonoBehaviour
 
     // 타워 업그레이드 버튼 클릭 이벤트
 
+    #endregion
+
+    #region UI 활성화/비활성화 메서드
+
+    // 실험실 UI 활성화/비활성화
+    public void ActivationLaboratoryUI(bool isActive)
+    {
+        _builderMainUI.SetActive(!isActive);
+        _laboratoryUI.SetActive(isActive);
+    }
+
     // 타워 건설 UI 활성화/비활성화
     public void ActivationTowerBuildUI(bool isActive)
     {
@@ -75,5 +77,24 @@ public class PlayerBuilderUI : MonoBehaviour
     {
         _builderMainUI.SetActive(!isActive);
         _towerSelectUI.SetActive(isActive);
+    }
+
+    #endregion
+
+
+    // 플레이어 필더가 존재하는지 확인
+    private bool IsPlayerBuilderExist(out PlayerBuilder builder)
+    {
+        builder = null;
+        var manager = StageManager.Instance;
+        if(manager != null)
+        {
+            builder = manager.PlayerBuilder;
+            if(builder != null)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

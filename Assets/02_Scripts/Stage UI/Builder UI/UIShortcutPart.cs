@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class UIShortcutPart : MonoBehaviour
 {
+    public UIShortcutLongPressInfo[] ShortcutLongPresses;
     public UIShortcutInfo[] Shortcuts;
 
     [Header("Tween")]

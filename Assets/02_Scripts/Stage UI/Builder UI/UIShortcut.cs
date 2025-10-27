@@ -27,6 +27,7 @@ public class UIShortcut : MonoBehaviour
             else // 숏컷 확인
             {
                 DetectShortcutInput(top);
+                DetectLongPressInput(top);
             }
         }
     }
@@ -40,15 +41,32 @@ public class UIShortcut : MonoBehaviour
         previousTop.ActiveThisPart();
     }
 
+    // 숏컷 키 감지
     public void DetectShortcutInput(UIShortcutPart currentTop)
     {
         foreach (var info in currentTop.Shortcuts)
         {
             // 단축키가 눌렸는지 확인
-            if (!info.IsLongPress && Input.GetKeyDown(info.ShortcutKey))
+            if (Input.GetKeyDown(info.ShortcutKey))
             {
                 // 단축키에 해당하는 버튼 클릭 이벤트 호출
                 info.ShortcutButton.onClick.Invoke();
+            }
+        }
+    }
+
+    // 길게 누르는 숏컷 감지
+    private void DetectLongPressInput(UIShortcutPart currentTop)
+    {
+        foreach(var info in currentTop.ShortcutLongPresses)
+        {
+            if (Input.GetKeyDown(info.ShortcutKey))
+            {
+                info.ShortcutLongPressButton.SetUpPress(true);
+            }
+            else if (Input.GetKeyUp(info.ShortcutKey))
+            {
+                info.ShortcutLongPressButton.SetUpPress(false);
             }
         }
     }

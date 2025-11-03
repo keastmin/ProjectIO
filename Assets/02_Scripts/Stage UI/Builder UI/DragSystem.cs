@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class DragSystem : MonoBehaviour
@@ -54,6 +55,8 @@ public class DragSystem : MonoBehaviour
 
     private void DragStart(Mouse mouse)
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return; // 다른 UI 위에서는 드래그가 시작되지 않음
+
         var mousePos = mouse.position.ReadValue(); // UI 스크린 상의 마우스 위치
         if (TryPojectToCameraPlane(_cam, mousePos, _planeHeight, out _startWorldPos) && !_isDragging)
         {

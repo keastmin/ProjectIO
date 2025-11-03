@@ -16,6 +16,9 @@ public class PlayerBuilder : Player
     [SerializeField] private float _dragDetectorHeight = 3f;
     [SerializeField] private LayerMask _dragDetectLayer;
 
+    [Header("UI")]
+    [SerializeField] private PlayerBuilderUI _builderUI; // UI 참조
+
     [SerializeField] private CinemachineCamera _cineCam;
     [SerializeField] private LayerMask _environmentalLayer;
 
@@ -50,6 +53,12 @@ public class PlayerBuilder : Player
     public PlayerBuilderStateMachine StateMachine;
     public bool IsSelectTower { get; set; }
 
+    #region 프로퍼티
+
+    public PlayerBuilderUI BuilderUI => _builderUI;
+
+    #endregion
+
     public void Awake()
     {
         _dragSelectedColliders = new Collider[100];
@@ -76,6 +85,16 @@ public class PlayerBuilder : Player
     {
         StateMachine.LateUpdate();
     }
+
+    #region 초기화 로직
+
+    // 참조를 주입하는 로직
+    public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI)
+    {
+        _builderUI = builderUI;
+    }
+
+    #endregion
 
     #region 타워 선택 로직
 

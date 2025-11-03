@@ -8,6 +8,7 @@ public class PlayerBuilderUI : MonoBehaviour
     [SerializeField] private GameObject _towerBuildUI;
     [SerializeField] private GameObject _laboratoryUI;
     [SerializeField] private GameObject _towerSelectUI;
+    [SerializeField] private DragSystem _dragSystem;
 
     public bool IsLaboratoryUIActive => _laboratoryUI.activeSelf;
 
@@ -77,6 +78,16 @@ public class PlayerBuilderUI : MonoBehaviour
     {
         _builderMainUI.SetActive(!isActive);
         _towerSelectUI.SetActive(isActive);
+    }
+
+    #endregion
+
+    #region Drag System
+
+    // 드래그 시스템 활성화/비활성화
+    public void DragSystemActivation(bool activation)
+    {
+        _dragSystem.gameObject.SetActive(activation);
     }
 
     #endregion

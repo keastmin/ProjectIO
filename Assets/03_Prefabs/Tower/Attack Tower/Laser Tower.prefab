@@ -496,6 +496,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser Tower
       objectReference: {fileID: 0}
+    - target: {fileID: 1821111103899054318, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4097201981202255514, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -603,6 +607,7 @@ MonoBehaviour:
     m_Bits: 64
   _targettingRange: 5
   _rotateSpeed: 10
+  _selectedChecker: {fileID: 3526814471284373224}
   _currTarget: {fileID: 0}
   _laser: {fileID: 215352874251757992}
   _laserWidth: 1
@@ -717,6 +722,11 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &3526814471284373224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1821111103899054318, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 3005064187948860934}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8324309076444236548 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6499190095465434370, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}

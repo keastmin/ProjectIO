@@ -50,6 +50,10 @@ MonoBehaviour:
   _cameraMaxZoomDistance: 11
   _cameraWheelPerZoomDistance: 10
   _zoomSmoothTime: 0.12
+  _dragDetectorHeight: 3
+  _dragDetectLayer:
+    serializedVersion: 2
+    m_Bits: 256
   _cineCam: {fileID: 0}
   _environmentalLayer:
     serializedVersion: 2

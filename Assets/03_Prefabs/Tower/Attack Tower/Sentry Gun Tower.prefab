@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sentry Gun Tower
       objectReference: {fileID: 0}
+    - target: {fileID: 1821111103899054318, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4097201981202255514, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -117,6 +121,7 @@ MonoBehaviour:
     m_Bits: 64
   _targettingRange: 5
   _rotateSpeed: 10
+  _selectedChecker: {fileID: 6484556048017894728}
   _currTarget: {fileID: 0}
   _bullet: {fileID: 3383989042019545065, guid: 022974b8ab27faa45b10e7989d5d7305, type: 3}
   _bulletSpeed: 20
@@ -141,5 +146,10 @@ MonoBehaviour:
 --- !u!4 &5158920055649005697 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 513425532071931175, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 4663521085442727334}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6484556048017894728 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1821111103899054318, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
   m_PrefabInstance: {fileID: 4663521085442727334}
   m_PrefabAsset: {fileID: 0}

@@ -13,6 +13,7 @@ public class PlayerBuilderOriginState : IPlayerState
     public void Enter()
     {
         Debug.Log("Origin State");
+        _player.DragOn();
     }
 
     public void Update()
@@ -58,6 +59,10 @@ public class PlayerBuilderOriginState : IPlayerState
         else if(_player.IsStandByTowerBuild)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerBuildState);
+        }
+        else if (_player.IsSelectTower)
+        {
+            _player.StateMachine.TransitionToState(_player.StateMachine.TowerSelectState);
         }
     }
 }

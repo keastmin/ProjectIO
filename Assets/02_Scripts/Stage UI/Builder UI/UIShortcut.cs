@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class UIShortcut : MonoBehaviour
 {
@@ -25,6 +27,7 @@ public class UIShortcut : MonoBehaviour
             else // 숏컷 확인
             {
                 DetectShortcutInput(top);
+                DetectLongPressInput(top);
             }
         }
     }
@@ -38,6 +41,7 @@ public class UIShortcut : MonoBehaviour
         previousTop.ActiveThisPart();
     }
 
+    // 숏컷 키 감지
     public void DetectShortcutInput(UIShortcutPart currentTop)
     {
         foreach (var info in currentTop.Shortcuts)
@@ -51,6 +55,22 @@ public class UIShortcut : MonoBehaviour
         }
     }
 
+    // 길게 누르는 숏컷 감지
+    private void DetectLongPressInput(UIShortcutPart currentTop)
+    {
+        foreach(var info in currentTop.ShortcutLongPresses)
+        {
+            if (Input.GetKeyDown(info.ShortcutKey))
+            {
+                info.ShortcutLongPressButton.SetUpPress(true);
+            }
+            else if (Input.GetKeyUp(info.ShortcutKey))
+            {
+                info.ShortcutLongPressButton.SetUpPress(false);
+            }
+        }
+    }
+
     // 다음 파트로 이동하는 버튼 클릭 이벤트
     public void OnClickNextPartButton(UIShortcutPart nextPart)
     {
@@ -58,5 +78,18 @@ public class UIShortcut : MonoBehaviour
         currentTop.DeactiveThisPart();
         _uiShortcutPartStack.Push(nextPart);
         nextPart.ActiveThisPart();
+    }
+
+    // 스택과 UI 상태 메인으로 초기화
+    public void Clear()
+    {
+        if(_uiShortcutPartStack.Count > 1)
+        {
+            while(_uiShortcutPartStack.Count > 1)
+            {
+                _uiShortcutPartStack.Pop().gameObject.SetActive(false);
+            }
+            _uiShortcutPartStack.Peek().gameObject.SetActive(true);
+        }
     }
 }

@@ -2089,7 +2089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b94350b5b4a7b724f83c84334f495d5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuilderUI: {fileID: 0}
+  BuilderUI: {fileID: 2067878119}
   RuunnerUI: {fileID: 1259220219}
 --- !u!1 &1254791977
 GameObject:
@@ -2886,6 +2886,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Builder UI
       objectReference: {fileID: 0}
+    - target: {fileID: 7909199387718648634, guid: 4c2035059c69fbc42b20cd4a6d5d7c03, type: 3}
+      propertyPath: _canvas
+      value: 
+      objectReference: {fileID: 886242801}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2896,6 +2900,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 182327087933826819, guid: 4c2035059c69fbc42b20cd4a6d5d7c03, type: 3}
   m_PrefabInstance: {fileID: 2067878117}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2067878119 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3104967173947594314, guid: 4c2035059c69fbc42b20cd4a6d5d7c03, type: 3}
+  m_PrefabInstance: {fileID: 2067878117}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad5362d625c77647874d1c674ec0e6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2085469497
 GameObject:
   m_ObjectHideFlags: 0

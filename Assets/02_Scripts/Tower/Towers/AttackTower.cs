@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class AttackTower : Tower
+public class AttackTower : Tower, IInteractableObject
 {
     [Header("공격")]
     [SerializeField] protected float _attackSpeed = 1f; // 공격 주기
@@ -14,6 +15,22 @@ public class AttackTower : Tower
 
     [Header("타겟에 대한 동작")]
     [SerializeField] protected float _rotateSpeed = 10f; // 타겟을 바라보는 회전 속도
+
+    [Header("선택 시 표시")]
+    [SerializeField] protected GameObject _selectedChecker; // 타워 선택 시 표시 오브젝트
+    [SerializeField] protected Image _selectedImage; // 타워 선택 시 UI에 표시될 이미지
+    protected bool _isSelectedTower = false; // 타워 선택 여부
+
+
+    public bool IsSelectedTower
+    {
+        get { return _isSelectedTower; }
+        set
+        {
+            _isSelectedTower = value;
+            ChangeSelectTowerMaterial(_selectedChecker, _isSelectedTower);
+        }
+    }
 
     protected int level; // 타워의 레벨
 
@@ -95,4 +112,39 @@ public class AttackTower : Tower
     }
 
     protected virtual void Fire() { }
+
+    #region IInteractableObject 구현
+
+    // 공격 타워를 클릭했을 때 호출되는 메서드
+    public void OnClickThisObject()
+    {
+        var manager = StageManager.Instance;
+        if(manager != null)
+        {
+            // 빌더의 타워 선택 상태를 true로 변경하고 선택된 타워를 현재 타워로 설정
+            manager.PlayerBuilder.BuilderSelectTowerSetting(true, this);
+        }
+    }
+
+    public void OnDragThisObject()
+    {
+
+    }
+    #endregion
+
+    #region 타워 선택 메서드
+
+    // 타워 선택 토글 메서드
+    public void ChangeSelectValue(bool selected)
+    {
+        IsSelectedTower = selected;
+    }
+
+    // 타워 선택시 머티리얼 변경 메서드
+    private void ChangeSelectTowerMaterial(GameObject checker, bool selected)
+    {
+        checker.SetActive(selected);
+    }
+
+    #endregion
 }

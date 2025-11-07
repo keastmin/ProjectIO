@@ -36,6 +36,9 @@ public class StageManager : NetworkBehaviour
     public TerritoryView TerritoryView;
     public TrackView TrackView;
 
+    // 빌더 참조 바인더
+    private PlayerBuilderReferenceBinder _builderBinder;
+
     public override void Spawned()
     {
         Instance = this;
@@ -60,6 +63,9 @@ public class StageManager : NetworkBehaviour
 
         // 로컬 시스템 - UI 초기화
         InitUIController();
+
+        // 마지막으로 빌더에게 필요한 참조들 바인드 해주기
+        BuilderReferenceBind();
     }
 
     void SpawnPlayer()
@@ -134,4 +140,17 @@ public class StageManager : NetworkBehaviour
             GridSystem.ChangeGridCellToLaboratoryState(i);
         }
     }
+
+    #region 참조 주입
+
+    // 빌더에게 필요한 참조 주입
+    private void BuilderReferenceBind()
+    {
+        _builderBinder = new PlayerBuilderReferenceBinder();
+
+        // 플레이어 빌더에게 UI 참조 주입
+        _builderBinder.BuilderUIBind(PlayerBuilder, UIController.BuilderUI);
+    }
+
+    #endregion
 }

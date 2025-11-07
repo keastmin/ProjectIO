@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Missile Tower
       objectReference: {fileID: 0}
+    - target: {fileID: 1821111103899054318, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4097201981202255514, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -104,6 +108,7 @@ MonoBehaviour:
     m_Bits: 64
   _targettingRange: 10
   _rotateSpeed: 10
+  _selectedChecker: {fileID: 1485205250601839287}
   _currTarget: {fileID: 0}
   MuzzleTransform: {fileID: 790783490424944510}
   MissilePrefab: {fileID: -8257491614462668254, guid: 28d14186b36c59e459e4d71d5ff83aca, type: 3}
@@ -115,6 +120,11 @@ MonoBehaviour:
 --- !u!4 &790783490424944510 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 513425532071931175, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 997935067257297497}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1485205250601839287 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1821111103899054318, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
   m_PrefabInstance: {fileID: 997935067257297497}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &3678503065273866599 stripped

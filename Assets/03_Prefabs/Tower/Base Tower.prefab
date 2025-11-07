@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 44500988820789863}
   - component: {fileID: 3255684489515176642}
   - component: {fileID: 5361554817355102395}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 1727701568027292707}
   - component: {fileID: 9093304404240583085}
   - component: {fileID: 7003783486209734470}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Base Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 2140176875165017450}
   - component: {fileID: 831070126545173350}
   - component: {fileID: 8854195836421655088}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8295083220190493215}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Tower Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

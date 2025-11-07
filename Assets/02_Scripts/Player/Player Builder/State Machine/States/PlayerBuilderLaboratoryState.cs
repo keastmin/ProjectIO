@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerBuilderLaboratoryState : IPlayerState
@@ -36,14 +37,17 @@ public class PlayerBuilderLaboratoryState : IPlayerState
     }
 
     public void Exit() 
-    { 
-
+    {
+        var manager = StageManager.Instance;
+        if(manager!= null)
+        {
+            manager.UIController.BuilderUI.ActivationLaboratoryUI(false);
+        }
     }
 
     private void TransitionTo()
     {
-        var stageManager = StageManager.Instance;
-        if(stageManager != null && !stageManager.UIController.BuilderUI.IsLaboratoryUIActive)
+        if(Input.GetMouseButtonDown(1))
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.OriginState);
         }

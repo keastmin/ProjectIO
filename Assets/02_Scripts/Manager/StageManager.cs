@@ -5,6 +5,8 @@ public class StageManager : NetworkBehaviour
 {
     [Networked] public PlayerRunner PlayerRunner { get; set; }
     [Networked] public PlayerBuilder PlayerBuilder { get; set; }
+    [Networked] public Laboratory Laboratory { get; set; }
+    public CinemachineSystem CinemachineSystem { get; private set; }
 
     public static StageManager Instance { get; private set; }
 
@@ -91,6 +93,14 @@ public class StageManager : NetworkBehaviour
     {
         var instance = Instantiate(cinemachineSystemPrefab); // 시네머신 시스템 인스턴스 생성
         instance.InitCinemachineCamera(PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer], PlayerRunner, PlayerBuilder);
+        CinemachineSystem = instance;
+        //instance.name = $"{Runner.name} - CinemachineSystem";
+        //Debug.Log($"{Runner.name} - CinemachineSystem spawned");
+
+        //instance.SetRunnerCameraTarget(PlayerRunner.transform); // 플레이어 러너 오브젝트를 러너 카메라의 타겟으로 설정
+
+        //var currentPlayerPosition = PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer]; // 현재 자신의 역할군을 가져옴
+        //instance.SetCinemachinePriority(currentPlayerPosition); // 자신의 역할군에 따라 시네머신 카메라의 우선순위를 설정
     }
 
     // 정해진 역할군에 따라 표현되는 UI를 초기화, 타워 슬롯 버튼을 설정
@@ -112,7 +122,7 @@ public class StageManager : NetworkBehaviour
         Vector2Int index = new Vector2Int(GridSystem.CellCountX / 2, GridSystem.CellCountY / 2);
         Vector3 labPos = GridSystem.GetNearGridPosition(index);
 
-        Runner.Spawn(ResourceManager.Instance.LaboratoryPrefab, labPos);
+        Laboratory = Runner.Spawn(ResourceManager.Instance.LaboratoryPrefab, labPos);
 
         RPC_SetLaboratoryCell(index);
     }

@@ -88,7 +88,7 @@ public class PlayerBuilder : Player
 
     #region 초기화 로직
 
-    // 참조를 주입하는 로직
+    // UI 참조를 주입하는 로직
     public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI)
     {
         _builderUI = builderUI;

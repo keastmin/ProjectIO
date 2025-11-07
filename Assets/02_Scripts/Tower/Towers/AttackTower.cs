@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AttackTower : Tower, IInteractableObject
 {
@@ -17,7 +18,9 @@ public class AttackTower : Tower, IInteractableObject
 
     [Header("선택 시 표시")]
     [SerializeField] protected GameObject _selectedChecker; // 타워 선택 시 표시 오브젝트
+    [SerializeField] protected Image _selectedImage; // 타워 선택 시 UI에 표시될 이미지
     protected bool _isSelectedTower = false; // 타워 선택 여부
+
 
     public bool IsSelectedTower
     {

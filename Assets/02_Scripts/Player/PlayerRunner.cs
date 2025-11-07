@@ -72,7 +72,15 @@ public class PlayerRunner : Player, IDamageable
             // 러너 연구소 상호작용
             var laboratoryUsing = data.LaboratoryInput.IsSet(NetworkInputData.LABORATORY_INPUT);
             if (laboratoryUsing)
-                Debug.Log("연구소 상호작용 사용");
+            {
+                var lab = StageManager.Instance.Laboratory;
+                StageManager.Instance.CinemachineSystem.SetTrackingTarget(lab.transform);
+                Debug.Log("연구소 보기");
+            }
+            else
+            {
+                StageManager.Instance.CinemachineSystem.SetTrackingTarget(transform);
+            }
 
             var weaponUsing = data.WeaponInput.IsSet(NetworkInputData.WEAPON_INPUT);
             if (weaponUsing)

@@ -25,7 +25,7 @@ public class CinemachineSystem : MonoBehaviour
     }
 
     // 내 역할군에 따라 시네머신 우선순위 결정
-    private void SetPriority(PlayerPosition myPosition) 
+    private void SetPriority(PlayerPosition myPosition)
     {
         switch (myPosition)
         {
@@ -41,6 +41,10 @@ public class CinemachineSystem : MonoBehaviour
     }
 
     // 시네머신의 타겟을 설정
+    public void SetTrackingTarget(Transform transform)
+    {
+        _runnerCamera.Target.TrackingTarget = transform;
+    }
     private void SetTrackingTarget(PlayerRunner runner)
     {
         _runnerCamera.Target.TrackingTarget = runner.transform;

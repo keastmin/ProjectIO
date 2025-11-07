@@ -5,6 +5,8 @@ public class StageManager : NetworkBehaviour
 {
     [Networked] public PlayerRunner PlayerRunner { get; set; }
     [Networked] public PlayerBuilder PlayerBuilder { get; set; }
+    [Networked] public Laboratory Laboratory { get; set; }
+    public CinemachineSystem CinemachineSystem { get; private set; }
 
     public static StageManager Instance { get; private set; }
 
@@ -85,6 +87,7 @@ public class StageManager : NetworkBehaviour
     {
         var instance = Instantiate(cinemachineSystemPrefab); // 시네머신 시스템 인스턴스 생성
         instance.InitCinemachineCamera(PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer], PlayerRunner, PlayerBuilder);
+        CinemachineSystem = instance;
         //instance.name = $"{Runner.name} - CinemachineSystem";
         //Debug.Log($"{Runner.name} - CinemachineSystem spawned");
 
@@ -113,7 +116,7 @@ public class StageManager : NetworkBehaviour
         Vector2Int index = new Vector2Int(GridSystem.CellCountX / 2, GridSystem.CellCountY / 2);
         Vector3 labPos = GridSystem.GetNearGridPosition(index);
 
-        Runner.Spawn(ResourceManager.Instance.LaboratoryPrefab, labPos);
+        Laboratory = Runner.Spawn(ResourceManager.Instance.LaboratoryPrefab, labPos);
 
         RPC_SetLaboratoryCell(index);
     }

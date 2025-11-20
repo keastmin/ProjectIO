@@ -12,6 +12,12 @@ public class PlayerBuilderUI : MonoBehaviour
 
     public bool IsLaboratoryUIActive => _laboratoryUI.activeSelf;
 
+    #region 프로퍼티
+
+    public DragSystem DragSystem => _dragSystem;
+
+    #endregion
+
     private void Awake()
     {
         _builderMainUI.SetActive(true);
@@ -81,17 +87,6 @@ public class PlayerBuilderUI : MonoBehaviour
     }
 
     #endregion
-
-    #region Drag System
-
-    // 드래그 시스템 활성화/비활성화
-    public void DragSystemActivation(bool activation)
-    {
-        _dragSystem.gameObject.SetActive(activation);
-    }
-
-    #endregion
-
 
     // 플레이어 필더가 존재하는지 확인
     private bool IsPlayerBuilderExist(out PlayerBuilder builder)

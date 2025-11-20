@@ -18,7 +18,6 @@ public class DragSection : MonoBehaviour
 
     public void DrawStart(Vector3 worldPos, Vector2 mousePos)
     {
-        gameObject.SetActive(true);
         _startWorldPos = worldPos;
         Drawing(mousePos);
     }
@@ -41,11 +40,6 @@ public class DragSection : MonoBehaviour
                 _rectTransform.sizeDelta = new Vector2(width, height);
             }
         }
-    }
-
-    public void DrawEnd()
-    {
-        gameObject.SetActive(false);
     }
 
     private bool WorldToAnchoredPosition(RectTransform target, Vector3 worldPosition, Canvas canvas, Camera sceneCam, out Vector2 anchored)

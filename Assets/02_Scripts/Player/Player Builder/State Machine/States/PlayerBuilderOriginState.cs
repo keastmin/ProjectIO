@@ -13,7 +13,6 @@ public class PlayerBuilderOriginState : IPlayerState
     public void Enter()
     {
         Debug.Log("Origin State");
-        _player.DragOn();
     }
 
     public void Update()

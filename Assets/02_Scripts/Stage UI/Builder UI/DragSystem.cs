@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -12,6 +11,8 @@ public class DragSystem : MonoBehaviour
     private Camera _cam;
     private bool _isDragging = false;
     private Vector3 _startWorldPos = Vector3.zero;
+
+    private Vector2 _startMousePos = Vector2.zero;
 
     private void Awake()
     {
@@ -30,40 +31,47 @@ public class DragSystem : MonoBehaviour
     }
 
     private void Update()
-    {
-        var mouse = Mouse.current;
-        if (mouse == null) return;
-
-        if (IsCanDrag)
+    { 
+        // 드래그 중이 아니지만 영역이 활성화 되어있으면 영역을 끔
+        if (!_isDragging && _dragSection.gameObject.activeSelf)
         {
-            if (mouse.leftButton.wasPressedThisFrame)
-            {
-                DragStart(mouse);
-            }
-
-            if (mouse.leftButton.isPressed)
-            {
-                Dragging(mouse);
-            }
-
-            if (mouse.leftButton.wasReleasedThisFrame)
-            {
-                DragEnd();
-            }
+            DragEnd();
         }
+
+        // 드래그 상태 초기화
+        _isDragging = false;
     }
 
-    private void DragStart(Mouse mouse)
+    /// <summary>
+    /// 이 함수가 호출되는 동안에는 드래그를 유지하고 드래그 상태가 아닐 때 처음 호출되면 초기화를 진행
+    /// </summary>
+    /// <param name="mousePos">마우스 위치</param>
+    public void Dragging(Vector2 mousePos)
     {
-        if (EventSystem.current.IsPointerOverGameObject()) return; // 다른 UI 위에서는 드래그가 시작되지 않음
-
-        var mousePos = mouse.position.ReadValue(); // UI 스크린 상의 마우스 위치
-        if (TryPojectToCameraPlane(_cam, mousePos, _planeHeight, out _startWorldPos) && !_isDragging)
+        // 이 함수가 호출되는 시점에 드래그 중이 아니었다면 드래그 시작 활성화
+        if (!_isDragging)
         {
-            _isDragging = true;
-            _dragSection.DrawStart(_startWorldPos, mousePos);
-            NotifyDragStart();
+            DragStart(mousePos);
         }
+
+        // 드래그를 유지
+        _isDragging = true;
+
+        // 드래그 영역 그리기
+
+    }
+
+    // 드래그 시작 초기화
+    private void DragStart(Vector2 mousePos)
+    {
+        _startMousePos = mousePos;
+        SetDragSectionActivation(true);
+    }
+
+    // 드래그 영역 활성화 여부 설정
+    private void SetDragSectionActivation(bool activation)
+    {
+        _dragSection.gameObject.SetActive(activation);
     }
 
     private void Dragging(Mouse mouse)
@@ -76,14 +84,10 @@ public class DragSystem : MonoBehaviour
         }
     }
 
+    // 드래그 종료
     private void DragEnd()
     {
-        if (_isDragging)
-        {
-            _isDragging = false;
-            _dragSection.DrawEnd();
-            NotifyDragEnd();
-        }
+        SetDragSectionActivation(false);
     }
 
     private Plane MakePlane(float height)

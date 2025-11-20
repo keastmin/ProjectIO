@@ -96,6 +96,51 @@ public class PlayerBuilder : Player
 
     #endregion
 
+    #region 드래그
+
+    /// <summary>
+    /// 드래그를 진행하는 함수
+    /// </summary>
+    /// <param name="mousePos">현재 화면상의 마우스 위치</param>
+    public void Drag(Vector2 mousePos)
+    {
+        if (ExistDragSystem(out DragSystem dragSystem))
+        {
+            dragSystem.Dragging(mousePos);
+        }
+    }
+
+    /// <summary>
+    /// 드래그를 종료하는 함수
+    /// </summary>
+    public void DragEnd()
+    {
+        if(ExistDragSystem(out DragSystem dragSystem))
+        {
+        }
+    }
+
+    /// <summary>
+    /// 드래그 시스템이 존재하는지 확인하고 반환하는 함수
+    /// </summary>
+    /// <param name="dragSystem">반환받은 DragSystem 참조</param>
+    /// <returns></returns>
+    private bool ExistDragSystem(out DragSystem dragSystem)
+    {
+        dragSystem = null;
+        if(_builderUI != null)
+        {
+            dragSystem = _builderUI.DragSystem;
+            if(dragSystem != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    #endregion
+
     #region 타워 선택 로직
 
     public void StartDragSelect()
@@ -154,30 +199,6 @@ public class PlayerBuilder : Player
     public void EndDragSelect()
     {
         _isDragSelecting = false;
-    }
-
-    // 드래그 기능 켜기
-    public void DragOn()
-    {
-        if (IsPlayerBuilderUIExist(out PlayerBuilderUI builderUI))
-        {
-            builderUI.DragSystemActivation(true);
-        }
-    }
-
-    // 드래그 기능 끄기
-    public void DragOff()
-    {
-        if (IsPlayerBuilderUIExist(out PlayerBuilderUI builderUI))
-        {
-            builderUI.DragSystemActivation(false);
-        }
-
-        foreach(var t in _selectedAttackTower)
-        {
-            if (t) t.ChangeSelectValue(false);
-        }
-        _selectedAttackTower.Clear();
     }
 
     #endregion

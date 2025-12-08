@@ -16,6 +16,7 @@ public class DragSection : MonoBehaviour
     /// <param name="endPos">끝 마우스 포지션</param>
     public void Drawing(Vector2 startPos, Vector2 endPos)
     {
+        Debug.Log("드래그 영역 그림");
         Vector2 center = (startPos + endPos) / 2f;
         float width = Mathf.Abs(startPos.x - endPos.x);
         float height = Mathf.Abs(startPos.y - endPos.y);

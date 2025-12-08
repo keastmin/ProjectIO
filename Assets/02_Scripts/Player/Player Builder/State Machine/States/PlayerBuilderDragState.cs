@@ -11,6 +11,7 @@ public class PlayerBuilderDragState : IPlayerState
 
     public void Enter()
     {
+        Debug.Log("Drag State 진입");
         _player.DragStart();
     }
 

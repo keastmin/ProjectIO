@@ -24,20 +24,23 @@ public class PlayerBuilderOriginState : IPlayerState
         if (_player.HasInputAuthority)
         {
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-            {               
+            {
+                _player.LeftMouseDownOnWorld();
                 _player.SetClickValue(true);
             }
-            if (Input.GetMouseButtonUp(0))
+            if (_player.IsClick && Input.GetMouseButtonUp(0))
             {
-                _player.OnClickInteractableObject();
+                _player.LeftMouseUpOnWorld();
                 _player.SetClickValue(false);
             }
 
+            // 클릭 시작 설정
             if (_player.IsClick)
             {
                 _player.SetCurrentMousePoint(Input.mousePosition);
             }
 
+            // 마우스를 통한 화면 이동
             _player.BuilderCamMove();
         }
         TransitionTo();

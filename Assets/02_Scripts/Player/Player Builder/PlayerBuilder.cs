@@ -70,6 +70,12 @@ public class PlayerBuilder : Player
 
     #endregion
 
+    #region 월드 상호작용 오브젝트 캐시
+
+    public ICanClickObject ClickObject;
+
+    #endregion
+
     private void Awake()
     {
         _dragSelectedColliders = new Collider[100];
@@ -199,24 +205,43 @@ public class PlayerBuilder : Player
 
     #region 월드 오브젝트 상호작용
 
-    public void OnClickInteractableObject()
+    // 월드를 향해 좌클릭을 눌렀을 때
+    public void LeftMouseDownOnWorld()
     {
+        // 이미 클릭된 오브젝트가 있을 때
+        if(ClickObject != null)
+        {
+            // 이미 등록된 클릭 오브젝트 해제
+            ClickObject.OnCancelClickThisObject();
+            ClickObject = null;
+        }
+
         var cam = Camera.main;
         var ray = cam.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, out var hit, 5000))
+        if (Physics.Raycast(ray, out var hit, 5000))
         {
-            var inter = hit.collider.GetComponentInParent<IInteractableObject>();
+            var inter = hit.collider.GetComponentInParent<ICanClickObject>();
             if (inter != null)
             {
-                inter.OnClickThisObject();
+                ClickObject = inter;
+                ClickObject.OnLeftMouseDownThisObject();
             }
         }
+    }
+
+    // 월드를 향해 좌클릭을 뗐을 때
+    public void LeftMouseUpOnWorld()
+    {
+        if(ClickObject != null)
+            ClickObject.OnLeftMouseUpThisObject();
     }
 
     // 빌더의 타워 선택 상태 설정
     public void BuilderSelectTowerSetting(bool isSelectTower, AttackTower tower)
     {
-        IsSelectTower = isSelectTower;
+        Debug.Log("타워 선택함");
+
+        // IsSelectTower = isSelectTower;
         // _selectedAttackTower = tower;
     }
 

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8632048801721329327}
   - component: {fileID: 3984747633682037487}
+  - component: {fileID: 1367329938437336398}
   - component: {fileID: 8593551356125243380}
   m_Layer: 0
   m_Name: Player Builder
@@ -50,15 +51,30 @@ MonoBehaviour:
   _cameraMaxZoomDistance: 11
   _cameraWheelPerZoomDistance: 10
   _zoomSmoothTime: 0.12
+  _dragThresholdPixel: 5
   _dragDetectorHeight: 3
   _dragDetectLayer:
     serializedVersion: 2
     m_Bits: 256
   _builderUI: {fileID: 0}
+  _dragSystem: {fileID: 0}
+  _gridSystem: {fileID: 0}
   _cineCam: {fileID: 0}
   _environmentalLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &1367329938437336398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585997719371933276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5060ecc9416bf5e448838601150263d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8593551356125243380
 MonoBehaviour:
   m_ObjectHideFlags: 0

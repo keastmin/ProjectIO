@@ -5,6 +5,7 @@ public class PlayerBuilderStateMachine
     private IPlayerState _currentState;
 
     public PlayerBuilderOriginState OriginState;
+    public PlayerBuilderDragState DragState;
     public PlayerBuilderTowerBuildState TowerBuildState;
     public PlayerBuilderLaboratoryState LaboratoryState;
     public PlayerBuilderTowerSelectState TowerSelectState;
@@ -13,6 +14,7 @@ public class PlayerBuilderStateMachine
     public PlayerBuilderStateMachine(PlayerBuilder player)
     {
         OriginState = new PlayerBuilderOriginState(player);
+        DragState = new PlayerBuilderDragState(player);
         TowerBuildState = new PlayerBuilderTowerBuildState(player);
         LaboratoryState = new PlayerBuilderLaboratoryState(player);
         TowerSelectState = new PlayerBuilderTowerSelectState(player);

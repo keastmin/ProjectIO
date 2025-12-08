@@ -13,11 +13,17 @@ public class PlayerBuilder : Player
     [SerializeField] private float _zoomSmoothTime = 0.12f; // 작을수록 더 빠르게 붙음
 
     [Header("Drag")]
+    [SerializeField] private float _dragThresholdPixel = 5f; 
     [SerializeField] private float _dragDetectorHeight = 3f;
     [SerializeField] private LayerMask _dragDetectLayer;
 
-    [Header("UI")]
+    [Header("Reference")]
     [SerializeField] private PlayerBuilderUI _builderUI; // UI 참조
+    [SerializeField] private DragSystem _dragSystem; // 드래그 시스템 참조
+    [SerializeField] private HexagonGridSystem _gridSystem; // 그리드 참조
+    [SerializeField] private PlayerBuilderMover _builderMover; // 빌더 무버 참조
+
+    [Space(10)]
 
     [SerializeField] private CinemachineCamera _cineCam;
     [SerializeField] private LayerMask _environmentalLayer;
@@ -34,8 +40,9 @@ public class PlayerBuilder : Player
     public TowerData PTowerData => _pTowerData;
 
     // 드래그 정보
-    private bool _isDragSelecting = false;
-    public bool IsDragSelecting => _isDragSelecting;
+    private bool _isClick = false;
+    private Vector2 _startMousePoint = Vector2.zero;
+    private Vector2 _currentMousePoint = Vector2.zero;
 
     // 선택된 타워 정보
     private Collider[] _dragSelectedColliders;
@@ -56,13 +63,22 @@ public class PlayerBuilder : Player
     #region 프로퍼티
 
     public PlayerBuilderUI BuilderUI => _builderUI;
+    public bool IsClick => _isClick;
+    public Vector2 StartMousePoint => _startMousePoint;
+    public Vector2 CurrentMousePoint => _currentMousePoint;
+    public float DragThresholdPixel => _dragThresholdPixel;
 
     #endregion
 
-    public void Awake()
+    private void Awake()
     {
         _dragSelectedColliders = new Collider[100];
         StateMachine = new PlayerBuilderStateMachine(this);
+        InitializeReference();
+    }
+
+    private void Start()
+    {
         StateMachine.InitStateMachine();
     }
 
@@ -88,10 +104,17 @@ public class PlayerBuilder : Player
 
     #region 초기화 로직
 
-    // UI 참조를 주입하는 로직
-    public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI)
+    private void InitializeReference()
     {
-        _builderUI = builderUI;
+        TryGetComponent(out _builderMover);
+    }
+
+    // 외부에서 참조를 주입하는 함수
+    public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI, HexagonGridSystem gridSystem)
+    {
+        _builderUI = builderUI;  
+        _dragSystem = builderUI.DragSystem;
+        _gridSystem = gridSystem; 
     }
 
     #endregion
@@ -99,15 +122,38 @@ public class PlayerBuilder : Player
     #region 드래그
 
     /// <summary>
-    /// 드래그를 진행하는 함수
+    /// 클릭 여부 설정 함수
     /// </summary>
-    /// <param name="mousePos">현재 화면상의 마우스 위치</param>
-    public void Drag(Vector2 mousePos)
+    /// <param name="isClick">클릭 여부</param>
+    public void SetClickValue(bool isClick)
     {
-        if (ExistDragSystem(out DragSystem dragSystem))
-        {
-            dragSystem.Dragging(mousePos);
-        }
+        _isClick = isClick;
+        _startMousePoint = Input.mousePosition;
+        _currentMousePoint = _startMousePoint;
+    }
+
+    /// <summary>
+    /// 현재 마우스 위치 설정 함수
+    /// </summary>
+    /// <param name="mousePos">현재 마우스 위치</param>
+    public void SetCurrentMousePoint(Vector2 mousePos)
+    {
+        _currentMousePoint = mousePos;
+    }
+
+    public void DragStart()
+    {
+        if (_dragSystem == null) return;
+
+        _dragSystem.DragStart();
+        Dragging();
+    }
+
+    public void Dragging()
+    {
+        if (_dragSystem == null) return;
+
+        _dragSystem.Dragging(_startMousePoint, _currentMousePoint);
     }
 
     /// <summary>
@@ -115,91 +161,11 @@ public class PlayerBuilder : Player
     /// </summary>
     public void DragEnd()
     {
-        if(ExistDragSystem(out DragSystem dragSystem))
-        {
-        }
+        if (_dragSystem == null) return;
+
+        _dragSystem.DragEnd();
     }
 
-    /// <summary>
-    /// 드래그 시스템이 존재하는지 확인하고 반환하는 함수
-    /// </summary>
-    /// <param name="dragSystem">반환받은 DragSystem 참조</param>
-    /// <returns></returns>
-    private bool ExistDragSystem(out DragSystem dragSystem)
-    {
-        dragSystem = null;
-        if(_builderUI != null)
-        {
-            dragSystem = _builderUI.DragSystem;
-            if(dragSystem != null)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    #endregion
-
-    #region 타워 선택 로직
-
-    public void StartDragSelect()
-    {
-        _isDragSelecting = true;
-    }
-
-    public void DraggingSelect(Vector3 startWorldPos, Vector3 currentWorldPos)
-    {
-        if (!_isDragSelecting) return;
-
-        int count = GetDragSelectingAttackTowers(startWorldPos, currentWorldPos, out _dragSelectedColliders);
-
-        // 1) 이번 프레임의 후보 집합 만들기
-        _nextSet.Clear();
-        for (int i = 0; i < count; i++)
-        {
-            var t = _dragSelectedColliders[i].GetComponentInParent<AttackTower>();
-            if (t) _nextSet.Add(t);
-        }
-
-        // 2) 제거 대상: selected ∖ nextSet
-        _toRemove.Clear();
-        foreach (var t in _selectedAttackTower)        // _selectedAttackTower는 HashSet<AttackTower>
-        {
-            if (t == null || !_nextSet.Contains(t))
-                _toRemove.Add(t);                       // 순회 중에는 직접 Remove 금지 → 임시 리스트에 모음
-        }
-        foreach (var t in _toRemove)
-        {
-            if (t) t.ChangeSelectValue(false);          // 하이라이트 끄기
-            _selectedAttackTower.Remove(t);             // 집합에서 제거
-        }
-
-        // 3) 추가 대상: nextSet ∖ selected
-        foreach (var t in _nextSet)
-        {
-            if (_selectedAttackTower.Add(t))            // 새로 들어온 경우에만 true
-                t.ChangeSelectValue(true);              // 하이라이트 켜기
-        }
-    }
-
-    private int GetDragSelectingAttackTowers(Vector3 startWorldPos, Vector3 currentWorldPos, out Collider[] towers)
-    {
-        towers = new Collider[100];
-        Vector3 center = (startWorldPos + currentWorldPos) * 0.5f;
-        center.y += _dragDetectorHeight * 0.5f;
-        float sizeX = Mathf.Abs(currentWorldPos.x - startWorldPos.x) * 0.5f;
-        float sizeZ = Mathf.Abs(currentWorldPos.z - startWorldPos.z) * 0.5f;
-        float sizeY = _dragDetectorHeight * 0.5f;
-        Vector3 halfExtents = new Vector3(sizeX, sizeY, sizeZ);
-        int towerCount = Physics.OverlapBoxNonAlloc(center, halfExtents, towers, Quaternion.identity, _dragDetectLayer); // 메인카메라의 Y축 기준 회전으로 회전이 따라가야됨
-        return towerCount;
-    }
-
-    public void EndDragSelect()
-    {
-        _isDragSelecting = false;
-    }
 
     #endregion
 
@@ -322,30 +288,6 @@ public class PlayerBuilder : Player
 
         // 최종 위치 = 원점 + 전방 * 현재 줌 거리
         _cineCam.transform.position = zoomOrigin + fwd * _camZoomDistance;
-    }
-
-    #endregion
-
-    #region 싱글톤 찾기
-
-    // 플레이어 빌더 UI 인스턴스 존재 여부 확인
-    private bool IsPlayerBuilderUIExist(out PlayerBuilderUI builderUI)
-    {
-        builderUI = null;
-        var stageManager = StageManager.Instance;
-        if(stageManager != null)
-        {
-            var uiController = stageManager.UIController;
-            if(uiController != null)
-            {
-                builderUI = uiController.BuilderUI;
-                if(builderUI != null)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     #endregion

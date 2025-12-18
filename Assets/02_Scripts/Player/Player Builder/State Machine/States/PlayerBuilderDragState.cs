@@ -13,17 +13,22 @@ public class PlayerBuilderDragState : IPlayerState
     {
         Debug.Log("Drag State 진입");
         _player.DragStart();
+
+        // 클릭 오브젝트가 있다면 취소 처리
+        _player.ClickLeftMouseUpOnWorld();
     }
 
     public void Update()
     {
+        _player.SetCurrentMousePoint(Input.mousePosition);
+        _player.Dragging();
+
+        CollectAttackTowerInDragRange();
+
         if (Input.GetMouseButtonUp(0))
         {
             _player.SetClickValue(false);
         }
-
-        _player.SetCurrentMousePoint(Input.mousePosition);
-        _player.Dragging();
 
         TransitionTo();
     }
@@ -45,6 +50,7 @@ public class PlayerBuilderDragState : IPlayerState
 
     public void Exit()
     {
+        CompleteDrag();
         _player.DragEnd();
     }
 
@@ -54,5 +60,23 @@ public class PlayerBuilderDragState : IPlayerState
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.OriginState);
         }
+    }
+
+    // 드래그 범위 안에 있는 공격 타워 수집
+    private void CollectAttackTowerInDragRange()
+    {
+        Vector2 startPos = _player.StartMousePoint;
+        Vector2 endPos = _player.CurrentMousePoint;
+        float minX = Mathf.Min(startPos.x, endPos.x);
+        float maxX = Mathf.Max(startPos.x, endPos.x);
+        float minY = Mathf.Min(startPos.y, endPos.y);
+        float maxY = Mathf.Max(startPos.y, endPos.y);
+        _player.DraggingCollectCollider(minX, maxX, minY, maxY);
+    }
+
+    // 드래그 영역 확정
+    private void CompleteDrag()
+    {
+        _player.DragObjectsCompleteCall();
     }
 }

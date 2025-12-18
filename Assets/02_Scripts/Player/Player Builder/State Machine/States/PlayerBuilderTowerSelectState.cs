@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerBuilderTowerSelectState : IPlayerState
 {
@@ -11,6 +12,8 @@ public class PlayerBuilderTowerSelectState : IPlayerState
 
     public void Enter()
     {
+        Debug.Log("Tower Select 상태 진입");
+
         var manager = StageManager.Instance;
         if (manager != null)
             manager.UIController.BuilderUI.ActivationTowerSelectUI(true);
@@ -23,7 +26,11 @@ public class PlayerBuilderTowerSelectState : IPlayerState
 
     public void Update()
     {
-
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            _player.ClickLeftMouseDownOnWorld();
+            _player.SetClickValue(true);
+        }
 
         TransitionTo();
     }
@@ -40,8 +47,6 @@ public class PlayerBuilderTowerSelectState : IPlayerState
 
     public void Exit()
     {
-        _player.BuilderSelectTowerSetting(false, null);
-
         var manager = StageManager.Instance;
         if (manager != null)
             manager.UIController.BuilderUI.ActivationTowerSelectUI(false);
@@ -49,7 +54,7 @@ public class PlayerBuilderTowerSelectState : IPlayerState
 
     private void TransitionTo()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (_player.SelectedAttackTowerCount <= 0)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.OriginState);
         }

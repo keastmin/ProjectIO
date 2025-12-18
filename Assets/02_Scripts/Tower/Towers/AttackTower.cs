@@ -3,7 +3,7 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AttackTower : Tower, ICanClickObject
+public class AttackTower : Tower, ICanClickObject, ICanDragObject
 {
     [Header("공격")]
     [SerializeField] protected float _attackSpeed = 1f; // 공격 주기
@@ -127,8 +127,8 @@ public class AttackTower : Tower, ICanClickObject
         var manager = StageManager.Instance;
         if(manager != null)
         {
-            // 빌더의 타워 선택 상태를 true로 변경하고 선택된 타워를 현재 타워로 설정
-            manager.PlayerBuilder.BuilderSelectTowerSetting(true, this);
+            // 빌더의 타워 선택을 함수를 호출하여 자신을 선택된 타워로 넘겨줌
+            manager.PlayerBuilder.AttackTowerSelected(this);
         }
     }
 
@@ -136,6 +136,30 @@ public class AttackTower : Tower, ICanClickObject
     public void OnCancelClickThisObject()
     {
         ChangeSelectValue(false);
+    }
+
+    #endregion
+
+    #region ICanDragObject 구현
+
+    public void OnDragSelectedThisObject()
+    {
+        ChangeSelectValue(true);
+    }
+
+    public void OnDragOverThisObject()
+    {
+        ChangeSelectValue(false);
+    }
+
+    public void OnDragCompleteThisObject()
+    {
+        var manager = StageManager.Instance;
+        if (manager != null)
+        {
+            // 빌더의 타워 선택을 함수를 호출하여 자신을 선택된 타워로 넘겨줌
+            manager.PlayerBuilder.AttackTowerSelected(this);
+        }
     }
 
     #endregion

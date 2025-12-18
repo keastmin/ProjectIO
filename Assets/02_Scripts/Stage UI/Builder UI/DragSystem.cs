@@ -45,5 +45,22 @@ public class DragSystem : MonoBehaviour
         _dragSection.gameObject.SetActive(false);
     }
 
+    public Rect GetDragSectionPixel()
+    {
+        RectTransform rt = _dragSection.DragRect;
+        Vector3[] wc = new Vector3[4];
+        rt.GetWorldCorners(wc);
+
+        float xMin = float.PositiveInfinity, yMin = float.PositiveInfinity, xMax = float.NegativeInfinity, yMax = float.NegativeInfinity;
+        foreach(var w in wc)
+        {
+            var ps = RectTransformUtility.WorldToScreenPoint(null, w);
+            xMin = Mathf.Min(xMin, ps.x); xMax = Mathf.Max(xMax, ps.x);
+            yMin = Mathf.Min(yMin, ps.y); yMax = Mathf.Max(yMax, ps.y);
+        }
+
+        return Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+    }
+
     #endregion
 }

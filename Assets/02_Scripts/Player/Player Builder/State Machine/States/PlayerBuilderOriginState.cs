@@ -15,8 +15,6 @@ public class PlayerBuilderOriginState : IPlayerState
     public void Enter()
     {
         Debug.Log("Origin State");
-
-        _player.SetClickValue(false); // 클릭 여부 초기화
     }
 
     public void Update()
@@ -25,13 +23,13 @@ public class PlayerBuilderOriginState : IPlayerState
         {
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
-                _player.LeftMouseDownOnWorld();
                 _player.SetClickValue(true);
+                _player.ClickLeftMouseDownOnWorld();
             }
             if (_player.IsClick && Input.GetMouseButtonUp(0))
             {
-                _player.LeftMouseUpOnWorld();
                 _player.SetClickValue(false);
+                _player.ClickLeftMouseUpOnWorld();
             }
 
             // 클릭 시작 설정
@@ -77,7 +75,7 @@ public class PlayerBuilderOriginState : IPlayerState
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerBuildState);
         }
-        else if (_player.IsSelectTower)
+        else if (_player.SelectedAttackTowerCount > 0) // 선택된 공격 타워가 있을 경우
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerSelectState);
         }

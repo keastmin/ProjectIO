@@ -9,7 +9,6 @@ public class PlayerBuilderStateMachine
     public PlayerBuilderTowerBuildState TowerBuildState;
     public PlayerBuilderLaboratoryState LaboratoryState;
     public PlayerBuilderTowerSelectState TowerSelectState;
-    public PlayerBuilderTowerDragState TowerDragState;
 
     public PlayerBuilderStateMachine(PlayerBuilder player)
     {
@@ -18,7 +17,6 @@ public class PlayerBuilderStateMachine
         TowerBuildState = new PlayerBuilderTowerBuildState(player);
         LaboratoryState = new PlayerBuilderLaboratoryState(player);
         TowerSelectState = new PlayerBuilderTowerSelectState(player);
-        TowerDragState = new PlayerBuilderTowerDragState(player);
     }
 
     public void InitStateMachine()

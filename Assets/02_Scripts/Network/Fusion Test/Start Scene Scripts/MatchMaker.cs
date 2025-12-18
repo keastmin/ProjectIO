@@ -34,7 +34,6 @@ public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
     private int _roomCodeLength = 6; // 룸 코드 길이
     public int RoomCodeLength => _roomCodeLength; // 룸 코드 길이 프로퍼티
 
-
     private void Awake()
     {
         // 싱글턴: 이미 인스턴스가 존재하면 현재 게임 오브젝트 파괴하고 아니라면 인스턴스 설정

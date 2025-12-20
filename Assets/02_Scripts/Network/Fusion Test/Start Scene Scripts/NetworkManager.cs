@@ -2,19 +2,67 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
 {
-    public override void Spawned()
+    // 싱글톤 인스턴스
+    public static NetworkManager Instance { get; private set; }
+
+    // 플레이어 정보
+    public PlayerRegistry Registry { get; private set; }
+
+    // 현재 테스트 모드 여부
+    private bool _isTestMode = false;
+    private PlayerPosition _testPosition = PlayerPosition.Builder;
+
+    private void Awake()
     {
-        
+        Registry = GetComponent<PlayerRegistry>();
     }
 
-    private void OnRoleChanged()
+    public override void Spawned()
     {
+        if (Instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
 
+        if (HasStateAuthority)
+            Runner.AddCallbacks(this);
+        Debug.Log("네트워크 매니저 스폰 완료");
+    }
+
+    #region 테스트 모드 함수
+
+    // 테스트 모드로 설정
+    public void SetTestModeVariable(bool isTestMode, PlayerPosition testPosition)
+    {
+        _isTestMode = isTestMode;
+        _testPosition = testPosition;
+    }
+
+    #endregion
+
+    #region INetworkRunner 콜백 구현
+
+    // 플레이어가 접속했을 때 콜백되는 함수
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
+        Debug.Log("플레이어 접속");
+
+        // 테스트 모드가 아니면 빌더로 추가, 테스트 모드라면 테스트 할 역할군으로 추가
+        if (HasStateAuthority && !_isTestMode)
+        {
+            Registry.AddPlayer(player, PlayerPosition.Builder);
+        }
+        else if (HasStateAuthority && _isTestMode)
+        {
+            Registry.AddPlayer(player, _testPosition);
+        }
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
@@ -67,10 +115,6 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
         
     }
 
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
-    {
-    }
-
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
     }
@@ -109,5 +153,5 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     {
         
     }
-
+    #endregion
 }

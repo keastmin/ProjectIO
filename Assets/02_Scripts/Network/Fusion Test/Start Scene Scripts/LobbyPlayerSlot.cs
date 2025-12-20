@@ -22,7 +22,7 @@ public class LobbyPlayerSlot : MonoBehaviour
 
     private void Awake()
     {
-        Position = PlayerPosition.None;
+        Position = PlayerPosition.Builder;
     }
 
     public void InitSlot()
@@ -32,11 +32,7 @@ public class LobbyPlayerSlot : MonoBehaviour
 
     public void SetPlayerPositionText(PlayerPosition position)
     {
-        if(position == PlayerPosition.None)
-        {
-            _playerPosition.text = "None";
-        }
-        else if(position == PlayerPosition.Builder)
+        if(position == PlayerPosition.Builder)
         {
             _playerPosition.text = "Builder";
         }

@@ -24,11 +24,11 @@ public class LobbyUI : MonoBehaviour
         ClearLobby();
 
         // PlayerRegistry가 아직 스폰되지 않으면 작동하지 않음
-        var playerRegistry = PlayerRegistry.Instance;
+        var playerRegistry = NetworkManager.Instance.Registry;
         if (playerRegistry)
         {
             // PlayerRegistry가 스폰되면 반복 시작
-            foreach (var player in PlayerRegistry.Instance.RefToPosition)
+            foreach (var player in playerRegistry.RefToPosition)
             {
                 // 플레이어의 역할군이 변경될 때마다 직접 클라이언트에서 각 역할군 UI Text 변경
                 PlayerPositionUpdate(player);
@@ -105,18 +105,18 @@ public class LobbyUI : MonoBehaviour
 
     public void OnClickPositionChange()
     {
-        if (PlayerRegistry.Instance == null) return;
+        if (NetworkManager.Instance.Registry == null) return;
         var key = MatchMaker.Instance.Runner.LocalPlayer;
-        PlayerRegistry.Instance.RPC_ChangeRole(key);
+        NetworkManager.Instance.Registry.RPC_ChangeRole(key);
     }
 
     public bool IsPlayersReady()
     {
-        if (PlayerRegistry.Instance != null)
+        if (NetworkManager.Instance.Registry != null)
         {
-            PlayerPosition firstPlayerPosition = PlayerPosition.None;
+            PlayerPosition firstPlayerPosition = PlayerPosition.Builder;
             int count = 0;
-            foreach (var player in PlayerRegistry.Instance.RefToPosition)
+            foreach (var player in NetworkManager.Instance.Registry.RefToPosition)
             {
                 if (count == 0) 
                 {
@@ -125,7 +125,7 @@ public class LobbyUI : MonoBehaviour
                 }
                 else
                 {
-                    if (player.Value != PlayerPosition.None && firstPlayerPosition != player.Value)
+                    if (player.Value != PlayerPosition.Builder && firstPlayerPosition != player.Value)
                     {
                         return true;
                     }
@@ -144,6 +144,6 @@ public class LobbyUI : MonoBehaviour
 
     public void ClearPlayerSlot()
     {
-        _playerSlot1.Position = _playerSlot2.Position = PlayerPosition.None;
+        _playerSlot1.Position = _playerSlot2.Position = PlayerPosition.Builder;
     }
 }

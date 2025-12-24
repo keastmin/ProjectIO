@@ -12,14 +12,22 @@ public class TestModeGameSceneSetup : MonoBehaviour
     [Header("네트워크 환경 구성 프리팹")]
     [SerializeField] private NetworkRunner _runnerPrefab; // 러너 프리팹
     [SerializeField] private NetworkManager _networkManagerPrefab; // 네트워크 매니저 프리팹
+    [SerializeField] private ResourceManager _resourceManagerPrefab; // 리소스 매니저 프리팹
 
-    [Space(10)]
-    [Header("게임 초기화 프리팹")]
-    [SerializeField] private GameObject _setupPrefab;
+    private void Awake()
+    {
+        if(NetworkManager.Instance == null)
+        {
+            BuildTestModeEnvironment();
+        }
+    }
 
     // 테스트 모드 환경 구축
     public async void BuildTestModeEnvironment()
     {
+        // 리소스 매니저 생성
+        Instantiate(_resourceManagerPrefab);
+
         // 러너 생성
         NetworkRunner runner = Instantiate(_runnerPrefab);
 

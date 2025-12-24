@@ -2,7 +2,7 @@ using Fusion;
 using System.Collections;
 using UnityEngine;
 
-public class StageManager : NetworkBehaviour, IGameStarter
+public class StageManager : NetworkBehaviour
 {
     [Networked] public PlayerRunner PlayerRunner { get; set; }
     [Networked] public PlayerBuilder PlayerBuilder { get; set; }
@@ -39,11 +39,6 @@ public class StageManager : NetworkBehaviour, IGameStarter
 
     bool _initialized = false;
 
-    public void StartGame()
-    {
-
-    }
-
     public override void Spawned()
     {
         Debug.Log("스폰 작동");
@@ -56,32 +51,9 @@ public class StageManager : NetworkBehaviour, IGameStarter
         {
             StartCoroutine(Co_InitAfterNetworkManagerReady());
         }
-
-        //if (HasStateAuthority)
-        //{
-        //    SpawnPlayer();
-        //    SpawnNetworkInputSystem();
-        //    SpawnLaboratory();
-        //}
-
-        //foreach (var system in systems)
-        //{
-        //    system.SetUp();
-        //}
-
-        //// 로컬 시스템 - 시네머신 초기화
-        //InitCinemachineSystem();
-
-        //// 로컬 시스템 - UI 초기화
-        //InitUIController();
-
-        //// 마지막으로 빌더에게 필요한 참조들 바인드 해주기
-        //BuilderReferenceBind(
-        //    PlayerBuilder,
-        //    UIController.BuilderUI,
-        //    GridSystem);
     }
 
+    // 네트워크 매니저의 스폰을 대기하는 코루틴
     private IEnumerator Co_InitAfterNetworkManagerReady()
     {
         // 1) NetworkManager/Registry 준비 대기
@@ -133,12 +105,12 @@ public class StageManager : NetworkBehaviour, IGameStarter
         }
         var runnerPlayer = NetworkManager.Instance.Registry.GetPlayerRefFromPosition(PlayerPosition.Runner);
         if(runnerPlayer == PlayerRef.None) PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity);
-        PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity, runnerPlayer);
+        else PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity, runnerPlayer);
         PlayerRunner.name = $"{Runner.name} - Player Runner";
 
         var builderPlayer = NetworkManager.Instance.Registry.GetPlayerRefFromPosition(PlayerPosition.Builder);
         if(builderPlayer == PlayerRef.None) PlayerBuilder = Runner.Spawn(ResourceManager.Instance.PlayerBuilderPrefab, Vector3.zero, Quaternion.identity);
-        PlayerBuilder = Runner.Spawn(ResourceManager.Instance.PlayerBuilderPrefab, Vector3.zero, Quaternion.identity, builderPlayer);
+        else PlayerBuilder = Runner.Spawn(ResourceManager.Instance.PlayerBuilderPrefab, Vector3.zero, Quaternion.identity, builderPlayer);
         PlayerBuilder.name = $"{Runner.name} - Player Builder";
 
         Debug.Log($"{Runner.name} - Player spawned");

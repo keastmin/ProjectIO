@@ -20,7 +20,8 @@ public class ResourceSystem : NetworkBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // 자신이 빌더라면 작동
+        if (Input.GetKeyDown(KeyCode.Space) && NetworkManager.Instance.Registry.RefToPosition[Runner.LocalPlayer] == PlayerPosition.Builder)
         {
             RPC_GetMineral(5);
         }

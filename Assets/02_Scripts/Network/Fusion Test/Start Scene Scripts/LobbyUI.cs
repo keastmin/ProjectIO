@@ -8,34 +8,51 @@ using UnityEngine.UI;
 public class LobbyUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _sessionName;
-    [SerializeField] private LobbyPlayerSlot _playerSlot1;
-    [SerializeField] private LobbyPlayerSlot _playerSlot2;
+    [SerializeField] private TextMeshProUGUI[] _slots;
 
     [SerializeField] private Button _startButton;
 
-    private void OnDisable()
-    {
-        ClearLobby();
-        _startButton.gameObject.SetActive(false);
-    }
-
     private void Update()
     {
-        ClearLobby();
-
         // PlayerRegistry가 아직 스폰되지 않으면 작동하지 않음
         var playerRegistry = NetworkManager.Instance.Registry;
         if (playerRegistry)
         {
-            // PlayerRegistry가 스폰되면 반복 시작
-            foreach (var player in playerRegistry.RefToPosition)
-            {
-                // 플레이어의 역할군이 변경될 때마다 직접 클라이언트에서 각 역할군 UI Text 변경
-                PlayerPositionUpdate(player);
-            }
+            int myIndex = GetMySlotIndex(playerRegistry); // 내 인덱스 저장
+            int otherIndex = myIndex == 0 ? 1 : 0; // 나와 다른 인덱스 저장
 
-            SetLobby();
+            SetSlotPositionText(playerRegistry, myIndex, otherIndex);
+
             StartButtonActivation();
+        }
+    }
+
+    // 내 슬롯 번호를 반환하는 함수
+    private int GetMySlotIndex(PlayerRegistry registry)
+    {
+        return registry.Runner.IsServer ? 0 : 1;
+    }
+
+    // 슬롯의 역할군 표시
+    private void SetSlotPositionText(PlayerRegistry registry, int myIndex, int otherIndex)
+    {
+        // 슬롯 초기화
+        _slots[myIndex].text = "None";
+        _slots[otherIndex].text = "None";
+
+        // 플레이어 정보 순회
+        foreach(var player in registry.RefToPosition)
+        {
+            var position = player.Value;
+
+            if(player.Key == registry.Runner.LocalPlayer)
+            {
+                _slots[myIndex].text = (position == PlayerPosition.Builder) ? "Builder" : "Runner";
+            }
+            else
+            {
+                _slots[otherIndex].text = (position == PlayerPosition.Builder) ? "Builder" : "Runner";
+            }
         }
     }
 
@@ -59,49 +76,6 @@ public class LobbyUI : MonoBehaviour
         }
     }
 
-    private void PlayerPositionUpdate(KeyValuePair<PlayerRef, PlayerPosition> playerInfos)
-    {
-        if (MatchMaker.Instance.Runner.LocalPlayer == playerInfos.Key)
-        {
-            if (MatchMaker.Instance.Runner.IsServer)
-            {
-                PlayerSlotUpdate(playerInfos.Value, 0);
-            }
-            else
-            {
-                PlayerSlotUpdate(playerInfos.Value, 1);
-            }
-        }
-        else
-        {
-            if (MatchMaker.Instance.Runner.IsServer)
-            {
-                PlayerSlotUpdate(playerInfos.Value, 1);
-            }
-            else
-            {
-                PlayerSlotUpdate(playerInfos.Value, 0);
-            }
-        }
-    }
-
-    private void PlayerSlotUpdate(PlayerPosition position, int slotNumber)
-    {
-        switch (slotNumber)
-        {
-            case 0:
-                _playerSlot1.Position = position;
-                break;
-            case 1:
-                _playerSlot2.Position = position;
-                break;
-        }
-    }
-
-    private void SetLobby()
-    {
-        _sessionName.text = MatchMaker.Instance.Runner.SessionInfo.Name;
-    }
 
     public void OnClickPositionChange()
     {
@@ -134,16 +108,5 @@ public class LobbyUI : MonoBehaviour
         }
 
         return false;
-    }
-
-    public void ClearLobby()
-    {
-        _sessionName.text = string.Empty;
-        ClearPlayerSlot();
-    }
-
-    public void ClearPlayerSlot()
-    {
-        _playerSlot1.Position = _playerSlot2.Position = PlayerPosition.Builder;
     }
 }

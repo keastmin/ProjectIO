@@ -8,142 +8,103 @@ using UnityEngine.UI;
 public class LobbyUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _sessionName;
-    [SerializeField] private LobbyPlayerSlot _playerSlot1;
-    [SerializeField] private LobbyPlayerSlot _playerSlot2;
+    [SerializeField] private TextMeshProUGUI[] _slots;
 
     [SerializeField] private Button _startButton;
 
-    private void OnDisable()
-    {
-        ClearLobby();
-        _startButton.gameObject.SetActive(false);
-    }
+    private string _slotDefaultText = "None";
 
     private void Update()
     {
-        ClearLobby();
-
         // PlayerRegistry가 아직 스폰되지 않으면 작동하지 않음
-        var playerRegistry = PlayerRegistry.Instance;
+        var playerRegistry = NetworkManager.Instance.Registry;
         if (playerRegistry)
         {
-            // PlayerRegistry가 스폰되면 반복 시작
-            foreach (var player in PlayerRegistry.Instance.RefToPosition)
-            {
-                // 플레이어의 역할군이 변경될 때마다 직접 클라이언트에서 각 역할군 UI Text 변경
-                PlayerPositionUpdate(player);
-            }
+            int myIndex = GetMySlotIndex(playerRegistry); // 내 인덱스 저장
+            int otherIndex = myIndex == 0 ? 1 : 0; // 나와 다른 인덱스 저장
 
-            SetLobby();
-            StartButtonActivation();
+            SetSlotPositionText(playerRegistry, myIndex, otherIndex); // 슬롯의 포지션 텍스트 설정
+            SetSessionNameText(playerRegistry); // 세션 이름 텍스트 설정
+            StartButtonActivation(playerRegistry); // 시작 버튼 활성화/비활성화
         }
     }
 
-    private void StartButtonActivation()
+    // 내 슬롯 번호를 반환하는 함수
+    private int GetMySlotIndex(PlayerRegistry registry)
     {
-        var runner = MatchMaker.Instance.Runner;
-        if (runner)
-        {
-            if (runner.IsServer)
-            {
-                if (!_startButton.gameObject.activeSelf)
-                    _startButton.gameObject.SetActive(true);
+        return registry.Runner.IsServer ? 0 : 1;
+    }
 
-                _startButton.interactable = IsPlayersReady();
+    // 슬롯의 역할군 표시
+    private void SetSlotPositionText(PlayerRegistry registry, int myIndex, int otherIndex)
+    {
+        // 슬롯 초기화
+        _slots[myIndex].text = _slotDefaultText;
+        _slots[otherIndex].text = _slotDefaultText;
+
+        // 플레이어 정보 순회
+        foreach(var player in registry.RefToPosition)
+        {
+            var position = player.Value;
+
+            if(player.Key == registry.Runner.LocalPlayer)
+            {
+                _slots[myIndex].text = (position == PlayerPosition.Builder) ? "Builder" : "Runner";
             }
             else
             {
-                if (_startButton.gameObject.activeSelf)
-                    _startButton.gameObject.SetActive(false);
+                _slots[otherIndex].text = (position == PlayerPosition.Builder) ? "Builder" : "Runner";
             }
         }
     }
 
-    private void PlayerPositionUpdate(KeyValuePair<PlayerRef, PlayerPosition> playerInfos)
+    // 세션 이름 설정
+    private void SetSessionNameText(PlayerRegistry registry)
     {
-        if (MatchMaker.Instance.Runner.LocalPlayer == playerInfos.Key)
+        _sessionName.text = registry.Runner.SessionInfo.Name;
+    }
+
+    private void StartButtonActivation(PlayerRegistry registry)
+    {
+        if (registry.Runner.IsServer)
         {
-            if (MatchMaker.Instance.Runner.IsServer)
-            {
-                PlayerSlotUpdate(playerInfos.Value, 0);
-            }
-            else
-            {
-                PlayerSlotUpdate(playerInfos.Value, 1);
-            }
+            if (!_startButton.gameObject.activeSelf)
+                _startButton.gameObject.SetActive(true);
+
+            // 버튼 활성화 여부 결정
+            _startButton.interactable = IsPlayersReady(registry);
         }
         else
         {
-            if (MatchMaker.Instance.Runner.IsServer)
-            {
-                PlayerSlotUpdate(playerInfos.Value, 1);
-            }
-            else
-            {
-                PlayerSlotUpdate(playerInfos.Value, 0);
-            }
+            if (_startButton.gameObject.activeSelf)
+                _startButton.gameObject.SetActive(false);
         }
     }
 
-    private void PlayerSlotUpdate(PlayerPosition position, int slotNumber)
+    public bool IsPlayersReady(PlayerRegistry registry)
     {
-        switch (slotNumber)
+        if(registry.RefToPosition.Count >= 2)
         {
-            case 0:
-                _playerSlot1.Position = position;
-                break;
-            case 1:
-                _playerSlot2.Position = position;
-                break;
-        }
-    }
-
-    private void SetLobby()
-    {
-        _sessionName.text = MatchMaker.Instance.Runner.SessionInfo.Name;
-    }
-
-    public void OnClickPositionChange()
-    {
-        if (PlayerRegistry.Instance == null) return;
-        var key = MatchMaker.Instance.Runner.LocalPlayer;
-        PlayerRegistry.Instance.RPC_ChangeRole(key);
-    }
-
-    public bool IsPlayersReady()
-    {
-        if (PlayerRegistry.Instance != null)
-        {
-            PlayerPosition firstPlayerPosition = PlayerPosition.None;
+            PlayerRef[] players = new PlayerRef[2];
             int count = 0;
-            foreach (var player in PlayerRegistry.Instance.RefToPosition)
+            foreach(var player in registry.RefToPosition)
             {
-                if (count == 0) 
-                {
-                    firstPlayerPosition = player.Value;
-                    count++;
-                }
-                else
-                {
-                    if (player.Value != PlayerPosition.None && firstPlayerPosition != player.Value)
-                    {
-                        return true;
-                    }
-                }
+                players[count++] = player.Key;
+            }
+
+            if (registry.RefToPosition[players[0]] != registry.RefToPosition[players[1]])
+            { 
+                return true;
             }
         }
 
         return false;
     }
 
-    public void ClearLobby()
+    public void OnClickPositionChange()
     {
-        _sessionName.text = string.Empty;
-        ClearPlayerSlot();
-    }
-
-    public void ClearPlayerSlot()
-    {
-        _playerSlot1.Position = _playerSlot2.Position = PlayerPosition.None;
+        if (NetworkManager.Instance.Registry == null) return;
+        var key = MatchMaker.Instance.Runner.LocalPlayer;
+        NetworkManager.Instance.Registry.RPC_ChangeRole(key);
     }
 }

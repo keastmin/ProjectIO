@@ -9,15 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [Header("Quick Start")]
-    public string QuickStartSessionName = "QuickStart";
-    public bool QuickStart = false;
-    public bool IsHost = true;
-    public PlayerPosition StartPosition;
-
     public static MatchMaker Instance { get; private set; } // 싱글턴 인스턴스
 
-    [Space(10)]
     [Header("Prefab")]
     public NetworkRunner RunnerPrefab; // 러너 프리팹
     public NetworkObject NetworkManagerPrefab; // 네트워크 매니저 프리팹
@@ -34,7 +27,6 @@ public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
     private int _roomCodeLength = 6; // 룸 코드 길이
     public int RoomCodeLength => _roomCodeLength; // 룸 코드 길이 프로퍼티
 
-
     private void Awake()
     {
         // 싱글턴: 이미 인스턴스가 존재하면 현재 게임 오브젝트 파괴하고 아니라면 인스턴스 설정
@@ -48,90 +40,7 @@ public class MatchMaker : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Start()
     {
-        // 퀵스타트 실행
-        if(QuickStart && IsHost)
-        {
-            QuickStartHost();
-        }
-        else if (QuickStart && !IsHost)
-        {
-            QuickStartClient();
-        }
     }
-
-    #region Quick Start
-
-    async void QuickStartHost()
-    {
-        if (!Runner)
-        {
-            Runner = Instantiate(RunnerPrefab);
-
-            Runner.GetComponent<NetworkEvents>().PlayerJoined.AddListener((runner, player) =>
-            {
-                if (runner.IsServer && runner.LocalPlayer == player)
-                {
-                    Debug.Log("네트워크 매니저 스폰");
-                    runner.Spawn(NetworkManagerPrefab);
-                }
-            });
-        }
-
-        // 러너에 콜백 추가
-        Runner.AddCallbacks(this);
-
-        // 입력을 제공하도록 설정
-        Runner.ProvideInput = true;
-
-        // 게임 시작 인자 설정
-        var result = await Runner.StartGame(new StartGameArgs
-        {
-            GameMode = GameMode.Host, // 호스트 모드로 시작
-            PlayerCount = _maxPlayerCount, // 최대 2명으로 설정
-            SessionName = QuickStartSessionName, // 룸 코드 랜덤 생성
-            SceneManager = Runner.GetComponent<NetworkSceneManagerDefault>() // 기본 씬 매니저 사용
-        });
-
-        // 룸 생성에 성공하면 룸 생성 이벤트 호출
-        if (result.Ok)
-        {
-            OnRoomCreated?.Invoke();
-        }
-    }
-
-    async void QuickStartClient()
-    {
-        // 러너가 없을 때 러너를 생성
-        if (!Runner)
-        {
-            // 러너 프리팹 생성
-            Runner = Instantiate(RunnerPrefab);
-        }
-
-        // 러너에 콜백 추가
-        Runner.AddCallbacks(this);
-
-        // 입력을 제공하도록 설정
-        Runner.ProvideInput = true;
-
-        // 게임 시작 인자 설정
-        var result = await Runner.StartGame(new StartGameArgs
-        {
-            GameMode = GameMode.Client, // 클라이언트 모드로 시작
-            SessionName = QuickStartSessionName, // 참여할 룸 코드를 받아옴
-            SceneManager = Runner.GetComponent<NetworkSceneManagerDefault>(), // 기본 씬 매니저 사용
-            EnableClientSessionCreation = false // 클라이언트 세션 생성 비활성화
-        });
-
-        // 룸 참여에 성공하면 룸 참여 이벤트 호출
-        if (result.Ok)
-        {
-            Debug.Log("방 참여 성공");
-            OnRoomJoined?.Invoke();
-        }
-    }
-
-    #endregion
 
     // 호스트가 룸을 생성하는 메서드
     public async void CreateRoom()

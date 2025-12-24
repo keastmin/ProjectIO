@@ -36,8 +36,6 @@ public class PlayerBuilderTowerBuildState : IPlayerState
         _towerGhost = Object.Instantiate(_player.PTowerData.TowerGhost);
         _towerRef = _player.PTowerData.TowerPrefabRef;
         _towerCost = _player.PTowerData.Tower.Cost;
-
-        _player.DragOff();
     }
 
     public void Update()

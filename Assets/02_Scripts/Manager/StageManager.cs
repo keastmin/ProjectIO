@@ -1,4 +1,5 @@
 using Fusion;
+using System.Collections;
 using UnityEngine;
 
 public class StageManager : NetworkBehaviour
@@ -36,15 +37,30 @@ public class StageManager : NetworkBehaviour
     public TerritoryView TerritoryView;
     public TrackView TrackView;
 
-    // 빌더 참조 바인더
-    private PlayerBuilderReferenceBinder _builderBinder;
+    bool _initialized = false;
 
     public override void Spawned()
     {
+        Debug.Log("스폰 작동");
         Instance = this;
 
         // 로컬 시스템 - 그리드 시스템 초기화(Laboratory 스폰 전에 초기화 필요)
         InitGridSystem();
+
+        if (!_initialized)
+        {
+            StartCoroutine(Co_InitAfterNetworkManagerReady());
+        }
+    }
+
+    // 네트워크 매니저의 스폰을 대기하는 코루틴
+    private IEnumerator Co_InitAfterNetworkManagerReady()
+    {
+        // 1) NetworkManager/Registry 준비 대기
+        while (NetworkManager.Instance == null || NetworkManager.Instance.Registry == null)
+            yield return null;
+
+        Debug.Log("NetworkManager 인식 성공");
 
         if (HasStateAuthority)
         {
@@ -65,17 +81,36 @@ public class StageManager : NetworkBehaviour
         InitUIController();
 
         // 마지막으로 빌더에게 필요한 참조들 바인드 해주기
-        BuilderReferenceBind();
+        BuilderReferenceBind(
+            PlayerBuilder,
+            UIController.BuilderUI,
+            GridSystem);
+
+        Debug.Log("셋업 완료");
+
+        _initialized = true;
     }
 
     void SpawnPlayer()
     {
-        var runnerPlayer = PlayerRegistry.Instance.GetPlayerRefFromPosition(PlayerPosition.Runner);
-        PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity, runnerPlayer);
+        if(NetworkManager.Instance == null)
+        {
+            Debug.LogError("NetworkManager 없음");
+            return;
+        }
+        else if(NetworkManager.Instance.Registry == null)
+        {
+            Debug.LogError("Registry 없음");
+            return;
+        }
+        var runnerPlayer = NetworkManager.Instance.Registry.GetPlayerRefFromPosition(PlayerPosition.Runner);
+        if(runnerPlayer == PlayerRef.None) PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity);
+        else PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity, runnerPlayer);
         PlayerRunner.name = $"{Runner.name} - Player Runner";
 
-        var builderPlayer = PlayerRegistry.Instance.GetPlayerRefFromPosition(PlayerPosition.Builder);
-        PlayerBuilder = Runner.Spawn(ResourceManager.Instance.PlayerBuilderPrefab, Vector3.zero, Quaternion.identity, builderPlayer);
+        var builderPlayer = NetworkManager.Instance.Registry.GetPlayerRefFromPosition(PlayerPosition.Builder);
+        if(builderPlayer == PlayerRef.None) PlayerBuilder = Runner.Spawn(ResourceManager.Instance.PlayerBuilderPrefab, Vector3.zero, Quaternion.identity);
+        else PlayerBuilder = Runner.Spawn(ResourceManager.Instance.PlayerBuilderPrefab, Vector3.zero, Quaternion.identity, builderPlayer);
         PlayerBuilder.name = $"{Runner.name} - Player Builder";
 
         Debug.Log($"{Runner.name} - Player spawned");
@@ -92,21 +127,14 @@ public class StageManager : NetworkBehaviour
     void InitCinemachineSystem()
     {
         var instance = Instantiate(cinemachineSystemPrefab); // 시네머신 시스템 인스턴스 생성
-        instance.InitCinemachineCamera(PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer], PlayerRunner, PlayerBuilder);
+        instance.InitCinemachineCamera(NetworkManager.Instance.Registry.RefToPosition[Runner.LocalPlayer], PlayerRunner, PlayerBuilder);
         CinemachineSystem = instance;
-        //instance.name = $"{Runner.name} - CinemachineSystem";
-        //Debug.Log($"{Runner.name} - CinemachineSystem spawned");
-
-        //instance.SetRunnerCameraTarget(PlayerRunner.transform); // 플레이어 러너 오브젝트를 러너 카메라의 타겟으로 설정
-
-        //var currentPlayerPosition = PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer]; // 현재 자신의 역할군을 가져옴
-        //instance.SetCinemachinePriority(currentPlayerPosition); // 자신의 역할군에 따라 시네머신 카메라의 우선순위를 설정
     }
 
     // 정해진 역할군에 따라 표현되는 UI를 초기화, 타워 슬롯 버튼을 설정
     private void InitUIController()
     {
-        var playerPosition = PlayerRegistry.Instance.RefToPosition[Runner.LocalPlayer]; // 현재 자신의 역할군을 가져옴
+        var playerPosition = NetworkManager.Instance.Registry.RefToPosition[Runner.LocalPlayer]; // 현재 자신의 역할군을 가져옴
         UIController.SetPlayerUI(playerPosition); // 자신의 역할군에 따라 UI를 설정
     }
 
@@ -144,12 +172,12 @@ public class StageManager : NetworkBehaviour
     #region 참조 주입
 
     // 빌더에게 필요한 참조 주입
-    private void BuilderReferenceBind()
+    private void BuilderReferenceBind(PlayerBuilder builder, PlayerBuilderUI builderUI, HexagonGridSystem gridSystem)
     {
-        _builderBinder = new PlayerBuilderReferenceBinder();
-
-        // 플레이어 빌더에게 UI 참조 주입
-        _builderBinder.BuilderUIBind(PlayerBuilder, UIController.BuilderUI);
+        // 플레이어 빌더에게 참조 주입
+        builder.PlayerBuilderReferenceInjection(
+            builderUI,
+            gridSystem);
     }
 
     #endregion

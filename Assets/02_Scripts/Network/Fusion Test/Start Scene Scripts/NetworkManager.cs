@@ -65,6 +65,19 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
+    // 플레이어가 나갔을 때 콜백되는 함수
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
+        Debug.Log("플레이어 종료");
+
+        // 플레이어를 Registry 딕셔너리에서 제거
+        if (HasStateAuthority)
+        {
+            if(Registry.RefToPosition.ContainsKey(player))
+                Registry.RemovePlayer(player);
+        }
+    }
+
     public void OnConnectedToServer(NetworkRunner runner)
     {
         
@@ -113,10 +126,6 @@ public class NetworkManager : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
     {
         
-    }
-
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)

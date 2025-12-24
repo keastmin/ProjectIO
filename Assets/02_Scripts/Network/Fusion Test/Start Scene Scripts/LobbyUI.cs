@@ -12,6 +12,8 @@ public class LobbyUI : MonoBehaviour
 
     [SerializeField] private Button _startButton;
 
+    private string _slotDefaultText = "None";
+
     private void Update()
     {
         // PlayerRegistry가 아직 스폰되지 않으면 작동하지 않음
@@ -21,9 +23,9 @@ public class LobbyUI : MonoBehaviour
             int myIndex = GetMySlotIndex(playerRegistry); // 내 인덱스 저장
             int otherIndex = myIndex == 0 ? 1 : 0; // 나와 다른 인덱스 저장
 
-            SetSlotPositionText(playerRegistry, myIndex, otherIndex);
-
-            StartButtonActivation();
+            SetSlotPositionText(playerRegistry, myIndex, otherIndex); // 슬롯의 포지션 텍스트 설정
+            SetSessionNameText(playerRegistry); // 세션 이름 텍스트 설정
+            StartButtonActivation(playerRegistry); // 시작 버튼 활성화/비활성화
         }
     }
 
@@ -37,8 +39,8 @@ public class LobbyUI : MonoBehaviour
     private void SetSlotPositionText(PlayerRegistry registry, int myIndex, int otherIndex)
     {
         // 슬롯 초기화
-        _slots[myIndex].text = "None";
-        _slots[otherIndex].text = "None";
+        _slots[myIndex].text = _slotDefaultText;
+        _slots[otherIndex].text = _slotDefaultText;
 
         // 플레이어 정보 순회
         foreach(var player in registry.RefToPosition)
@@ -56,57 +58,53 @@ public class LobbyUI : MonoBehaviour
         }
     }
 
-    private void StartButtonActivation()
+    // 세션 이름 설정
+    private void SetSessionNameText(PlayerRegistry registry)
     {
-        var runner = MatchMaker.Instance.Runner;
-        if (runner)
-        {
-            if (runner.IsServer)
-            {
-                if (!_startButton.gameObject.activeSelf)
-                    _startButton.gameObject.SetActive(true);
+        _sessionName.text = registry.Runner.SessionInfo.Name;
+    }
 
-                _startButton.interactable = IsPlayersReady();
-            }
-            else
-            {
-                if (_startButton.gameObject.activeSelf)
-                    _startButton.gameObject.SetActive(false);
-            }
+    private void StartButtonActivation(PlayerRegistry registry)
+    {
+        if (registry.Runner.IsServer)
+        {
+            if (!_startButton.gameObject.activeSelf)
+                _startButton.gameObject.SetActive(true);
+
+            // 버튼 활성화 여부 결정
+            _startButton.interactable = IsPlayersReady(registry);
+        }
+        else
+        {
+            if (_startButton.gameObject.activeSelf)
+                _startButton.gameObject.SetActive(false);
         }
     }
 
+    public bool IsPlayersReady(PlayerRegistry registry)
+    {
+        if(registry.RefToPosition.Count >= 2)
+        {
+            PlayerRef[] players = new PlayerRef[2];
+            int count = 0;
+            foreach(var player in registry.RefToPosition)
+            {
+                players[count++] = player.Key;
+            }
+
+            if (registry.RefToPosition[players[0]] != registry.RefToPosition[players[1]])
+            { 
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public void OnClickPositionChange()
     {
         if (NetworkManager.Instance.Registry == null) return;
         var key = MatchMaker.Instance.Runner.LocalPlayer;
         NetworkManager.Instance.Registry.RPC_ChangeRole(key);
-    }
-
-    public bool IsPlayersReady()
-    {
-        if (NetworkManager.Instance.Registry != null)
-        {
-            PlayerPosition firstPlayerPosition = PlayerPosition.Builder;
-            int count = 0;
-            foreach (var player in NetworkManager.Instance.Registry.RefToPosition)
-            {
-                if (count == 0) 
-                {
-                    firstPlayerPosition = player.Value;
-                    count++;
-                }
-                else
-                {
-                    if (player.Value != PlayerPosition.Builder && firstPlayerPosition != player.Value)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 }

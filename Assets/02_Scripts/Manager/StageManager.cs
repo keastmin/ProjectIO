@@ -29,7 +29,7 @@ public class StageManager : NetworkBehaviour
     [Header("Local Systems")]
     [SerializeField] private CinemachineSystem cinemachineSystemPrefab; // 시네머신 시스템 프리팸
     public StageUIController UIController; // 이 게임 스테이지의 UI 컨트롤러
-    public HexagonGridSystem GridSystem; // 그리드 시스템
+    public HexagonGrid Grid; // 헥사곤 그리드 컴포넌트
 
     [Space(10)]
 
@@ -45,7 +45,7 @@ public class StageManager : NetworkBehaviour
         Instance = this;
 
         // 로컬 시스템 - 그리드 시스템 초기화(Laboratory 스폰 전에 초기화 필요)
-        InitGridSystem();
+        //InitGridSystem();
 
         if (!_initialized)
         {
@@ -66,7 +66,7 @@ public class StageManager : NetworkBehaviour
         {
             SpawnPlayer();
             SpawnNetworkInputSystem();
-            SpawnLaboratory();
+            //SpawnLaboratory();
         }
 
         foreach (var system in systems)
@@ -84,7 +84,7 @@ public class StageManager : NetworkBehaviour
         BuilderReferenceBind(
             PlayerBuilder,
             UIController.BuilderUI,
-            GridSystem);
+            Grid);
 
         Debug.Log("셋업 완료");
 
@@ -138,46 +138,15 @@ public class StageManager : NetworkBehaviour
         UIController.SetPlayerUI(playerPosition); // 자신의 역할군에 따라 UI를 설정
     }
 
-    // 그리드 시스템 초기화
-    private void InitGridSystem()
-    {
-        GridSystem.InitGrid();
-    }
-
-    // 연구소 스폰
-    private void SpawnLaboratory()
-    {
-        Vector2Int index = new Vector2Int(GridSystem.CellCountX / 2, GridSystem.CellCountY / 2);
-        Vector3 labPos = GridSystem.GetNearGridPosition(index);
-
-        Laboratory = Runner.Spawn(ResourceManager.Instance.LaboratoryPrefab, labPos);
-
-        RPC_SetLaboratoryCell(index);
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_SetLaboratoryCell(Vector2Int index)
-    {
-        Vector2Int[] indices = { new Vector2Int(index.x - 1, index.y - 1), new Vector2Int(index.x, index.y - 1),
-                                 index, new Vector2Int(index.x - 1, index.y), new Vector2Int(index.x + 1, index.y), 
-                                 new Vector2Int(index.x - 1, index.y + 1), new Vector2Int(index.x, index.y + 1) };
-
-        // 그리드에 표시
-        foreach (var i in indices)
-        {
-            GridSystem.ChangeGridCellToLaboratoryState(i);
-        }
-    }
-
     #region 참조 주입
 
     // 빌더에게 필요한 참조 주입
-    private void BuilderReferenceBind(PlayerBuilder builder, PlayerBuilderUI builderUI, HexagonGridSystem gridSystem)
+    private void BuilderReferenceBind(PlayerBuilder builder, PlayerBuilderUI builderUI, HexagonGrid hexagonGrid)
     {
         // 플레이어 빌더에게 참조 주입
         builder.PlayerBuilderReferenceInjection(
             builderUI,
-            gridSystem);
+            hexagonGrid);
     }
 
     #endregion

@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(PlayerBuilderTowerBuild), typeof(PlayerBuilderGridInteractor))]
 public class PlayerBuilder : Player
 {
     [Header("Camera")]
@@ -21,8 +22,8 @@ public class PlayerBuilder : Player
     [Header("Reference")]
     [SerializeField] private PlayerBuilderUI _builderUI; // UI 참조
     [SerializeField] private DragSystem _dragSystem; // 드래그 시스템 참조
-    [SerializeField] private HexagonGridSystem _gridSystem; // 그리드 참조
     [SerializeField] private PlayerBuilderMover _builderMover; // 빌더 무버 참조
+    [SerializeField] private HexagonGrid _hexagonGrid; // 그리드 참조
 
     [Space(10)]
 
@@ -35,10 +36,6 @@ public class PlayerBuilder : Player
     private float _camZoomDistance = 0f; // 0=초기 위치, + = 전방으로 이동한 누적 거리
     private float _zoomTargetDistance = 0f;                  // 목표 전방 이동량(0~_cameraMaxZoomDistance)
     private float _zoomVel = 0f;                             // SmoothDamp용 내부 속도 캐시
-
-    // 설치할 타워
-    private TowerData _pTowerData;
-    public TowerData PTowerData => _pTowerData;
 
     // 드래그 정보
     private bool _isClick = false;
@@ -53,14 +50,26 @@ public class PlayerBuilder : Player
     public int SelectedAttackTowerCount => _selectedAttackTower.Count;
 
     // UI와의 상호작용 변수
-    public bool IsStandByTowerBuild { get; set; }
     public bool IsOpeningLaboratory { get; set; }
 
     // 상태머신
     public PlayerBuilderStateMachine StateMachine;
     public bool IsSelectTower { get; set; }
 
+    #region 컴포넌트
+
+    private PlayerBuilderTowerBuild _builderTowerBuild; // 타워 건설 도움 컴포넌트
+
+    #endregion
+
     #region 프로퍼티
+
+    #region 컴포넌트 프로퍼티
+
+    public PlayerBuilderTowerBuild BuilderTowerBuild => _builderTowerBuild;
+    public HexagonGrid Grid => _hexagonGrid;
+
+    #endregion
 
     public PlayerBuilderUI BuilderUI => _builderUI;
     public bool IsClick => _isClick;
@@ -118,11 +127,15 @@ public class PlayerBuilder : Player
     }
 
     // 외부에서 참조를 주입하는 함수
-    public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI, HexagonGridSystem gridSystem)
+    public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI, HexagonGrid hexagonGrid)
     {
         _builderUI = builderUI;  
         _dragSystem = builderUI.DragSystem;
-        _gridSystem = gridSystem; 
+        _hexagonGrid = hexagonGrid;
+        
+        // 타워 건설 관련 컴포넌트 초기화
+        TryGetComponent(out _builderTowerBuild);
+        _builderTowerBuild.Init(_builderUI);
     }
 
     #endregion
@@ -375,25 +388,6 @@ public class PlayerBuilder : Player
     public void ResetAttackTowerHashSet()
     {
         _selectedAttackTower.Clear();
-    }
-
-    #endregion
-
-    #region 타워 설치 로직
-
-    // 타워 설치 대기 상태로 돌입
-    public void StandByTowerBuild(TowerData towerData)
-    {
-        IsStandByTowerBuild = true;
-        _pTowerData = towerData;
-    }
-
-    // 호스트에게 코스트만큼 소유한 자원을 감소 요청
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_TowerBuild(NetworkPrefabRef towerRef, Vector3 buildPos, int cost)
-    {
-        StageManager.Instance.ResourceSystem.Mineral -= cost;
-        Runner.Spawn(towerRef, buildPos, Quaternion.identity);
     }
 
     #endregion

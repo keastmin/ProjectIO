@@ -10,8 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8632048801721329327}
   - component: {fileID: 3984747633682037487}
+  - component: {fileID: 2695761604568023699}
+  - component: {fileID: 8884391747278583287}
   - component: {fileID: 1367329938437336398}
   - component: {fileID: 8593551356125243380}
+  - component: {fileID: 381393472815718579}
   m_Layer: 0
   m_Name: Player Builder
   m_TagString: Untagged
@@ -53,16 +56,51 @@ MonoBehaviour:
   _zoomSmoothTime: 0.12
   _dragThresholdPixel: 5
   _dragDetectorHeight: 3
+  _dragDetectBoxThickness: 0.1
   _dragDetectLayer:
     serializedVersion: 2
     m_Bits: 256
   _builderUI: {fileID: 0}
   _dragSystem: {fileID: 0}
-  _gridSystem: {fileID: 0}
+  _builderMover: {fileID: 0}
+  _hexagonGrid: {fileID: 0}
   _cineCam: {fileID: 0}
   _environmentalLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &2695761604568023699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585997719371933276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f75862a571d19e43af89a72dc1d064a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tower: {fileID: 0}
+  _towerGhost: {fileID: 0}
+  _cost:
+    Mineral: 0
+    Gas: 0
+  _towerRef:
+    RawGuidValue: 00000000000000000000000000000000
+  _isStandByBuild: 0
+--- !u!114 &8884391747278583287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585997719371933276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 667a8dfdb35ff39418bb1752d46baf78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hexagonGrid: {fileID: 0}
 --- !u!114 &1367329938437336398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +113,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5060ecc9416bf5e448838601150263d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _builderCam: {fileID: 0}
+  _moveSpeed: 10
+  _movePixel: 5
 --- !u!114 &8593551356125243380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,4 +134,18 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3984747633682037487}
+  - {fileID: 2695761604568023699}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &381393472815718579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585997719371933276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 667a8dfdb35ff39418bb1752d46baf78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hexagonGrid: {fileID: 0}

@@ -71,7 +71,7 @@ public class PlayerBuilderOriginState : IPlayerState
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.LaboratoryState);
         }
-        else if(_player.IsStandByTowerBuild)
+        else if(_player.BuilderTowerBuild.IsStandByBuild)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerBuildState);
         }

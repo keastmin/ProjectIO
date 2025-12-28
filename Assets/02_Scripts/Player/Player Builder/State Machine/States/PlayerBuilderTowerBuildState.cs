@@ -21,21 +21,14 @@ public class PlayerBuilderTowerBuildState : IPlayerState
 
     public void Enter()
     {
-        var manager = StageManager.Instance;
-        if(manager != null)
-        {
-            var uiController = manager.UIController;
-            if(uiController != null)
-            {
-                uiController.BuilderUI.ActivationTowerBuildUI(true);
-            }
-        }
+        // UI 활성화
+        _player.BuilderUI.ActivationTowerBuildUI(true);
 
+        // 타워 가이드 생성
+        _towerGhost = Object.Instantiate(_player.BuilderTowerBuild.TowerGhost);
+
+        // 타워 건설 가능을 false로 초기화
         _canTowerBuild = false;
-        _tower = _player.PTowerData.Tower;
-        _towerGhost = Object.Instantiate(_player.PTowerData.TowerGhost);
-        _towerRef = _player.PTowerData.TowerPrefabRef;
-        _towerCost = _player.PTowerData.Tower.Cost;
     }
 
     public void Update()
@@ -46,8 +39,8 @@ public class PlayerBuilderTowerBuildState : IPlayerState
         if (Input.GetMouseButtonDown(0) && _canTowerBuild && !EventSystem.current.IsPointerOverGameObject())
         {
             // 좌클릭을 하면 타워 설치
-            _player.RPC_TowerBuild(_towerRef, _towerBuildPosition, _towerCost.Mineral);
-            StageManager.Instance.GridSystem.ChangeGridCellToTowerState(_towerBuildIndex);
+            _player.BuilderTowerBuild.BuildTower(_towerBuildPosition); // 타워 설치
+            _player.Grid.ChangeCellState(_towerBuildIndex, CellState.Tower); // 그리드 상태 변경
         }
 
         TransitionTo();
@@ -75,25 +68,19 @@ public class PlayerBuilderTowerBuildState : IPlayerState
 
     private void TransitionTo()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (!_player.BuilderTowerBuild.IsStandByBuild)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.OriginState);
         }
     }
 
+    // 타워 빌드 종료
     private void CancelTowerBuild()
     {
         Object.Destroy(_towerGhost.gameObject);
-        _player.IsStandByTowerBuild = false;
-        var manager = StageManager.Instance;
-        if (manager != null)
-        {
-            var uiController = manager.UIController;
-            if (uiController != null)
-            {
-                uiController.BuilderUI.ActivationTowerBuildUI(false);
-            }
-        }
+        _canTowerBuild = false;
+
+        _player.BuilderUI.ActivationTowerBuildUI(false);
     }
 
     // 스크린에서 찍고 있는 마우스가 설정한 레이어에 닿았는지 판별하고 위치를 반환하는 함수
@@ -113,30 +100,6 @@ public class PlayerBuilderTowerBuildState : IPlayerState
         return isValid;
     }
 
-    // 스냅샷될 그리드의 인덱스를 반환하는 함수
-    private Vector2Int GetSnapshotIndex(Vector3 mousePosition)
-    {
-        return StageManager.Instance.GridSystem.GetNearGridIndex(mousePosition);
-    }
-
-    // 스냅샷될 셀의 위치를 반환하는 함수
-    private Vector3 GetSnapshotPosition(Vector2Int index)
-    {
-        return StageManager.Instance.GridSystem.GetNearGridPosition(index);
-    }
-
-    // 타워 설치가 가능한지 판별하는 함수
-    private bool IsValidTowerCraft(Vector2Int index, int cost)
-    {
-        // 해당 셀에 타워 설치가 불가능 하다면 false
-        if (!StageManager.Instance.GridSystem.IsPointToTowerCraftValid(index)) return false;
-
-        // 현재 가지고 있는 자원이 설치할 타워의 필요 자원보다 적다면 false
-        if (StageManager.Instance.ResourceSystem.Mineral < cost) return false;
-
-        return true;
-    }
-
     // 타워 예시를 스냅샷하는 함수
     private bool SnapshotTowerGhost()
     {
@@ -146,12 +109,13 @@ public class PlayerBuilderTowerBuildState : IPlayerState
 
         if (isValid)
         {
-            _towerBuildIndex = GetSnapshotIndex(mouseHitPoint);
-            _towerBuildPosition = GetSnapshotPosition(_towerBuildIndex);
-
+            // 셀 중앙으로 스냅샷
+            _towerBuildIndex = _player.Grid.GetNearIndex(mouseHitPoint);
+            _towerBuildPosition = _player.Grid.GetNearCellPositionFromIndex(_towerBuildIndex);
             _towerGhost.transform.position = _towerBuildPosition;
 
-            if (IsValidTowerCraft(_towerBuildIndex, _tower.Cost.Mineral))
+            // 타워 설치 가능 여부 판별 후 타워 고스트 색 변경
+            if (_player.Grid.IsEmptyCell(_towerBuildIndex))
             {
                 // 타워 설치가 가능하다면 푸른색으로 변경하고 타워 설치 가능 플래그를 true로 변경
                 _towerGhost.EnableTower();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,12 @@ public class PlayerBuilderUI : MonoBehaviour
     [SerializeField] private DragSystem _dragSystem;
 
     public bool IsLaboratoryUIActive => _laboratoryUI.activeSelf;
+
+    #region Action
+
+    public event Action<TowerData> OnClickTowerBuildButtonAction; // 타워 건설 버튼을 눌렀을 때의 액션
+
+    #endregion
 
     #region 프로퍼티
 
@@ -31,10 +38,12 @@ public class PlayerBuilderUI : MonoBehaviour
     // 타워 선택 버튼 클릭 이벤트
     public void OnClickTowerButton(TowerData data)
     {
-        if (IsPlayerBuilderExist(out PlayerBuilder builder))
-        {
-            builder.StandByTowerBuild(data);
-        }
+        OnClickTowerBuildButtonAction?.Invoke(data);
+
+        //if (IsPlayerBuilderExist(out PlayerBuilder builder))
+        //{
+        //    builder.StandByTowerBuild(data);
+        //}
     }
 
     // 실험실 버튼 클릭 이벤트

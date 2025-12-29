@@ -24,6 +24,7 @@ public class ResourceSystem : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && NetworkManager.Instance.Registry.RefToPosition[Runner.LocalPlayer] == PlayerPosition.Builder)
         {
             RPC_GetMineral(5);
+            RPC_GetGas(5);
         }
     }
 
@@ -31,6 +32,12 @@ public class ResourceSystem : NetworkBehaviour
     public void RPC_GetMineral(int mineral)
     {
         Mineral += mineral;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_GetGas(int gas)
+    {
+        Gas += gas;
     }
 
     public void OnChangedMineralCount()

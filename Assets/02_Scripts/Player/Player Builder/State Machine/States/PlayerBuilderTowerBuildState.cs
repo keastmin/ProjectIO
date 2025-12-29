@@ -41,6 +41,12 @@ public class PlayerBuilderTowerBuildState : IPlayerState
             // 좌클릭을 하면 타워 설치
             _player.BuilderTowerBuild.BuildTower(_towerBuildPosition); // 타워 설치
             _player.Grid.ChangeCellState(_towerBuildIndex, CellState.Tower); // 그리드 상태 변경
+            ResourceSystem.Instance.Mineral -= _player.BuilderTowerBuild.BuildCost.Mineral; // 미네랄 차감
+            ResourceSystem.Instance.Gas -= _player.BuilderTowerBuild.BuildCost.Gas; // 가스 차감
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            _player.BuilderTowerBuild.RevertStandBy();
         }
 
         TransitionTo();
@@ -114,8 +120,12 @@ public class PlayerBuilderTowerBuildState : IPlayerState
             _towerBuildPosition = _player.Grid.GetNearCellPositionFromIndex(_towerBuildIndex);
             _towerGhost.transform.position = _towerBuildPosition;
 
+            bool isInTerritory = _player.Grid.IsPointInTerritory(_towerBuildIndex); // 영역 내부인가?
+            bool isMineralEnough = StageManager.Instance.ResourceSystem.Mineral >= _player.BuilderTowerBuild.BuildCost.Mineral; // 미네랄이 충분한가?
+            bool isGasEnough = StageManager.Instance.ResourceSystem.Gas >= _player.BuilderTowerBuild.BuildCost.Gas; // 가스가 충분한가?
+
             // 타워 설치 가능 여부 판별 후 타워 고스트 색 변경
-            if (_player.Grid.IsEmptyCell(_towerBuildIndex))
+            if (_player.Grid.IsEmptyCell(_towerBuildIndex) && isInTerritory && isMineralEnough && isGasEnough)
             {
                 // 타워 설치가 가능하다면 푸른색으로 변경하고 타워 설치 가능 플래그를 true로 변경
                 _towerGhost.EnableTower();

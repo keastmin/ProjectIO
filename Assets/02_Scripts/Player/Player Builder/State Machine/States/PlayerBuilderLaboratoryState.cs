@@ -13,10 +13,15 @@ public class PlayerBuilderLaboratoryState : IPlayerState
     public void Enter() 
     {
         Debug.Log("Laboratory State");
+
+        _player.BuilderUI.ActivationLaboratoryUI(true);
     }
 
     public void Update() 
     {
+        if (Input.GetMouseButtonDown(1))
+            _player.CloseLaboratory();
+
         _player.BuilderCamMove();
         TransitionTo();
     }
@@ -38,16 +43,12 @@ public class PlayerBuilderLaboratoryState : IPlayerState
 
     public void Exit() 
     {
-        var manager = StageManager.Instance;
-        if(manager!= null)
-        {
-            manager.UIController.BuilderUI.ActivationLaboratoryUI(false);
-        }
+        _player.BuilderUI.ActivationLaboratoryUI(false);
     }
 
     private void TransitionTo()
     {
-        if(Input.GetMouseButtonDown(1))
+        if(!_player.IsOpeningLaboratory)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.OriginState);
         }

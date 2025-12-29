@@ -24,6 +24,7 @@ public class PlayerBuilder : Player
     [SerializeField] private DragSystem _dragSystem; // 드래그 시스템 참조
     [SerializeField] private PlayerBuilderMover _builderMover; // 빌더 무버 참조
     [SerializeField] private HexagonGrid _hexagonGrid; // 그리드 참조
+    [SerializeField] private Laboratory _laboratory; // 연구실 참조
 
     [Space(10)]
 
@@ -54,7 +55,6 @@ public class PlayerBuilder : Player
 
     // 상태머신
     public PlayerBuilderStateMachine StateMachine;
-    public bool IsSelectTower { get; set; }
 
     #region 컴포넌트
 
@@ -68,15 +68,19 @@ public class PlayerBuilder : Player
 
     public PlayerBuilderTowerBuild BuilderTowerBuild => _builderTowerBuild;
     public HexagonGrid Grid => _hexagonGrid;
+    public PlayerBuilderUI BuilderUI => _builderUI;
 
     #endregion
 
-    public PlayerBuilderUI BuilderUI => _builderUI;
+    #region 필드 프로퍼티
+
     public bool IsClick => _isClick;
     public Vector2 StartMousePoint => _startMousePoint;
     public Vector2 CurrentMousePoint => _currentMousePoint;
     public float DragThresholdPixel => _dragThresholdPixel;
     public float DragDetectHeight => _dragDetectorHeight;
+
+    #endregion
 
     #endregion
 
@@ -127,12 +131,17 @@ public class PlayerBuilder : Player
     }
 
     // 외부에서 참조를 주입하는 함수
-    public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI, HexagonGrid hexagonGrid)
+    public void PlayerBuilderReferenceInjection(PlayerBuilderUI builderUI, HexagonGrid hexagonGrid, Laboratory laboratory)
     {
         _builderUI = builderUI;  
         _dragSystem = builderUI.DragSystem;
         _hexagonGrid = hexagonGrid;
-        
+        _laboratory = laboratory;
+
+        // 연구소 관련 액션 연결
+        _builderUI.OnClickLaboratoryButtonAction += OpenLaboratory;
+        _laboratory.OnClickLaboratoryObjectAction += OpenLaboratory;
+
         // 타워 건설 관련 컴포넌트 초기화
         TryGetComponent(out _builderTowerBuild);
         _builderTowerBuild.Init(_builderUI);
@@ -394,10 +403,9 @@ public class PlayerBuilder : Player
 
     #region 연구실 로직
 
-    public void OpenLaboratory(bool isOpening)
-    {
-        IsOpeningLaboratory = isOpening;
-    }
+    public void OpenLaboratory() => IsOpeningLaboratory = true;
+
+    public void CloseLaboratory() => IsOpeningLaboratory = false;
 
     #endregion
 

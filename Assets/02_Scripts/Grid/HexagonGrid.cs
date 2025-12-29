@@ -3,6 +3,7 @@ using UnityEngine;
 
 public sealed class HexagonGrid : MonoBehaviour
 {
+    [SerializeField] private TerritorySystem _territorySystem; // 영역 컴포넌트
     [SerializeField] private MeshCollider _gridBasePlaneCollider; // 그리드의 기반이 될 Plane의 콜라이더
     [SerializeField] private Vector2Int _gridCellCount; // 그리드의 셀 개수
     [SerializeField] private float _hexagonSize = 1.5f; // 육각형 중심에서 꼭짓점 까지의 거리
@@ -154,6 +155,60 @@ public sealed class HexagonGrid : MonoBehaviour
         }
 
         return best;
+    }
+
+    /// <summary>
+    /// radius값 만큼 주변 셀들의 상태를 복수로 변경하는 함수
+    /// </summary>
+    /// <param name="centerIndex">중심 인덱스</param>
+    /// <param name="radius">변경 범위</param>
+    /// <param name="occupyState">변경할 상태</param>
+    /// <param name="requireEmpty">전부 비어있어야 하는지 여부</param>
+    /// <returns>완료 여부</returns>
+    public bool TryOccupyArea(Vector2Int centerIndex, int radius, CellState occupyState, bool requireEmpty = true)
+    {
+        var indices = GetIndicesInRadius(centerIndex, radius, includeCenter: true);
+
+        // 1) 검증 단계 (전부 비었는지)
+        if (requireEmpty)
+        {
+            for (int i = 0; i < indices.Count; i++)
+            {
+                var idx = indices[i];
+                if (_grid[idx.x, idx.y].State != CellState.None) // CellState enum 참고 :contentReference[oaicite:3]{index=3}
+                    return false;
+            }
+        }
+
+        // 2) 커밋 단계 (한 번에 변경)
+        for (int i = 0; i < indices.Count; i++)
+        {
+            var idx = indices[i];
+            _grid[idx.x, idx.y].SetState(occupyState); // GridCell.SetState :contentReference[oaicite:4]{index=4}
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// 그리드의 중심 인덱스를 반환하는 함수
+    /// </summary>
+    /// <returns>그리드의 중심 인덱스</returns>
+    public Vector2Int GetCenterIndex()
+    {
+        return _gridCellCount / 2;
+    }
+
+    /// <summary>
+    /// 인덱스를 기반으로 영역 내부인지 검사하는 함수
+    /// </summary>
+    /// <param name="index">검사할 인덱스</param>
+    /// <returns>영역 내부 여부</returns>
+    public bool IsPointInTerritory(Vector2Int index)
+    {
+        Vector3 pos = _grid[index.x, index.y].Position;
+        Vector2 point = new Vector2(pos.x, pos.z);
+        return _territorySystem.Territory.IsPointInPolygon(point);
     }
 
     #endregion
@@ -308,6 +363,49 @@ public sealed class HexagonGrid : MonoBehaviour
                 emit(q, r);
             }
         }
+    }
+
+    private Vector2Int OffsetToAxialIndex(Vector2Int index)
+    {
+        int col = index.x;
+        int row = index.y;
+
+        if (_hexagonType == HexagonType.PointyTop)
+        {
+            // odd-r 역변환
+            int r = row;
+            int q = col - ((r - (r & 1)) / 2);
+            return new Vector2Int(q, r);
+        }
+        else
+        {
+            // odd-q 역변환
+            int q = col;
+            int r = row - ((q - (q & 1)) / 2);
+            return new Vector2Int(q, r);
+        }
+    }
+
+    private List<Vector2Int> GetIndicesInRadius(Vector2Int centerIndex, int radius, bool includeCenter = true)
+    {
+        var centerAx = OffsetToAxialIndex(centerIndex);
+        var result = new List<Vector2Int>(radius == 1 ? 7 : 19);
+
+        EnumerateAxialInRadius(centerAx.x, centerAx.y, radius, (q, r) =>
+        {
+            if (!includeCenter && q == centerAx.x && r == centerAx.y)
+                return;
+
+            Vector2Int idx = AxialToOffsetIndex(q, r);
+
+            // "잘려나간" 경계 밖은 제외 (원하면 여기서 실패 처리로 바꿀 수도 있음)
+            if (idx.x < 0 || idx.x >= _gridCellCount.x || idx.y < 0 || idx.y >= _gridCellCount.y)
+                return;
+
+            result.Add(idx);
+        });
+
+        return result;
     }
 
     #endregion

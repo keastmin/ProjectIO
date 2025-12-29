@@ -66,8 +66,7 @@ public class PlayerBuilderOriginState : IPlayerState
 
     private void TransitionTo()
     {
-        var stageManager = StageManager.Instance;
-        if(stageManager != null && stageManager.UIController.BuilderUI.IsLaboratoryUIActive)
+        if(_player.IsOpeningLaboratory)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.LaboratoryState);
         }

@@ -44,9 +44,6 @@ public class StageManager : NetworkBehaviour
         Debug.Log("스폰 작동");
         Instance = this;
 
-        // 로컬 시스템 - 그리드 시스템 초기화(Laboratory 스폰 전에 초기화 필요)
-        //InitGridSystem();
-
         if (!_initialized)
         {
             StartCoroutine(Co_InitAfterNetworkManagerReady());
@@ -56,7 +53,7 @@ public class StageManager : NetworkBehaviour
     // 네트워크 매니저의 스폰을 대기하는 코루틴
     private IEnumerator Co_InitAfterNetworkManagerReady()
     {
-        // 1) NetworkManager/Registry 준비 대기
+        // NetworkManager/Registry 준비 대기
         while (NetworkManager.Instance == null || NetworkManager.Instance.Registry == null)
             yield return null;
 
@@ -66,7 +63,7 @@ public class StageManager : NetworkBehaviour
         {
             SpawnPlayer();
             SpawnNetworkInputSystem();
-            //SpawnLaboratory();
+            SpawnLaboratory();
         }
 
         foreach (var system in systems)
@@ -84,7 +81,8 @@ public class StageManager : NetworkBehaviour
         BuilderReferenceBind(
             PlayerBuilder,
             UIController.BuilderUI,
-            Grid);
+            Grid,
+            Laboratory);
 
         Debug.Log("셋업 완료");
 
@@ -93,16 +91,6 @@ public class StageManager : NetworkBehaviour
 
     void SpawnPlayer()
     {
-        if(NetworkManager.Instance == null)
-        {
-            Debug.LogError("NetworkManager 없음");
-            return;
-        }
-        else if(NetworkManager.Instance.Registry == null)
-        {
-            Debug.LogError("Registry 없음");
-            return;
-        }
         var runnerPlayer = NetworkManager.Instance.Registry.GetPlayerRefFromPosition(PlayerPosition.Runner);
         if(runnerPlayer == PlayerRef.None) PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity);
         else PlayerRunner = Runner.Spawn(ResourceManager.Instance.PlayerRunnerPrefab, Vector3.zero - (Vector3.forward * 4f), Quaternion.identity, runnerPlayer);
@@ -138,15 +126,30 @@ public class StageManager : NetworkBehaviour
         UIController.SetPlayerUI(playerPosition); // 자신의 역할군에 따라 UI를 설정
     }
 
+    // 연구소 스폰
+    private void SpawnLaboratory()
+    {
+        // 연구소 차지 셀 인덱스 범위: [x, y], [x - 1, y], [x, y - 1], [x + 1, y], [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]
+        Vector2Int centerIndex = Grid.GetCenterIndex();
+
+        // 연구소 생성
+        Vector3 labPos = Grid.GetNearCellPositionFromIndex(centerIndex);
+        Laboratory = Runner.Spawn(ResourceManager.Instance.LaboratoryPrefab, labPos, Quaternion.identity);
+
+        // 연구소가 위치한 셀 상태 변경
+        Grid.TryOccupyArea(centerIndex, 1, CellState.Laborarytory);
+    }
+
     #region 참조 주입
 
     // 빌더에게 필요한 참조 주입
-    private void BuilderReferenceBind(PlayerBuilder builder, PlayerBuilderUI builderUI, HexagonGrid hexagonGrid)
+    private void BuilderReferenceBind(PlayerBuilder builder, PlayerBuilderUI builderUI, HexagonGrid hexagonGrid, Laboratory laboratory)
     {
         // 플레이어 빌더에게 참조 주입
         builder.PlayerBuilderReferenceInjection(
             builderUI,
-            hexagonGrid);
+            hexagonGrid,
+            laboratory);
     }
 
     #endregion

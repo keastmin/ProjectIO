@@ -1,8 +1,10 @@
 using Fusion;
+using System;
 using UnityEngine;
 
 public class Laboratory : NetworkBehaviour, ICanClickObject
 {
+    public event Action OnClickLaboratoryObjectAction;
 
     #region IInteractableObject
 
@@ -14,11 +16,7 @@ public class Laboratory : NetworkBehaviour, ICanClickObject
     // 빌더의 연구소를 통한 강화 UI 띄우기
     public void OnLeftMouseUpThisObject()
     {
-        var manager = StageManager.Instance;
-        if (StageManager.Instance != null)
-        {
-            StageManager.Instance.UIController.BuilderUI.OnClickLaboratoryButton(true);
-        }
+        OnClickLaboratoryObjectAction?.Invoke();
     }
 
     public void OnCancelClickThisObject()

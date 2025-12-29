@@ -5,11 +5,12 @@ public sealed class PlayerBuilderTowerBuild : NetworkBehaviour
 {
     [SerializeField] private Tower _tower;
     [SerializeField] private TowerGhost _towerGhost;
-    [SerializeField] private Cost _cost;
+    [SerializeField] private Cost _buildCost;
     [SerializeField] private NetworkPrefabRef _towerRef;
     [SerializeField] private bool _isStandByBuild = false;
 
     public TowerGhost TowerGhost => _towerGhost;
+    public Cost BuildCost => _buildCost;
     public bool IsStandByBuild => _isStandByBuild;
 
     #region API
@@ -32,7 +33,7 @@ public sealed class PlayerBuilderTowerBuild : NetworkBehaviour
     {
         if(_towerRef != default && _tower != null)
         {
-            RPC_BuildTower(_towerRef, _cost, position);
+            RPC_BuildTower(_towerRef, _buildCost, position);
         }
         RevertStandBy();
     }
@@ -75,7 +76,7 @@ public sealed class PlayerBuilderTowerBuild : NetworkBehaviour
 
             if(_tower != null)
             {
-                _cost = _tower.Cost;
+                _buildCost = _tower.Cost;
             }
 
             // 타워 설치 준비

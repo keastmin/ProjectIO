@@ -16,6 +16,7 @@ public class PlayerBuilderUI : MonoBehaviour
     #region Action
 
     public event Action<TowerData> OnClickTowerBuildButtonAction; // 타워 건설 버튼을 눌렀을 때의 액션
+    public event Action OnClickLaboratoryButtonAction; // 실험실 버튼을 눌렀을 떄의 액션
 
     #endregion
 
@@ -39,20 +40,12 @@ public class PlayerBuilderUI : MonoBehaviour
     public void OnClickTowerButton(TowerData data)
     {
         OnClickTowerBuildButtonAction?.Invoke(data);
-
-        //if (IsPlayerBuilderExist(out PlayerBuilder builder))
-        //{
-        //    builder.StandByTowerBuild(data);
-        //}
     }
 
     // 실험실 버튼 클릭 이벤트
     public void OnClickLaboratoryButton(bool isActive)
     {
-        if (IsPlayerBuilderExist(out PlayerBuilder builder))
-        {
-            builder.OpenLaboratory(isActive);
-        }
+        OnClickLaboratoryButtonAction?.Invoke();
     }
 
     // 타워 판매 버튼 클릭 이벤트
@@ -65,10 +58,6 @@ public class PlayerBuilderUI : MonoBehaviour
             // manager.PlayerBuilder.SelectedAttackTower.Sell();
         }
     }
-
-    // 타워 이동 버튼 클릭 이벤트
-
-    // 타워 업그레이드 버튼 클릭 이벤트
 
     #endregion
 

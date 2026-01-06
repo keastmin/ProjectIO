@@ -101,6 +101,7 @@ MonoBehaviour:
   _cost:
     Mineral: 0
     Gas: 0
+  _ghost: {fileID: 7665473588800853303, guid: 0b364e81c2959854787a47f8ade54f35, type: 3}
   _attackSpeed: 1
   _attackPosition: {fileID: 0}
   _enemyLayer:
@@ -109,6 +110,7 @@ MonoBehaviour:
   _targettingRange: 10
   _rotateSpeed: 10
   _selectedChecker: {fileID: 1485205250601839287}
+  _selectedImage: {fileID: 0}
   _currTarget: {fileID: 0}
   MuzzleTransform: {fileID: 790783490424944510}
   MissilePrefab: {fileID: -8257491614462668254, guid: 28d14186b36c59e459e4d71d5ff83aca, type: 3}

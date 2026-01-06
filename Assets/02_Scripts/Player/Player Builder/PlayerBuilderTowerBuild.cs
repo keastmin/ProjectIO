@@ -28,12 +28,15 @@ public sealed class PlayerBuilderTowerBuild : NetworkBehaviour
     /// <summary>
     /// 건설 준비중인 타워를 설치하는 함수
     /// </summary>
-    /// <param name="position">타워를 설치할 위치</param>
-    public void BuildTower(Vector3 position)
+    /// <param name="grid">타워를 설치할 때 기반이 되는 육각 그리드</param>
+    /// <param name="index">타워를 설치할 그리드의 인덱스</param>
+    public void BuildTower(HexagonGrid grid, Vector2Int index)
     {
         if(_towerRef != default && _tower != null)
         {
-            RPC_BuildTower(_towerRef, _buildCost, position);
+            Vector3 pos = grid.GetNearCellPositionFromIndex(index);
+            grid.ChangeCellState(index, CellState.Tower); // 타워 설치 인덱스에 타워 상태로 변경
+            RPC_BuildTower(_towerRef, _buildCost, pos);
         }
         RevertStandBy();
     }
@@ -89,8 +92,9 @@ public sealed class PlayerBuilderTowerBuild : NetworkBehaviour
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_BuildTower(NetworkPrefabRef towerRef, Cost cost, Vector3 position)
     {
-        ResourceSystem.Instance.Mineral -= cost.Mineral;
-        Runner.Spawn(towerRef, position, Quaternion.identity);
+        ResourceSystem.Instance.Mineral -= cost.Mineral; // 미네랄 차감
+        ResourceSystem.Instance.Gas -= cost.Gas; // 가스 차감
+        Runner.Spawn(towerRef, position, Quaternion.identity); // 타워 스폰
     }
 
     #endregion

@@ -38,16 +38,6 @@ public class PlayerBuilderDragState : IPlayerState
         
     }
 
-    public void NetworkFixedUpdate()
-    {
-        
-    }
-
-    public void Render()
-    {
-        
-    }
-
     public void Exit()
     {
         CompleteDrag();
@@ -71,7 +61,9 @@ public class PlayerBuilderDragState : IPlayerState
         float maxX = Mathf.Max(startPos.x, endPos.x);
         float minY = Mathf.Min(startPos.y, endPos.y);
         float maxY = Mathf.Max(startPos.y, endPos.y);
-        _player.DraggingCollectCollider(minX, maxX, minY, maxY);
+        DraggingCollector.FrustumDraggingCollectCollider(_player.DragObjectHash, _player.CurrentFrameDetectDragObjectHash,
+            _player.CurrentFrameRemoveDragObjectList, _player.DragSelectedColliders, _player.DragDetectLayer, Camera.main,
+            minX, minY, maxX, maxY);
     }
 
     // 드래그 영역 확정

@@ -9,6 +9,7 @@ public class PlayerBuilderStateMachine
     public PlayerBuilderTowerBuildState TowerBuildState;
     public PlayerBuilderLaboratoryState LaboratoryState;
     public PlayerBuilderTowerSelectState TowerSelectState;
+    public PlayerBuilderTowerMoveState TowerMoveState;
 
     public PlayerBuilderStateMachine(PlayerBuilder player)
     {
@@ -17,6 +18,7 @@ public class PlayerBuilderStateMachine
         TowerBuildState = new PlayerBuilderTowerBuildState(player);
         LaboratoryState = new PlayerBuilderLaboratoryState(player);
         TowerSelectState = new PlayerBuilderTowerSelectState(player);
+        TowerMoveState = new PlayerBuilderTowerMoveState(player);
     }
 
     public void InitStateMachine()
@@ -28,16 +30,6 @@ public class PlayerBuilderStateMachine
     public void Update()
     {
         _currentState.Update();
-    }
-
-    public void Render()
-    {
-        _currentState.Render();
-    }
-
-    public void NetworkFixedUpdate()
-    {
-        _currentState.NetworkFixedUpdate();
     }
 
     public void LateUpdate()

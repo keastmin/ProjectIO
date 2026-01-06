@@ -25,6 +25,8 @@ public sealed class HexagonGrid : MonoBehaviour
 
     private readonly HashSet<long> _visited = new HashSet<long>();
 
+    public float GridHeight => transform.position.y + _gridOffset.y;
+
     #region MonoBehaviour
 
     private void OnValidate()

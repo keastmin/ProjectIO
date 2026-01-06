@@ -15,8 +15,6 @@ public class PlayerBuilder : Player
 
     [Header("Drag")]
     [SerializeField] private float _dragThresholdPixel = 5f; 
-    [SerializeField] private float _dragDetectorHeight = 1f;
-    [SerializeField] private float _dragDetectBoxThickness = 0.1f;
     [SerializeField] private LayerMask _dragDetectLayer;
 
     [Header("Reference")]
@@ -42,13 +40,11 @@ public class PlayerBuilder : Player
     private bool _isClick = false;
     private Vector2 _startMousePoint = Vector2.zero;
     private Vector2 _currentMousePoint = Vector2.zero;
-    private int _dragObjectCount = 0;
 
     // 선택된 타워 정보
-    private Collider[] _dragSelectedColliders;
-    private HashSet<AttackTower> _selectedAttackTower = new();
-    public HashSet<AttackTower> SelectedAttackTower => _selectedAttackTower;
-    public int SelectedAttackTowerCount => _selectedAttackTower.Count;
+    private HashSet<Tower> _selectedTowers = new();
+    public HashSet<Tower> SelectedTowers => _selectedTowers;
+    public int SelectedTowersCount => SelectedTowers.Count;
 
     // UI와의 상호작용 변수
     public bool IsOpeningLaboratory { get; set; }
@@ -56,9 +52,11 @@ public class PlayerBuilder : Player
     // 상태머신
     public PlayerBuilderStateMachine StateMachine;
 
-    #region 컴포넌트
+    #region 플레이어 빌더 컴포넌트
 
     private PlayerBuilderTowerBuild _builderTowerBuild; // 타워 건설 도움 컴포넌트
+    private PlayerBuilderTowerSell _builderTowerSell; // 타워 판매 도움 컴포넌트
+    private PlayerBuilderTowerMove _builderTowerMove; // 타워 이전 도움 컴포넌트
 
     #endregion
 
@@ -67,6 +65,7 @@ public class PlayerBuilder : Player
     #region 컴포넌트 프로퍼티
 
     public PlayerBuilderTowerBuild BuilderTowerBuild => _builderTowerBuild;
+    public PlayerBuilderTowerMove BuilderTowerMove => _builderTowerMove;
     public HexagonGrid Grid => _hexagonGrid;
     public PlayerBuilderUI BuilderUI => _builderUI;
 
@@ -78,7 +77,7 @@ public class PlayerBuilder : Player
     public Vector2 StartMousePoint => _startMousePoint;
     public Vector2 CurrentMousePoint => _currentMousePoint;
     public float DragThresholdPixel => _dragThresholdPixel;
-    public float DragDetectHeight => _dragDetectorHeight;
+    public LayerMask DragDetectLayer => _dragDetectLayer;
 
     #endregion
 
@@ -87,13 +86,19 @@ public class PlayerBuilder : Player
     #region 월드 상호작용 오브젝트
 
     public ICanClickObject ClickObject;
+
+    #region 드래그
     public HashSet<ICanDragObject> DragObjectHash = new();
+    public HashSet<ICanDragObject> CurrentFrameDetectDragObjectHash = new();
+    public List<ICanDragObject> CurrentFrameRemoveDragObjectList = new();
+    public Collider[] DragSelectedColliders;
+    #endregion
 
     #endregion
 
     private void Awake()
     {
-        _dragSelectedColliders = new Collider[100];
+        DragSelectedColliders = new Collider[100];
         StateMachine = new PlayerBuilderStateMachine(this);
         InitializeReference();
     }
@@ -106,16 +111,6 @@ public class PlayerBuilder : Player
     private void Update()
     {
         StateMachine.Update();
-    }
-
-    public override void Render()
-    {
-        StateMachine.Render();
-    }
-
-    public override void FixedUpdateNetwork()
-    {
-        StateMachine.NetworkFixedUpdate();
     }
 
     private void LateUpdate()
@@ -142,6 +137,14 @@ public class PlayerBuilder : Player
         _builderUI.OnClickLaboratoryButtonAction += OpenLaboratory;
         _laboratory.OnClickLaboratoryObjectAction += OpenLaboratory;
 
+        // 타워 판매 액션 연결
+        TryGetComponent(out _builderTowerSell);
+        _builderUI.OnClickSellTowerButtonAction += TowerSell;
+
+        // 타워 이전 액션 연결
+        TryGetComponent(out _builderTowerMove);
+        _builderUI.OnClickMoveTowerButtonAction += ActiveTowerMoveState;
+
         // 타워 건설 관련 컴포넌트 초기화
         TryGetComponent(out _builderTowerBuild);
         _builderTowerBuild.Init(_builderUI);
@@ -163,7 +166,7 @@ public class PlayerBuilder : Player
         }
 
         // 이미 선택된 드래그 오브젝트가 있을 때
-        if (_dragObjectCount > 0)
+        if (DragObjectHash.Count > 0)
         {
             foreach(var dragObj in DragObjectHash)
             {
@@ -245,135 +248,6 @@ public class PlayerBuilder : Player
         _dragSystem.DragEnd();
     }
 
-    // 드래그 동안 영역 내의 콜라이더 수집
-    public void DraggingCollectCollider(float minX, float maxX, float minY, float maxY)
-    {
-        Camera cam = Camera.main;
-        if (!cam) return;
-
-        // 0) 픽셀 사각형 정리(스왑 + 카메라 뷰포트로 클램프)
-        if (minX > maxX) (minX, maxX) = (maxX, minX);
-        if (minY > maxY) (minY, maxY) = (maxY, minY);
-        Rect vp = cam.pixelRect;
-        minX = Mathf.Clamp(minX, vp.xMin, vp.xMax);
-        maxX = Mathf.Clamp(maxX, vp.xMin, vp.xMax);
-        minY = Mathf.Clamp(minY, vp.yMin, vp.yMax);
-        maxY = Mathf.Clamp(maxY, vp.yMin, vp.yMax);
-        if (maxX <= minX || maxY <= minY) return; // 화면 밖이면 종료
-
-        // 1) 드래그 사각형 4모서리를 near/far로 언프로젝션(월드 8점)
-        float nearZ = Mathf.Max(cam.nearClipPlane, 0.03f);
-        float farZ = 30f; // 필요에 맞게 조절; 검증 단계에선 cam.farClipPlane 권장
-
-        Vector3 Near(float x, float y) => cam.ScreenToWorldPoint(new Vector3(x, y, nearZ));
-        Vector3 Far(float x, float y) => cam.ScreenToWorldPoint(new Vector3(x, y, farZ));
-
-        // 인덱스 규칙: 0=BL, 1=TL, 2=TR, 3=BR  (CalculateFrustumCorners와 동일 규칙로 맞춤)
-        Vector3[] n = new Vector3[4];
-        Vector3[] f = new Vector3[4];
-        n[0] = Near(minX, minY); n[1] = Near(minX, maxY); n[2] = Near(maxX, maxY); n[3] = Near(maxX, minY);
-        f[0] = Far(minX, minY); f[1] = Far(minX, maxY); f[2] = Far(maxX, maxY); f[3] = Far(maxX, minY);
-
-        // 2) 8점 AABB (브로드페이즈 후보 수집용)
-        Bounds aabb = new Bounds(n[0], Vector3.zero);
-        aabb.Encapsulate(n[1]); aabb.Encapsulate(n[2]); aabb.Encapsulate(n[3]);
-        aabb.Encapsulate(f[0]); aabb.Encapsulate(f[1]); aabb.Encapsulate(f[2]); aabb.Encapsulate(f[3]);
-
-        // 3) 수동 평면 구성(프러스텀 '안쪽이 항상 +측'이 되도록 정렬)
-        Vector3 centerNear = (n[0] + n[1] + n[2] + n[3]) * 0.25f;
-        Vector3 centerFar = (f[0] + f[1] + f[2] + f[3]) * 0.25f;
-        Vector3 insidePoint = (centerNear + centerFar) * 0.5f;
-
-        Plane MakeOriented(Vector3 a, Vector3 b, Vector3 c)
-        {
-            var p = new Plane(a, b, c);              // 노멀 = (b-a) × (c-a)
-            if (!p.GetSide(insidePoint)) p.Flip();   // insidePoint가 -측이면 뒤집어 +측으로
-            return p;
-        }
-
-        Plane[] planes = new Plane[]
-        {
-        // Near / Far (TL→TR→BR / BR→TR→TL)
-        MakeOriented(n[1], n[2], n[3]),
-        MakeOriented(f[3], f[2], f[1]),
-
-        // Left / Right / Top / Bottom
-        MakeOriented(n[0], n[1], f[1]), // BL(n)→TL(n)→TL(f)
-        MakeOriented(n[3], n[2], f[2]), // BR(n)→TR(n)→TR(f)
-        MakeOriented(n[1], n[2], f[2]), // TL(n)→TR(n)→TR(f)
-        MakeOriented(n[3], n[0], f[0]), // BR(n)→BL(n)→BL(f)
-        };
-
-        // 4) 후보 수집 (NonAlloc 권장: 재사용 버퍼 _dragSelectedColliders)
-        int candidateCount = Physics.OverlapBoxNonAlloc(
-            aabb.center, aabb.extents, _dragSelectedColliders,
-            Quaternion.identity, _dragDetectLayer, QueryTriggerInteraction.Collide
-        );
-
-        // 5) 정밀 필터: 프러스텀 평면으로 통과만 in-place 압축
-        _dragObjectCount = 0;
-        for (int i = 0; i < candidateCount; i++)
-        {
-            var col = _dragSelectedColliders[i];
-            if (!col) continue;
-            if (GeometryUtility.TestPlanesAABB(planes, col.bounds))
-                _dragSelectedColliders[_dragObjectCount++] = col;
-        }
-        for (int i = _dragObjectCount; i < _dragSelectedColliders.Length; i++) _dragSelectedColliders[i] = null;
-
-        // 0) 현재 프레임에 감지된 드래그 가능한 오브젝트 집합 만들기
-        //    (재사용 캐시로 두면 좋음: 클래스 필드로 HashSet<ICanDragObject> _currentDragSet; List<ICanDragObject> _toRemove;)
-        var currentDragSet = new HashSet<ICanDragObject>();
-        for (int i = 0; i < _dragObjectCount; i++)
-        {
-            var d = _dragSelectedColliders[i]?.GetComponent<ICanDragObject>();
-            if (d != null) currentDragSet.Add(d);
-        }
-
-        // 1) 새로 들어온 것들 추가 + 콜백
-        foreach (var d in currentDragSet)
-        {
-            if (DragObjectHash.Add(d)) // 새로 추가된 경우에만
-                d.OnDragSelectedThisObject();
-        }
-
-        // 2) 나간 것들 모아서 제거 + 콜백
-        var toRemove = new List<ICanDragObject>();
-        foreach (var d in DragObjectHash)        // 여기서는 "읽기만" 하고
-        {
-            if (!currentDragSet.Contains(d))
-                toRemove.Add(d);                  // 지울 목록에만 담아둠
-        }
-        foreach (var d in toRemove)               // 열거가 끝난 뒤 실제 제거
-        {
-            d.OnDragOverThisObject();
-            DragObjectHash.Remove(d);
-        }
-
-        Debug.Log($"DragFrustum collect: candidates={candidateCount}, inside={_dragObjectCount}");
-
-        // =====(옵션) 시각 디버그: 프러스텀 와이어 + AABB=====
-        float dur = 0f; bool depthTest = true;
-        void L(Vector3 a, Vector3 b, Color c) => Debug.DrawLine(a, b, c, dur, depthTest);
-
-        // near/far 사각형
-        L(n[0], n[1], Color.cyan); L(n[1], n[2], Color.cyan);
-        L(n[2], n[3], Color.cyan); L(n[3], n[0], Color.cyan);
-        L(f[0], f[1], Color.blue); L(f[1], f[2], Color.blue);
-        L(f[2], f[3], Color.blue); L(f[3], f[0], Color.blue);
-        // 엣지
-        L(n[0], f[0], Color.green); L(n[1], f[1], Color.green);
-        L(n[2], f[2], Color.green); L(n[3], f[3], Color.green);
-        // AABB
-        Vector3 c0 = aabb.center, e = aabb.extents;
-        Vector3 V(float sx, float sy, float sz) => c0 + new Vector3(e.x * sx, e.y * sy, e.z * sz);
-        var v000 = V(-1, -1, -1); var v100 = V(1, -1, -1); var v110 = V(1, 1, -1); var v010 = V(-1, 1, -1);
-        var v001 = V(-1, -1, 1); var v101 = V(1, -1, 1); var v111 = V(1, 1, 1); var v011 = V(-1, 1, 1);
-        L(v000, v100, Color.yellow); L(v100, v110, Color.yellow); L(v110, v010, Color.yellow); L(v010, v000, Color.yellow);
-        L(v001, v101, Color.yellow); L(v101, v111, Color.yellow); L(v111, v011, Color.yellow); L(v011, v001, Color.yellow);
-        L(v000, v001, Color.yellow); L(v100, v101, Color.yellow); L(v110, v111, Color.yellow); L(v010, v011, Color.yellow);
-    }
-
     // 드래그 오브젝트들의 확정 함수 호출
     public void DragObjectsCompleteCall()
     {
@@ -387,16 +261,24 @@ public class PlayerBuilder : Player
 
     #region 월드 오브젝트 상호작용
 
+    // 타워 판매 함수
+    public void TowerSell()
+    {
+        ClickObject = null;
+        DragObjectHash.Clear();
+        _builderTowerSell.SellTower(_hexagonGrid, SelectedTowers);
+    }
+
     // 공격 타워 선택 함수
     public void AttackTowerSelected(AttackTower tower)
     {
-        _selectedAttackTower.Add(tower);
+        _selectedTowers.Add(tower);
     }
 
     // 공격 타워 선택 해쉬를 초기화하는 함수
     public void ResetAttackTowerHashSet()
     {
-        _selectedAttackTower.Clear();
+        _selectedTowers.Clear();
     }
 
     #endregion
@@ -406,6 +288,12 @@ public class PlayerBuilder : Player
     public void OpenLaboratory() => IsOpeningLaboratory = true;
 
     public void CloseLaboratory() => IsOpeningLaboratory = false;
+
+    #endregion
+
+    #region 상태
+
+    private void ActiveTowerMoveState() => StateMachine.TransitionToState(StateMachine.TowerMoveState);
 
     #endregion
 

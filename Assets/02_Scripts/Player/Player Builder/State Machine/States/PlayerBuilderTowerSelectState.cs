@@ -19,11 +19,6 @@ public class PlayerBuilderTowerSelectState : IPlayerState
             manager.UIController.BuilderUI.ActivationTowerSelectUI(true);
     }
 
-    public void Render()
-    {
-        
-    }
-
     public void Update()
     {
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
@@ -40,11 +35,6 @@ public class PlayerBuilderTowerSelectState : IPlayerState
 
     }
 
-    public void NetworkFixedUpdate()
-    {
-
-    }
-
     public void Exit()
     {
         var manager = StageManager.Instance;
@@ -54,7 +44,7 @@ public class PlayerBuilderTowerSelectState : IPlayerState
 
     private void TransitionTo()
     {
-        if (_player.SelectedAttackTowerCount <= 0)
+        if (_player.SelectedTowersCount <= 0)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.OriginState);
         }

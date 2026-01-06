@@ -22,7 +22,7 @@ public class PlayerBuilderTowerBuildState : IPlayerState
     public void Enter()
     {
         // UI 활성화
-        _player.BuilderUI.ActivationTowerBuildUI(true);
+        _player.BuilderUI.ActivationTowerBuildUI(true, "Left Mouse: Build, RightMouse: Cancel");
 
         // 타워 가이드 생성
         _towerGhost = Object.Instantiate(_player.BuilderTowerBuild.TowerGhost);
@@ -39,10 +39,7 @@ public class PlayerBuilderTowerBuildState : IPlayerState
         if (Input.GetMouseButtonDown(0) && _canTowerBuild && !EventSystem.current.IsPointerOverGameObject())
         {
             // 좌클릭을 하면 타워 설치
-            _player.BuilderTowerBuild.BuildTower(_towerBuildPosition); // 타워 설치
-            _player.Grid.ChangeCellState(_towerBuildIndex, CellState.Tower); // 그리드 상태 변경
-            ResourceSystem.Instance.Mineral -= _player.BuilderTowerBuild.BuildCost.Mineral; // 미네랄 차감
-            ResourceSystem.Instance.Gas -= _player.BuilderTowerBuild.BuildCost.Gas; // 가스 차감
+            _player.BuilderTowerBuild.BuildTower(_player.Grid, _towerBuildIndex); // 타워 설치
         }
         else if (Input.GetMouseButtonDown(1))
         {
@@ -55,16 +52,6 @@ public class PlayerBuilderTowerBuildState : IPlayerState
     public void LateUpdate()
     {
         _player.BuilderCamMove();
-    }
-
-    public void Render()
-    {
-
-    }
-
-    public void NetworkFixedUpdate()
-    {
-
     }
 
     public void Exit()

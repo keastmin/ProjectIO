@@ -463,6 +463,7 @@ MonoBehaviour:
   _cost:
     Mineral: 0
     Gas: 0
+  _ghost: {fileID: 7665473588800853303, guid: 0bf0c54a9fca10e42892d87a65465f48, type: 3}
   _attackSpeed: 1
   _attackPosition: {fileID: 0}
   _enemyLayer:
@@ -471,6 +472,7 @@ MonoBehaviour:
   _targettingRange: 5
   _rotateSpeed: 10
   _selectedChecker: {fileID: 4986708666596087175}
+  _selectedImage: {fileID: 0}
   _currTarget: {fileID: 0}
   blade: {fileID: 5888868628931544496}
   AttackRange: 3

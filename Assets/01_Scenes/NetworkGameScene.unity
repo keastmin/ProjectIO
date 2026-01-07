@@ -839,7 +839,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 471
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3067,10 +3067,6 @@ PrefabInstance:
     - target: {fileID: 1979958928233236374, guid: e4f76d1c9ebcfc94da4fe245963476d1, type: 3}
       propertyPath: m_Name
       value: Game Scene Setup
-      objectReference: {fileID: 0}
-    - target: {fileID: 2984146816420512075, guid: e4f76d1c9ebcfc94da4fe245963476d1, type: 3}
-      propertyPath: _playerPosition
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8681410219602733062, guid: e4f76d1c9ebcfc94da4fe245963476d1, type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
-public sealed class HexagonGrid : MonoBehaviour
+public sealed class HexagonGrid : NetworkBehaviour
 {
     [SerializeField] private TerritorySystem _territorySystem; // 영역 컴포넌트
     [SerializeField] private MeshCollider _gridBasePlaneCollider; // 그리드의 기반이 될 Plane의 콜라이더
@@ -445,5 +446,11 @@ public sealed class HexagonGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_SyncCellStates()
+    {
+
     }
 }

@@ -438,11 +438,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6499190095465434370, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
   m_PrefabInstance: {fileID: 6661312010346456425}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4986708666596087175 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1821111103899054318, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
-  m_PrefabInstance: {fileID: 6661312010346456425}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6611800503456299588 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 554064233507888941, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
@@ -471,10 +466,15 @@ MonoBehaviour:
     m_Bits: 64
   _targettingRange: 5
   _rotateSpeed: 10
-  _selectedChecker: {fileID: 4986708666596087175}
+  _selectedChecker: {fileID: 6955318143968693727}
   _selectedImage: {fileID: 0}
   _currTarget: {fileID: 0}
   blade: {fileID: 5888868628931544496}
   AttackRange: 3
   CanHit: 0
   HitColliders: []
+--- !u!1 &6955318143968693727 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4393255916219869366, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 6661312010346456425}
+  m_PrefabAsset: {fileID: 0}

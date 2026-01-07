@@ -176,7 +176,7 @@ public class PlayerBuilder : Player
         }
 
         // 선택된 공격타워 해쉬 초기화
-        ResetAttackTowerHashSet();
+        ResetTowerHashSet();
 
         // 새로운 오브젝트 수집 시도
         var cam = Camera.main;
@@ -270,13 +270,13 @@ public class PlayerBuilder : Player
     }
 
     // 공격 타워 선택 함수
-    public void AttackTowerSelected(AttackTower tower)
+    public void TowerSelected(Tower tower)
     {
         _selectedTowers.Add(tower);
     }
 
     // 공격 타워 선택 해쉬를 초기화하는 함수
-    public void ResetAttackTowerHashSet()
+    public void ResetTowerHashSet()
     {
         _selectedTowers.Clear();
     }

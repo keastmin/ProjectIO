@@ -39,6 +39,11 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
 
     [Networked] protected TickTimer _attackTick { get; set; } // 공격 주기를 계산하는 타이머
 
+    private void Awake()
+    {
+        _selectedChecker.SetActive(false);
+    }
+
     // 타워에서 타겟까지의 magnitude를 반환하는 메서드
     private float GetTowerToTargetMagnitude(Vector3 monsterPos, Vector3 targetPos)
     {
@@ -128,7 +133,7 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
         if(manager != null)
         {
             // 빌더의 타워 선택을 함수를 호출하여 자신을 선택된 타워로 넘겨줌
-            manager.PlayerBuilder.AttackTowerSelected(this);
+            manager.PlayerBuilder.TowerSelected(this);
         }
     }
 
@@ -158,7 +163,7 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
         if (manager != null)
         {
             // 빌더의 타워 선택을 함수를 호출하여 자신을 선택된 타워로 넘겨줌
-            manager.PlayerBuilder.AttackTowerSelected(this);
+            manager.PlayerBuilder.TowerSelected(this);
         }
     }
 

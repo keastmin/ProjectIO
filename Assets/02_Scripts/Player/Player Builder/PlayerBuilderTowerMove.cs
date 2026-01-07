@@ -22,16 +22,58 @@ public class PlayerBuilderTowerMove : NetworkBehaviour
         TowerDistanceVectorCalc(towers, pivot);
     }
 
-    public void TowerGhostSnapShot(HexagonGrid grid, Vector3 mousePos)
+    public bool TowerGhostSnapShot(HexagonGrid grid, Vector3 mousePos)
     {
+        bool canMove = true;
+
         foreach(var ghost in _ghosts)
         {
+            // 타겟 위치 계산
             Tower targetTower = _ghostToTowerDic[ghost];
             Vector3 diff = _towerToVecDic[targetTower];
-            ghost.transform.position = mousePos + diff;
+            Vector3 targetPos = mousePos + diff;
 
+            // 그리드에 스냅샷할 위치 계산
+            Vector2Int snapshotIndex = grid.GetNearIndex(targetPos);
+            Vector3 snapshotPos = grid.GetNearCellPositionFromIndex(snapshotIndex);
+            ghost.transform.position = snapshotPos;
             ghost.EnableTower();
+
+            // 스탭샷 위치에 설치 가능한지 검사
+            bool canMoveThisTower = CanMoveThisPosition(grid, snapshotIndex);
+            if (!canMoveThisTower)
+            {
+                canMove = false;
+                ghost.DisableTower();
+            }
         }
+
+        return canMove;
+    }
+
+    public void TowerMove(HexagonGrid grid)
+    {
+        int arrayCount = _ghostToTowerDic.Count;
+        int currentCount = 0;
+        NetworkId[] netId = new NetworkId[arrayCount];
+        Vector3[] vec = new Vector3[arrayCount];
+
+        foreach(var g in _ghosts)
+        {
+            Tower tower = _ghostToTowerDic[g];
+
+            Vector2Int index = grid.GetNearIndex(tower.transform.position);
+            grid.ChangeCellState(index, CellState.None);
+
+            Vector2Int newIndex = grid.GetNearIndex(g.transform.position);
+            grid.ChangeCellState(newIndex, CellState.Tower);
+
+            netId[currentCount] = tower.Object.Id;
+            vec[currentCount++] = g.transform.position;
+        }
+
+        // 타워 위치 이동 RPC 호출
+        RPC_TowerMove(netId, vec);
     }
 
     public void TowerMoveClear()
@@ -101,6 +143,27 @@ public class PlayerBuilderTowerMove : NetworkBehaviour
             Vector3 p = tower.transform.position;
             Vector3 diff = p - pivot;
             _towerToVecDic.Add(tower, diff);
+        }
+    }
+
+    private bool CanMoveThisPosition(HexagonGrid grid, Vector2Int index)
+    {
+        if (grid.IsEmptyCell(index) && grid.IsPointInTerritory(index))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_TowerMove(NetworkId[] netId, Vector3[] pos)
+    {
+        for (int i = 0; i < netId.Length && i < pos.Length; i++)
+        {
+            if (!Runner.TryFindObject(netId[i], out NetworkObject obj))
+                continue;
+            obj.TryGetComponent(out NetworkTransform nt);
+            nt.Teleport(pos[i]);
         }
     }
 

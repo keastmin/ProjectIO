@@ -18,8 +18,16 @@ public class PlayerBuilderTowerMoveState : IPlayerState
     public void Update()
     {
         Vector3 mouseWorldPos = GetMouseWorldPos(_player.Grid);
-        _player.BuilderTowerMove.TowerGhostSnapShot(_player.Grid, mouseWorldPos);
-        TransitionTo();
+        bool canMove = _player.BuilderTowerMove.TowerGhostSnapShot(_player.Grid, mouseWorldPos);
+        bool moveComplete = false;
+        
+        if(canMove && Input.GetMouseButtonDown(0))
+        {
+            moveComplete = true;
+            _player.BuilderTowerMove.TowerMove(_player.Grid);
+        }
+
+        TransitionTo(moveComplete);
     }
 
     public void LateUpdate()
@@ -33,9 +41,13 @@ public class PlayerBuilderTowerMoveState : IPlayerState
         _player.BuilderUI.ActivationTowerBuildUI(false);
     }
 
-    private void TransitionTo()
+    private void TransitionTo(bool moveComplete)
     {
         if (Input.GetMouseButtonDown(1))
+        {
+            _player.StateMachine.TransitionToState(_player.StateMachine.TowerSelectState);
+        }
+        else if(Input.GetMouseButtonDown(0) && moveComplete)
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerSelectState);
         }

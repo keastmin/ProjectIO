@@ -58,7 +58,6 @@ public class LaserTower : AttackTower
         }
     }
 
-
     protected override void Fire()
     {
         if (_attackTick.ExpiredOrNotRunning(Runner) && _currTarget != null)

@@ -1,7 +1,7 @@
 using Fusion;
 using UnityEngine;
 
-public class SentryGunTower : AttackTower
+public sealed class SentryGunTower : AttackTower
 {
     // 총구 위치에서 발포 이펙트 재생
     // 타겟 몬스터에서 피격 이펙트 재생

@@ -5,8 +5,6 @@ public class PlayerBuilderOriginState : IPlayerState
 {
     private PlayerBuilder _player;
 
-    private bool _isDragging = false;
-
     public PlayerBuilderOriginState(PlayerBuilder player)
     {
         _player = player;
@@ -37,26 +35,14 @@ public class PlayerBuilderOriginState : IPlayerState
             {
                 _player.SetCurrentMousePoint(Input.mousePosition);
             }
-
-            // 마우스를 통한 화면 이동
-            _player.BuilderCamMove();
         }
         TransitionTo();
     }
 
     public void LateUpdate()
     {
-
-    }
-
-    public void Render()
-    {
-
-    }
-
-    public void NetworkFixedUpdate()
-    {
-
+        // 마우스를 통한 화면 이동
+        _player.BuilderCamMove();
     }
 
     public void Exit()
@@ -74,7 +60,7 @@ public class PlayerBuilderOriginState : IPlayerState
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerBuildState);
         }
-        else if (_player.SelectedAttackTowerCount > 0) // 선택된 공격 타워가 있을 경우
+        else if (_player.SelectedTowersCount > 0) // 선택된 타워가 있을 경우
         {
             _player.StateMachine.TransitionToState(_player.StateMachine.TowerSelectState);
         }

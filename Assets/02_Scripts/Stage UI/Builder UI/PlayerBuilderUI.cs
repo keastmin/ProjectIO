@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerBuilderUI : MonoBehaviour
@@ -11,12 +12,16 @@ public class PlayerBuilderUI : MonoBehaviour
     [SerializeField] private GameObject _towerSelectUI;
     [SerializeField] private DragSystem _dragSystem;
 
+    [SerializeField] private TextMeshProUGUI _buildUIText;
+
     public bool IsLaboratoryUIActive => _laboratoryUI.activeSelf;
 
     #region Action
 
     public event Action<TowerData> OnClickTowerBuildButtonAction; // 타워 건설 버튼을 눌렀을 때의 액션
     public event Action OnClickLaboratoryButtonAction; // 실험실 버튼을 눌렀을 떄의 액션
+    public event Action OnClickSellTowerButtonAction; // 타워 판매 버튼을 눌렀을 때의 액션
+    public event Action OnClickMoveTowerButtonAction; // 타워 움직임 버튼을 눌렀을 때의 액션
 
     #endregion
 
@@ -36,27 +41,28 @@ public class PlayerBuilderUI : MonoBehaviour
 
     #region 클릭 이벤트 메서드
 
-    // 타워 선택 버튼 클릭 이벤트
-    public void OnClickTowerButton(TowerData data)
-    {
-        OnClickTowerBuildButtonAction?.Invoke(data);
-    }
-
     // 실험실 버튼 클릭 이벤트
     public void OnClickLaboratoryButton(bool isActive)
     {
         OnClickLaboratoryButtonAction?.Invoke();
     }
 
+    // 타워 선택 버튼 클릭 이벤트
+    public void OnClickTowerButton(TowerData data)
+    {
+        OnClickTowerBuildButtonAction?.Invoke(data);
+    }
+
     // 타워 판매 버튼 클릭 이벤트
     public void OnClickTowerSellButton()
     {
-        var manager = StageManager.Instance;
-        if (manager != null)
-        {
-            Debug.Log("타워 판매");
-            // manager.PlayerBuilder.SelectedAttackTower.Sell();
-        }
+        OnClickSellTowerButtonAction?.Invoke();
+    }
+
+    // 타워 이동 버튼 클릭 이벤트
+    public void OnClickTowerMoveButton()
+    {
+        OnClickMoveTowerButtonAction?.Invoke();
     }
 
     #endregion
@@ -71,8 +77,13 @@ public class PlayerBuilderUI : MonoBehaviour
     }
 
     // 타워 건설 UI 활성화/비활성화
-    public void ActivationTowerBuildUI(bool isActive)
+    public void ActivationTowerBuildUI(bool isActive, string towerBuildInfo = "")
     {
+        if(_buildUIText != null)
+        {
+            _buildUIText.text = towerBuildInfo;
+        }
+
         _builderMainUI.SetActive(!isActive);
         _towerBuildUI.SetActive(isActive);
     }

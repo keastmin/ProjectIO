@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 8632048801721329327}
   - component: {fileID: 3984747633682037487}
   - component: {fileID: 2695761604568023699}
-  - component: {fileID: 8884391747278583287}
+  - component: {fileID: 1348447139255107765}
+  - component: {fileID: 5337325868287337551}
   - component: {fileID: 1367329938437336398}
   - component: {fileID: 8593551356125243380}
   - component: {fileID: 381393472815718579}
@@ -55,8 +56,6 @@ MonoBehaviour:
   _cameraWheelPerZoomDistance: 10
   _zoomSmoothTime: 0.12
   _dragThresholdPixel: 5
-  _dragDetectorHeight: 3
-  _dragDetectBoxThickness: 0.1
   _dragDetectLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -64,10 +63,13 @@ MonoBehaviour:
   _dragSystem: {fileID: 0}
   _builderMover: {fileID: 0}
   _hexagonGrid: {fileID: 0}
+  _laboratory: {fileID: 0}
   _cineCam: {fileID: 0}
   _environmentalLayer:
     serializedVersion: 2
     m_Bits: 128
+  Test: {fileID: 7847402044693984832, guid: 835635a8a678b20408884e501d6461dd, type: 3}
+  DragSelectedColliders: []
 --- !u!114 &2695761604568023699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,13 +84,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tower: {fileID: 0}
   _towerGhost: {fileID: 0}
-  _cost:
+  _buildCost:
     Mineral: 0
     Gas: 0
   _towerRef:
     RawGuidValue: 00000000000000000000000000000000
   _isStandByBuild: 0
---- !u!114 &8884391747278583287
+--- !u!114 &1348447139255107765
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,10 +99,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 2585997719371933276}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 667a8dfdb35ff39418bb1752d46baf78, type: 3}
+  m_Script: {fileID: 11500000, guid: 776d555d177649642b9165df854388ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hexagonGrid: {fileID: 0}
+--- !u!114 &5337325868287337551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585997719371933276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d606aadc31fb12a498b352707137e54b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1367329938437336398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +148,8 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3984747633682037487}
   - {fileID: 2695761604568023699}
+  - {fileID: 1348447139255107765}
+  - {fileID: 5337325868287337551}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &381393472815718579
 MonoBehaviour:

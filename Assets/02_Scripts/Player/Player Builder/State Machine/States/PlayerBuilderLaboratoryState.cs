@@ -31,16 +31,6 @@ public class PlayerBuilderLaboratoryState : IPlayerState
 
     }
 
-    public void Render() 
-    { 
-
-    }
-
-    public void NetworkFixedUpdate() 
-    {
-
-    }
-
     public void Exit() 
     {
         _player.BuilderUI.ActivationLaboratoryUI(false);

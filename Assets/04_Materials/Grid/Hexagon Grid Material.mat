@@ -85,6 +85,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_9d5bb1689dbd49349feb7096df3d857a_Texture_1_Texture2D:
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -149,12 +153,15 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Emission: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FillColor: {r: 0, g: 0, b: 0, a: 0}
     - _GridOrigin: {r: -25, g: -25, b: 0, a: 0}
+    - _MousePos: {r: 2.69, g: 0, b: 0, a: 0}
     - _OriginXYZ: {r: 0, g: 0, b: 0, a: 0}
     - _OriginXZ: {r: -26.2, g: -26, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _line_Color: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 0}
+    - _Vector2: {r: -0.16, g: -0.11, b: 0, a: 0}
+    - _line_Color: {r: 0.2320886, g: 0.8087224, b: 0.8632074, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

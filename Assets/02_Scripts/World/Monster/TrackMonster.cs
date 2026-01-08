@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 public class TrackMonster : Monster
@@ -6,11 +8,13 @@ public class TrackMonster : Monster
     protected Track track;
     protected int currentPointIndex;
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
         Handles.color = Color.white;
         Handles.Label(transform.position + Vector3.up * 0.5f, name);
     }
+#endif
 
     public void SetTrack(Track track) => this.track = track;
 

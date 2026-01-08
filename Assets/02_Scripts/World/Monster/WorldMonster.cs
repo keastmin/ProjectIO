@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 public class WorldMonster : Monster
@@ -11,6 +13,7 @@ public class WorldMonster : Monster
     protected Vector3 patrolTargetPosition;
     protected bool isPatrolling = false;
 
+#if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -27,6 +30,7 @@ public class WorldMonster : Monster
         Handles.color = Color.white;
         Handles.Label(transform.position + Vector3.up * 0.5f, name);
     }
+#endif
 
     public void SetPatrolPivotPosition(Vector3 position) => patrolPivotPosition = position;
 

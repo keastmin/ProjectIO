@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerRunnerUI : MonoBehaviour
 {
+    public RunnerDisplay Display;
+    public RunnerPopup Popup;
+
     [SerializeField] ItemSlotUI[] itemSlotViews;
 
     int selectedItem;

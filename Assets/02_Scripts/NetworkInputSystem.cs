@@ -11,6 +11,8 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
 
     private bool _dashInput = false; // 러너의 대쉬 입력
     private bool _slideInput = false; // 러너의 슬라이드 입력
+    private bool _itemInput = false; // 러너 아이템 입력
+    private bool _skillInput = false; // 러너 스킬 입력
     private int _selectedItem = 0; // 러너 아이템
     private bool _mouseButton0 = false; // 마우스 좌클릭
     private bool _mouseButton1 = false; // 마우스 우클릭
@@ -20,7 +22,9 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
     private void Update()
     {
         _dashInput = _dashInput | Input.GetKey(KeyCode.LeftShift); // 왼쪽 쉬프트를 통해 _dashInput 여부 검사
-        _slideInput = _slideInput | Input.GetKey(KeyCode.LeftControl); // 왼쪽 컨트롤을 통해 _slideInput 여부 검사
+        _slideInput = _slideInput | Input.GetKeyDown(KeyCode.LeftControl); // 왼쪽 컨트롤을 통해 _slideInput 여부 검사
+        _itemInput = _itemInput | Input.GetKeyDown(KeyCode.Q); // Q키를 통해 _itemInput 여부 검사
+        _skillInput = _skillInput | Input.GetKeyDown(KeyCode.E); // E키를 통해 _skillInput 여부 검사
         _mouseButton0 = _mouseButton0 | Input.GetMouseButtonDown(0); // 마우스 좌클릭 여부 검사
         _mouseButton1 = _mouseButton1 | Input.GetMouseButtonDown(1); // 마우스 우클릭 여부 검사
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -77,11 +81,14 @@ public class NetworkInputSystem : NetworkBehaviour, INetworkRunnerCallbacks
         _slideInput = false;
 
         // 아이템 사용
-        data.ItemInput.Set(NetworkInputData.ITEM_INPUT, Input.GetKey(KeyCode.Q));
+        data.ItemInput.Set(NetworkInputData.ITEM_INPUT, _itemInput);
+        _itemInput = false;
         data.SelectedItem = _selectedItem;
 
         // 스킬 사용
-        data.SkillInput.Set(NetworkInputData.SKILL_INPUT, Input.GetKey(KeyCode.E));
+        data.SkillInput.Set(NetworkInputData.SKILL_INPUT, _skillInput);
+        _skillInput = false;
+        data.SelectedSkill = _selectedItem;
 
         // 상호작용
         data.InteractInput.Set(NetworkInputData.INTERACT_INPUT, Input.GetKey(KeyCode.F));

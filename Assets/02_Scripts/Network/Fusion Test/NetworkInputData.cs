@@ -21,6 +21,7 @@ public struct NetworkInputData : INetworkInput
     public NetworkButtons ItemInput;
     public int SelectedItem;
     public NetworkButtons SkillInput;
+    public int SelectedSkill;
     public NetworkButtons InteractInput;
     public NetworkButtons LaboratoryInput;
     public NetworkButtons WeaponInput;

@@ -39,6 +39,7 @@ public class TerritorySystem : NetworkSystemBase
 
         GenerateInitialTerritory();
 
+        StageManager.Instance.PlayerRunner.OnPositionChangedInLocal += OnPlayerPositionChangedInLocal;
         StageManager.Instance.PlayerRunner.OnPositionChanged += OnPlayerPositionChanged;
     }
 
@@ -73,6 +74,97 @@ public class TerritorySystem : NetworkSystemBase
         }
 
         return polygonPoints;
+    }
+
+    public void OnPlayerPositionChangedInLocal(PlayerRunner playerRunner) // 로컬에서 매 프레임
+    {
+        var currentPosition = new Vector2(playerRunner.transform.position.x, playerRunner.transform.position.z);
+
+        if (Territory.IsPointInPolygon(currentPosition))
+        {
+            // if (!Object.HasStateAuthority) { return; } // Host가 아니면 무시
+            if (isExpanding)
+            {
+                if (playerPath.Count > 1)
+                {
+                    AddExpandingPathPoint(currentPosition);
+                    ExpandTerritory();
+                }
+                StopExpanding();
+                Debug.Log("다시 들어옴");
+            }
+            previousPosition = currentPosition;
+        }
+        else
+        {
+            if (!isExpanding)
+            {
+                Debug.Log("나감");
+                StartExpanding();
+                AddExpandingPathPoint(previousPosition);
+                AddExpandingPathPoint(currentPosition);
+            }
+
+            if (Vector2.SqrMagnitude(currentPosition - previousPosition) > 0.01f)
+            {
+                if (Object.HasStateAuthority)
+                {
+                    if (playerPath.Count >= 2)
+                    {
+                        toward = (currentPosition - previousPosition).normalized;
+                        var dir = Vector2.Dot(toward, (currentPosition - playerPath[^1]).normalized);
+                        if (dir < 1 - 0.01f)
+                        {
+                            AddExpandingPathPoint(previousPosition);
+                        }
+                    }
+
+                    // 러너가 자신이 지나온 길을 다시 밟으면 게임 오버
+                    CheckPlayerRunnerCrossedOwnPath(currentPosition);
+                }
+
+                if (lineRenderer.positionCount > 0)
+                {
+                    lineRenderer.SetPosition(lineRenderer.positionCount - 1, new Vector3(currentPosition.x, 0, currentPosition.y));
+                }
+                previousPosition = currentPosition;
+            }
+        }
+    }
+
+    private void StartExpanding()
+    {
+        isExpanding = true;
+        playerPath.Clear();
+    }
+
+    private void StopExpanding()
+    {
+        playerPath.Clear();
+        lineRenderer.positionCount = 0;
+        isExpanding = false;
+    }
+
+    private void AddExpandingPathPoint(Vector2 point)
+    {
+        playerPath.Add(point);
+        lineRenderer.positionCount = playerPath.Count + 1;
+        var converted = playerPath.ConvertAll(p => new Vector3(p.x, 0, p.y));
+        converted.Add(new Vector3(point.x, 0, point.y));
+        lineRenderer.SetPositions(converted.ToArray());
+    }
+
+    private void ExpandTerritory()
+    {
+        Debug.Log($"{Runner.name} - Expanding territory with path: {playerPath.Count}");
+
+        Territory.Expand(playerPath);
+        TerritoryView.SetTerritory(Territory.Vertices);
+
+        if (Object.HasStateAuthority)
+        {
+            OnTerritoryExpandedEvent?.Invoke(Territory, this); // 호스트만
+        }
     }
 
     Vector2 toward;

@@ -32,7 +32,6 @@ public class PlayerRunner : Player, IDamageable
     private float _elapsedTime = 0f; // 경과 시간
 
     public event Action<PlayerRunner> OnPositionChanged; // 영역 관련 이벤트
-    public event Action<PlayerRunner> OnPositionChangedInLocal; // 로컬 영역 관련 이벤트
 
     private void Awake()
     {
@@ -106,10 +105,11 @@ public class PlayerRunner : Player, IDamageable
                 // Debug.Log(data.SelectedWeapon);
             }
         }
+    }
 
-        // TakeDamage(Time.fixedDeltaTime * 0.5f);
-
-        // 영역에 관한 로직 이벤트 수행 - 러너만
+    public override void Render()
+    {
+        base.Render(); // vfx, 비주얼적인 요소
         OnPositionChanged?.Invoke(this);
     }
 
@@ -119,9 +119,6 @@ public class PlayerRunner : Player, IDamageable
         var minutes = Mathf.FloorToInt(_elapsedTime / 60f);
         var seconds = Mathf.FloorToInt(_elapsedTime % 60f);
         StageManager.Instance.UIController.RunnerUI.Display.ElapsedTime.SetElapsedTimeText($"{minutes:D2}:{seconds:D2}");
-
-        // 영역에 관한 로직 이벤트 수행(로컬) - Host, Client 구분 없이 매 프레임
-        // OnPositionChangedInLocal?.Invoke(this);
     }
 
     // 플레이어 러너 초기화

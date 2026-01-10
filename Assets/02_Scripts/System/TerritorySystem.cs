@@ -39,7 +39,6 @@ public class TerritorySystem : NetworkSystemBase
 
         GenerateInitialTerritory();
 
-        StageManager.Instance.PlayerRunner.OnPositionChangedInLocal += OnPlayerPositionChangedInLocal;
         StageManager.Instance.PlayerRunner.OnPositionChanged += OnPlayerPositionChanged;
     }
 
@@ -76,62 +75,6 @@ public class TerritorySystem : NetworkSystemBase
         return polygonPoints;
     }
 
-    public void OnPlayerPositionChangedInLocal(PlayerRunner playerRunner) // 로컬에서 매 프레임
-    {
-        var currentPosition = new Vector2(playerRunner.transform.position.x, playerRunner.transform.position.z);
-
-        if (Territory.IsPointInPolygon(currentPosition))
-        {
-            // if (!Object.HasStateAuthority) { return; } // Host가 아니면 무시
-            if (isExpanding)
-            {
-                if (playerPath.Count > 1)
-                {
-                    AddExpandingPathPoint(currentPosition);
-                    ExpandTerritory();
-                }
-                StopExpanding();
-                Debug.Log("다시 들어옴");
-            }
-            previousPosition = currentPosition;
-        }
-        else
-        {
-            if (!isExpanding)
-            {
-                Debug.Log("나감");
-                StartExpanding();
-                AddExpandingPathPoint(previousPosition);
-                AddExpandingPathPoint(currentPosition);
-            }
-
-            if (Vector2.SqrMagnitude(currentPosition - previousPosition) > 0.01f)
-            {
-                if (Object.HasStateAuthority)
-                {
-                    if (playerPath.Count >= 2)
-                    {
-                        toward = (currentPosition - previousPosition).normalized;
-                        var dir = Vector2.Dot(toward, (currentPosition - playerPath[^1]).normalized);
-                        if (dir < 1 - 0.01f)
-                        {
-                            AddExpandingPathPoint(previousPosition);
-                        }
-                    }
-
-                    // 러너가 자신이 지나온 길을 다시 밟으면 게임 오버
-                    CheckPlayerRunnerCrossedOwnPath(currentPosition);
-                }
-
-                if (lineRenderer.positionCount > 0)
-                {
-                    lineRenderer.SetPosition(lineRenderer.positionCount - 1, new Vector3(currentPosition.x, 0, currentPosition.y));
-                }
-                previousPosition = currentPosition;
-            }
-        }
-    }
-
     private void StartExpanding()
     {
         isExpanding = true;
@@ -154,19 +97,6 @@ public class TerritorySystem : NetworkSystemBase
         lineRenderer.SetPositions(converted.ToArray());
     }
 
-    private void ExpandTerritory()
-    {
-        Debug.Log($"{Runner.name} - Expanding territory with path: {playerPath.Count}");
-
-        Territory.Expand(playerPath);
-        TerritoryView.SetTerritory(Territory.Vertices);
-
-        if (Object.HasStateAuthority)
-        {
-            OnTerritoryExpandedEvent?.Invoke(Territory, this); // 호스트만
-        }
-    }
-
     Vector2 toward;
     public void OnPlayerPositionChanged(PlayerRunner playerRunner) // 러너만
     {
@@ -174,46 +104,46 @@ public class TerritorySystem : NetworkSystemBase
 
         if (Territory.IsPointInPolygon(currentPosition))
         {
-            if (!Object.HasStateAuthority) { return; }
             if (isExpanding)
             {
                 if (playerPath.Count > 1)
                 {
-                    RPC_AddExpandingPathPoint(currentPosition);
-                    RPC_ExpandTerritory();
+                    AddExpandingPathPoint(currentPosition);
+                    if (Object.HasStateAuthority)
+                    {
+                        var playerPathArray = playerPath.ToArray();
+                        RPC_ExpandTerritory(playerPathArray);
+                    }
                 }
-                RPC_StopExpanding();
+                StopExpanding();
                 Debug.Log("다시 들어옴");
             }
             previousPosition = currentPosition;
         }
         else
         {
-            if (Object.HasStateAuthority && !isExpanding)
+            if (!isExpanding)
             {
                 Debug.Log("나감");
-                RPC_StartExpanding();
-                RPC_AddExpandingPathPoint(previousPosition);
-                RPC_AddExpandingPathPoint(currentPosition);
+                StartExpanding();
+                AddExpandingPathPoint(previousPosition);
+                AddExpandingPathPoint(currentPosition);
             }
 
             if (Vector2.SqrMagnitude(currentPosition - previousPosition) > 0.01f)
             {
-                if (Object.HasStateAuthority)
+                if (playerPath.Count >= 2)
                 {
-                    if (playerPath.Count >= 2)
+                    toward = (currentPosition - previousPosition).normalized;
+                    var dir = Vector2.Dot(toward, (currentPosition - playerPath[^1]).normalized);
+                    if (dir < 1 - 0.01f)
                     {
-                        toward = (currentPosition - previousPosition).normalized;
-                        var dir = Vector2.Dot(toward, (currentPosition - playerPath[^1]).normalized);
-                        if (dir < 1 - 0.01f)
-                        {
-                            RPC_AddExpandingPathPoint(previousPosition);
-                        }
+                        AddExpandingPathPoint(previousPosition);
                     }
-
-                    // 러너가 자신이 지나온 길을 다시 밟으면 게임 오버
-                    CheckPlayerRunnerCrossedOwnPath(currentPosition);
                 }
+
+                // 러너가 자신이 지나온 길을 다시 밟으면 게임 오버
+                CheckPlayerRunnerCrossedOwnPath(currentPosition);
 
                 if (lineRenderer.positionCount > 0)
                 {
@@ -250,11 +180,12 @@ public class TerritorySystem : NetworkSystemBase
     }
 
     [Rpc(RpcSources.All, RpcTargets.All, Channel = RpcChannel.Reliable)]
-    public void RPC_ExpandTerritory()
+    public void RPC_ExpandTerritory(Vector2[] playerPathArray)
     {
-        Debug.Log($"{Runner.name} - Expanding territory with path: {playerPath.Count}");
+        Debug.Log($"{Runner.name} - Expanding territory with path: {playerPathArray.Length}");
 
-        Territory.Expand(playerPath);
+        var playerPathFromHost = new List<Vector2>(playerPathArray);
+        Territory.Expand(playerPathFromHost);
         TerritoryView.SetTerritory(Territory.Vertices);
 
         if (Object.HasStateAuthority)

@@ -81,6 +81,11 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: -5263401666010537090}
   m_SourcePrefab: {fileID: 100100000, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+--- !u!1 &268686593581800444 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1036938011115028901, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 997935067257297497}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &750147116969117044 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 554064233507888941, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
@@ -111,6 +116,10 @@ MonoBehaviour:
   _rotateSpeed: 10
   _selectedChecker: {fileID: 3543939636943254255}
   _selectedImage: {fileID: 0}
+  _propertiesType: 0
+  _flameEffect: {fileID: 7930971290443247962}
+  _blitzEffect: {fileID: 3812209592461697766}
+  _bioEffect: {fileID: 268686593581800444}
   _currTarget: {fileID: 0}
   MuzzleTransform: {fileID: 790783490424944510}
   MissilePrefab: {fileID: -8257491614462668254, guid: 28d14186b36c59e459e4d71d5ff83aca, type: 3}
@@ -140,3 +149,13 @@ MonoBehaviour:
   m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3812209592461697766 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4124963853794736319, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 997935067257297497}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7930971290443247962 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7190305726298204931, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 997935067257297497}
+  m_PrefabAsset: {fileID: 0}

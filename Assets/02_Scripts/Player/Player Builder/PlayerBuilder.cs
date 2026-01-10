@@ -145,6 +145,9 @@ public class PlayerBuilder : Player
         TryGetComponent(out _builderTowerMove);
         _builderUI.OnClickMoveTowerButtonAction += ActiveTowerMoveState;
 
+        // 타워 속성부여 액션 연결
+        _builderUI.OnClickUpgradeTowerButtonAction += TowerAddProperties;
+
         // 타워 건설 관련 컴포넌트 초기화
         TryGetComponent(out _builderTowerBuild);
         _builderTowerBuild.Init(_builderUI);
@@ -260,6 +263,19 @@ public class PlayerBuilder : Player
     #endregion
 
     #region 월드 오브젝트 상호작용
+
+    // 타워 속성 부여
+    public void TowerAddProperties()
+    {
+        Debug.Log("타워 속성부여 이벤트 눌림");
+        foreach(var tower in SelectedTowers)
+        {
+            if(tower.TryGetComponent(out AttackTower attackTower))
+            {
+                attackTower.AddProperties(TowerPropertiesType.None);
+            }
+        }
+    }
 
     // 타워 판매 함수
     public void TowerSell()

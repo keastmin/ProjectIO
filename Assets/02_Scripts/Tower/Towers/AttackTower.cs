@@ -19,8 +19,14 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
     [Header("선택 시 표시")]
     [SerializeField] protected GameObject _selectedChecker; // 타워 선택 시 표시 오브젝트
     [SerializeField] protected Image _selectedImage; // 타워 선택 시 UI에 표시될 이미지
-    protected bool _isSelectedTower = false; // 타워 선택 여부
 
+    [Header("속성 부여")]
+    [SerializeField] protected TowerPropertiesType _propertiesType = TowerPropertiesType.None; // 부여된 속성
+    [SerializeField] private GameObject _flameEffect;
+    [SerializeField] private GameObject _blitzEffect;
+    [SerializeField] private GameObject _bioEffect;
+
+    protected bool _isSelectedTower = false; // 타워 선택 여부
 
     public bool IsSelectedTower
     {
@@ -32,8 +38,6 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
         }
     }
 
-    protected int level; // 타워의 레벨
-
     protected Queue<Collider> _targetQueue; // 타겟을 저장하는 큐
     [SerializeField] protected Collider _currTarget; // 현재 타겟
 
@@ -42,6 +46,9 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
     private void Awake()
     {
         _selectedChecker.SetActive(false);
+        _flameEffect.SetActive(false);
+        _blitzEffect.SetActive(false);
+        _bioEffect.SetActive(false);
     }
 
     // 타워에서 타겟까지의 magnitude를 반환하는 메서드
@@ -118,6 +125,60 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
 
     protected virtual void Fire() { }
 
+    #region 속성 부여
+
+    /// <summary>
+    /// 타워에 속성을 부여함
+    /// </summary>
+    /// <param name="increaseType">확률이 증가한 타입</param>
+    /// <param name="increaseAmount">확률 증가량(10%와 같은 0 ~ 100% 사이 값)</param>
+    /// <returns>부여된 속성</returns>
+    public TowerPropertiesType AddProperties(TowerPropertiesType increaseType, float increaseAmount = 0f)
+    {
+        // 이미 속성이 부여되어 있으면 즉시 반환
+        if(_propertiesType != TowerPropertiesType.None)
+        {
+            return _propertiesType;
+        }
+
+        float flameProb = 1f / 3f; // 화염 속성 확률
+        float blitzProb = 1f / 3f; // 전격 속성 확률
+        float bioProb = 1f / 3f; // 생화학 속성 확률
+
+        // 증가 확률이 있을 경우
+        if (increaseType != TowerPropertiesType.None)
+        { 
+            // 증가량 대입
+            switch (increaseType)
+            {
+                case TowerPropertiesType.Flame: flameProb += increaseAmount / 100f; break;
+                case TowerPropertiesType.Blitz: blitzProb += increaseAmount / 100f; break;
+                case TowerPropertiesType.Biochemical: bioProb += increaseAmount / 100f; break;
+            }
+
+            // 남은 확률 분배
+            float remain = 1f - (increaseType == TowerPropertiesType.Flame ? flameProb :
+                                (increaseType == TowerPropertiesType.Blitz) ? blitzProb : bioProb);
+
+            float other = remain / 2f;
+
+            if (increaseType != TowerPropertiesType.Flame) flameProb = other;
+            if (increaseType != TowerPropertiesType.Blitz) blitzProb = other;
+            if (increaseType != TowerPropertiesType.Biochemical) bioProb = other;
+        }
+
+        // 속성 부여
+        var type = RandomPickProperties(flameProb, blitzProb, bioProb);
+        RPC_SetLocalTowerProperties(type);
+        RPC_ActivePropertiesEffect(type);
+
+        Debug.Log("속성 부여 완료");
+
+        return _propertiesType;
+    }
+
+    #endregion
+
     #region ICanClickObject 구현
 
     // 공격 타워를 눌렀을 때 호출되는 메서드
@@ -183,6 +244,55 @@ public class AttackTower : Tower, ICanClickObject, ICanDragObject
         checker.SetActive(selected);
         
         Debug.Log("타워 선택 표시" + checker.activeSelf);
+    }
+
+    #endregion
+
+    #region 헬퍼
+
+    // 확률에 따라 부여할 속성 랜덤 뽑기
+    private TowerPropertiesType RandomPickProperties(float flameProb, float blitzProb, float bioProb)
+    {
+        // 모든 확률의 합: 1이거나 그의 근삿값
+        float sum = flameProb + blitzProb + bioProb;
+
+        // 정규화
+        flameProb /= sum; blitzProb /= sum; bioProb /= sum;
+
+        // 확률에 따라 속성 리턴
+        float r = Random.value; // [0, 1)
+        if (r < flameProb) return TowerPropertiesType.Flame;
+        if (r < flameProb + blitzProb) return TowerPropertiesType.Blitz;
+        return TowerPropertiesType.Biochemical;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SetLocalTowerProperties(TowerPropertiesType type)
+    {
+        _propertiesType = type;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ActivePropertiesEffect(TowerPropertiesType type)
+    {
+        if (type == TowerPropertiesType.None)
+        {
+            _flameEffect.SetActive(false);
+            _blitzEffect.SetActive(false);
+            _bioEffect.SetActive(false);
+        }
+        else if (type == TowerPropertiesType.Flame)
+        {
+            _flameEffect.SetActive(true);
+        }
+        else if (type == TowerPropertiesType.Blitz)
+        {
+            _blitzEffect.SetActive(true);
+        }
+        else if (type == TowerPropertiesType.Biochemical)
+        {
+            _bioEffect.SetActive(true);
+        }
     }
 
     #endregion

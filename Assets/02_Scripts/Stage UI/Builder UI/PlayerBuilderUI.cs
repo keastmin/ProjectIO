@@ -22,6 +22,7 @@ public class PlayerBuilderUI : MonoBehaviour
     public event Action OnClickLaboratoryButtonAction; // 실험실 버튼을 눌렀을 떄의 액션
     public event Action OnClickSellTowerButtonAction; // 타워 판매 버튼을 눌렀을 때의 액션
     public event Action OnClickMoveTowerButtonAction; // 타워 움직임 버튼을 눌렀을 때의 액션
+    public event Action OnClickUpgradeTowerButtonAction; // 타워 속성 부여 버튼을 눌렀을 때의 액션
 
     #endregion
 
@@ -63,6 +64,12 @@ public class PlayerBuilderUI : MonoBehaviour
     public void OnClickTowerMoveButton()
     {
         OnClickMoveTowerButtonAction?.Invoke();
+    }
+
+    // 타워 속성 부여 버튼 클릭 이벤트
+    public void OnClickTowerUpgradeButton()
+    {
+        OnClickUpgradeTowerButtonAction?.Invoke();
     }
 
     #endregion

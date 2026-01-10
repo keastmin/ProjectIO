@@ -438,6 +438,16 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6499190095465434370, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
   m_PrefabInstance: {fileID: 6661312010346456425}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4591599094736637546 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7190305726298204931, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 6661312010346456425}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5913871013181056204 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1036938011115028901, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 6661312010346456425}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6611800503456299588 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 554064233507888941, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
@@ -468,6 +478,10 @@ MonoBehaviour:
   _rotateSpeed: 10
   _selectedChecker: {fileID: 6955318143968693727}
   _selectedImage: {fileID: 0}
+  _propertiesType: 0
+  _flameEffect: {fileID: 4591599094736637546}
+  _blitzEffect: {fileID: 7300171442849357270}
+  _bioEffect: {fileID: 5913871013181056204}
   _currTarget: {fileID: 0}
   blade: {fileID: 5888868628931544496}
   AttackRange: 3
@@ -476,5 +490,10 @@ MonoBehaviour:
 --- !u!1 &6955318143968693727 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4393255916219869366, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 6661312010346456425}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7300171442849357270 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4124963853794736319, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
   m_PrefabInstance: {fileID: 6661312010346456425}
   m_PrefabAsset: {fileID: 0}

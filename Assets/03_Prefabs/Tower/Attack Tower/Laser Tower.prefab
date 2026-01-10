@@ -580,9 +580,19 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 215352874251757992}
   m_SourcePrefab: {fileID: 100100000, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+--- !u!1 &1192030240813252281 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4124963853794736319, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 3005064187948860934}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1532309158598782640 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4393255916219869366, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 3005064187948860934}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2870992353503217571 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1036938011115028901, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
   m_PrefabInstance: {fileID: 3005064187948860934}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &3315862675565320491 stripped
@@ -615,6 +625,10 @@ MonoBehaviour:
   _rotateSpeed: 10
   _selectedChecker: {fileID: 1532309158598782640}
   _selectedImage: {fileID: 0}
+  _propertiesType: 0
+  _flameEffect: {fileID: 5367509017210301701}
+  _blitzEffect: {fileID: 1192030240813252281}
+  _bioEffect: {fileID: 2870992353503217571}
   _currTarget: {fileID: 0}
   _laser: {fileID: 215352874251757992}
   _laserWidth: 1
@@ -729,6 +743,11 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &5367509017210301701 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7190305726298204931, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
+  m_PrefabInstance: {fileID: 3005064187948860934}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8324309076444236548 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6499190095465434370, guid: 6892247cd852b494dac5840fdd95f6ea, type: 3}
